@@ -1,18 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  ServerMessage,
-  ServerMessageAction,
-  useSharedWebSocket,
-} from 'shared-network-library';
+import { useSharedWebSocket } from '../providers/WebSocketProvider';
+import { ServerMessage, ServerMessageAction } from '../types/ServerMessages';
 
 export const ConnectionStatus = () => {
-  console.log("Hellow from connection status");
   const { connected, subscribe } = useSharedWebSocket();
   const [showHeartbeat, setShowHeartbeat] = useState(false);
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    console.log("connection status useEffect");
     const unsubscribe = subscribe((message: ServerMessage) => {
       if (message.type === ServerMessageAction.HEARTBEAT) {
         setShowHeartbeat(true);

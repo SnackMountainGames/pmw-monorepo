@@ -11839,8 +11839,7 @@ __metadata:
   dependencies:
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
-    shared-network-library: "workspace:^"
-    shared-ui-library: "workspace:^"
+    shared-component-library: "workspace:^"
   languageName: unknown
   linkType: soft
 
@@ -12952,20 +12951,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shared-network-library@workspace:^, shared-network-library@workspace:packages/shared-network-library":
+"shared-component-library@workspace:^, shared-component-library@workspace:packages/shared-component-library":
   version: 0.0.0-use.local
-  resolution: "shared-network-library@workspace:packages/shared-network-library"
-  peerDependencies:
-    react: ^19.0.0
-    react-dom: ^19.0.0
-  languageName: unknown
-  linkType: soft
-
-"shared-ui-library@workspace:^, shared-ui-library@workspace:packages/shared-ui-library":
-  version: 0.0.0-use.local
-  resolution: "shared-ui-library@workspace:packages/shared-ui-library"
-  dependencies:
-    shared-network-library: "workspace:^"
+  resolution: "shared-component-library@workspace:packages/shared-component-library"
   peerDependencies:
     react: ^19.0.0
     react-dom: ^19.0.0

@@ -56,8 +56,6 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
      * Establish connection once
      */
     useEffect(() => {
-      console.log("trying stuff")
-
       const socket = new WebSocket(WEBSOCKET_URL);
         socketRef.current = socket;
 
@@ -123,7 +121,6 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
  * Hook to consume the shared socket
  */
 export const useSharedWebSocket = () => {
-  console.log("useSharedWebSocket", WebSocketContext);
   const context = useContext(WebSocketContext);
     if (!context) {
         throw new Error(

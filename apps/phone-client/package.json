@@ -2,13 +2,9 @@
   "name": "phone-client",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "dev": "vite"
-  },
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "shared-network-library": "workspace:^",
-    "shared-ui-library": "workspace:^"
+    "shared-component-library": "workspace:^"
   }
 }

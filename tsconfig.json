@@ -10,10 +10,7 @@
       "path": "./apps/phone-client"
     },
     {
-      "path": "./packages/shared-network-library"
-    },
-    {
-      "path": "./packages/shared-ui-library"
+      "path": "./packages/shared-component-library"
     }
   ]
 }
