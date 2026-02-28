@@ -6,21 +6,12 @@ import {
     useState,
     useCallback, type ReactNode,
 } from "react";
-
-/**
- * You can replace this with a stricter union later
- */
-export type ServerMessage = {
-    type: string;
-    [key: string]: any;
-};
-
-type MessageListener = (message: ServerMessage) => void;
+import { ServerMessage, ServerMessageListener } from '../types/ServerMessages';
 
 type WebSocketContextType = {
-    connected: boolean;
-    send: (data: unknown) => void;
-    subscribe: (listener: MessageListener) => () => void;
+  connected: boolean;
+  send: (data: unknown) => void;
+  subscribe: (listener: ServerMessageListener) => () => void;
 };
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
@@ -30,7 +21,7 @@ const WEBSOCKET_URL = "wss://6dwbd9e1d8.execute-api.us-west-2.amazonaws.com/dev/
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const socketRef = useRef<WebSocket | null>(null);
-    const listenersRef = useRef<MessageListener[]>([]);
+    const listenersRef = useRef<ServerMessageListener[]>([]);
     const heartbeatRef = useRef<number | null>(null);
 
     const [connected, setConnected] = useState(false);
@@ -65,7 +56,9 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
      * Establish connection once
      */
     useEffect(() => {
-        const socket = new WebSocket(WEBSOCKET_URL);
+      console.log("trying stuff")
+
+      const socket = new WebSocket(WEBSOCKET_URL);
         socketRef.current = socket;
 
         socket.onopen = () => {
@@ -103,20 +96,20 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             socket.close();
             stopHeartbeat();
         };
-    }, [startHeartbeat, stopHeartbeat]);
+    }, []);
     
     /**
      * Subscribe to incoming messages
      * Returns unsubscribe function
      */
-    const subscribe = useCallback((listener: MessageListener) => {
-        listenersRef.current.push(listener);
+    const subscribe = useCallback((listener: ServerMessageListener) => {
+      listenersRef.current.push(listener);
 
-        return () => {
-            listenersRef.current = listenersRef.current.filter(
-                (l) => l !== listener
-            );
-        };
+      return () => {
+        listenersRef.current = listenersRef.current.filter(
+          (l) => l !== listener
+        );
+      };
     }, []);
 
     return (
@@ -130,7 +123,8 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
  * Hook to consume the shared socket
  */
 export const useSharedWebSocket = () => {
-    const context = useContext(WebSocketContext);
+  console.log("useSharedWebSocket", WebSocketContext);
+  const context = useContext(WebSocketContext);
     if (!context) {
         throw new Error(
             "useSharedWebSocket must be used inside a WebSocketProvider"

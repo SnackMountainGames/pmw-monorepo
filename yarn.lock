@@ -6554,14 +6554,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001759":
-  version: 1.0.30001772
-  resolution: "caniuse-lite@npm:1.0.30001772"
-  checksum: 10c0/62a29a47e4b728f7e927301392733c3982af74293ccf523e63eafc06f70b66fe48d51a6b6272e4fe34e57af9dced8ef7a3c611f21b51b999c6bed793bb7c7ede
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001766":
+"caniuse-lite@npm:^1.0.30001759, caniuse-lite@npm:^1.0.30001766":
   version: 1.0.30001774
   resolution: "caniuse-lite@npm:1.0.30001774"
   checksum: 10c0/cc6a340a5421b9a67d8fa80889065ee27b2839ad62993571dded5296e18f02bbf685ce7094e93fe908cddc9fefdfad35d6c010b724cc3d22a6479b0d0b679f8c
@@ -11844,6 +11837,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "phone-client@workspace:apps/phone-client"
   dependencies:
+    react: "npm:^19.0.0"
+    react-dom: "npm:^19.0.0"
     shared-network-library: "workspace:^"
     shared-ui-library: "workspace:^"
   languageName: unknown
@@ -12960,6 +12955,9 @@ __metadata:
 "shared-network-library@workspace:^, shared-network-library@workspace:packages/shared-network-library":
   version: 0.0.0-use.local
   resolution: "shared-network-library@workspace:packages/shared-network-library"
+  peerDependencies:
+    react: ^19.0.0
+    react-dom: ^19.0.0
   languageName: unknown
   linkType: soft
 
@@ -12968,6 +12966,9 @@ __metadata:
   resolution: "shared-ui-library@workspace:packages/shared-ui-library"
   dependencies:
     shared-network-library: "workspace:^"
+  peerDependencies:
+    react: ^19.0.0
+    react-dom: ^19.0.0
   languageName: unknown
   linkType: soft
 

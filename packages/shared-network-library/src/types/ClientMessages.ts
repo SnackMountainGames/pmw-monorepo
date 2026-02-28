@@ -1,12 +1,12 @@
 /**
  * Client messages (Client -> Server)
  */
-export enum WebSocketMessageActions {
+export enum ClientMessageAction {
   HEARTBEAT = "heartbeat",
 }
 
-export interface WebSocketMessage {
-  type: WebSocketMessageActions;
+export interface ClientMessage {
+  type: ClientMessageAction;
   roomCode?: string;
   room?: any[];
   players?: Player[];
