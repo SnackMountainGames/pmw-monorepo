@@ -6,6 +6,11 @@
     "build:all": "nx run-many --target=build --all",
     "test:all": "nx run-many --target=test --all"
   },
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "zustand": "^5.0.11"
+  },
   "devDependencies": {
     "@babel/core": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
@@ -57,9 +62,5 @@
     "packages/*",
     "packages"
   ],
-  "packageManager": "yarn@4.12.0",
-  "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  }
+  "packageManager": "yarn@4.12.0"
 }
