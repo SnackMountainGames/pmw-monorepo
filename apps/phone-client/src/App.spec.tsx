@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import App from './app';
+import { App } from './App';
 
 describe('App', () => {
   it('should render successfully', () => {
@@ -11,7 +11,7 @@ describe('App', () => {
   it('should have a greeting as the title', () => {
     const { getAllByText } = render(<App />);
     expect(
-      getAllByText(new RegExp('Welcome phone-client', 'gi')).length > 0
+      getAllByText(new RegExp('PMW Phone Client', 'gi')).length > 0
     ).toBeTruthy();
   });
 });

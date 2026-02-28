@@ -1,8 +1,9 @@
 {
   "name": "phone-client",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "shared-network-library": "workspace:^",
     "shared-ui-library": "workspace:^"
   }
 }

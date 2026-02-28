@@ -11844,6 +11844,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "phone-client@workspace:apps/phone-client"
   dependencies:
+    shared-network-library: "workspace:^"
     shared-ui-library: "workspace:^"
   languageName: unknown
   linkType: soft
@@ -12956,9 +12957,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"shared-network-library@workspace:^, shared-network-library@workspace:packages/shared-network-library":
+  version: 0.0.0-use.local
+  resolution: "shared-network-library@workspace:packages/shared-network-library"
+  languageName: unknown
+  linkType: soft
+
 "shared-ui-library@workspace:^, shared-ui-library@workspace:packages/shared-ui-library":
   version: 0.0.0-use.local
   resolution: "shared-ui-library@workspace:packages/shared-ui-library"
+  dependencies:
+    shared-network-library: "workspace:^"
   languageName: unknown
   linkType: soft
 

@@ -38,6 +38,9 @@
   "references": [
     {
       "path": "../../packages/shared-ui-library/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/shared-network-library/tsconfig.lib.json"
     }
   ]
 }
