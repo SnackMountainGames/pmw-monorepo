@@ -4,8 +4,8 @@ test('has title', async ({ page }) => {
   await page.goto('/');
 
   const h1s = await page.$$('h1');
-  expect(h1s).toHaveLength(2);
+  expect(h1s).toHaveLength(1);
 
   // Expect h1 to contain a substring.
-  expect(await page.locator('h1').nth(1).innerText()).toContain('Welcome');
+  expect(await page.locator('h1').innerText()).toContain('PMW Phone Client');
 });
