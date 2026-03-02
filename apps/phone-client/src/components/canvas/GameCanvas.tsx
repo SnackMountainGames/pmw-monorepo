@@ -52,8 +52,6 @@ export const GameCanvas = () => {
     };
   }, []);
 
-
-
   const update = (dt: number) => {
     const canvasState = canvasStateRef.current;
 
@@ -133,6 +131,7 @@ export const GameCanvas = () => {
 
   return (
     <canvas
+      id='game-canvas'
       ref={canvasRef}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

@@ -18,9 +18,15 @@ export const WelcomeMenu = () => {
         setIsConnectedToGameRoom(true);
       }
     });
-  }, [subscribe]);
+  }, [subscribe, setIsConnectedToGameRoom]);
 
   const joinRoom = () => {
+    // for now, pretend to join a room if there is no room code
+    if (!roomCode) {
+      setIsConnectedToGameRoom(true);
+      return;
+    }
+
     send({
       action: 'joinRoom',
       roomCode,

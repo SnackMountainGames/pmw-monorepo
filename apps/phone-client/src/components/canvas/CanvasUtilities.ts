@@ -7,6 +7,8 @@ export const handleResizeCanvas = (canvas: HTMLCanvasElement) => {
 };
 
 export const handlePointerDown = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
+  if (e.pointerType === 'mouse' && !(e.buttons & 1)) return;
+
   canvasState.pointer = {
     x: e.clientX,
     y: e.clientY,
@@ -21,6 +23,7 @@ export const handlePointerDown = (e: PointerEvent<HTMLCanvasElement>, canvasStat
 
 export const handlePointerMove = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
   if (e.pointerType === "mouse" && !(e.buttons & 1)) return;
+
   canvasState.pointer = {
     x: e.clientX,
     y: e.clientY,
