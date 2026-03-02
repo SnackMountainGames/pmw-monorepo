@@ -1,4 +1,4 @@
-# shared-ui-library
+# shared-netowork-library
 
 This library was generated with [Nx](https://nx.dev).
 

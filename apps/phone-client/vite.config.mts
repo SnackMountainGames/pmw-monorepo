@@ -7,7 +7,7 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/apps/phone-client',
   server: {
     port: 4200,
-    host: 'localhost',
+    host: true,
   },
   preview: {
     port: 4200,
@@ -37,5 +37,6 @@ export default defineConfig(() => ({
       reportsDirectory: './test-output/vitest/coverage',
       provider: 'v8' as const,
     },
+    setupFiles: `vitest.setup.ts`
   },
 }));
