@@ -3,6 +3,7 @@
  */
 export enum ServerMessageAction {
   HEARTBEAT = 'heartbeat',
+  JOINED_ROOM = 'joinedRoom',
 }
 
 export type ServerMessage = {

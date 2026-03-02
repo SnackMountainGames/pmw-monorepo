@@ -1,19 +1,22 @@
 import { create } from "zustand";
 
-export type GameState = {
-    isPointerDown: boolean;
-    objects: GameObject[];
-    pointerDownStart?: PointerObject;
-    image?: HTMLImageElement;
+export type CanvasState = {
+  pointer?: PointerObject;
+  isPointerDown: boolean;
+  objects: CanvasObject[];
+  pointerDownStart?: PointerDownObject;
+};
+
+export type PointerObject = {
+  x: number;
+  y: number;
 }
 
-type PointerObject = {
-    time: number;
-    x: number;
-    y: number;
-}
+export type PointerDownObject = {
+  time: number;
+} & PointerObject;
 
-type GameObject = {
+export type CanvasObject = {
     x: number;
     y: number;
     dx: number;
@@ -21,34 +24,26 @@ type GameObject = {
     time?: number; // optional, number of seconds for this to live on screen
 }
 
+export const defaultCanvasState: CanvasState = {
+  isPointerDown: false,
+  objects: [],
+};
+
 type GameStore = {
-    score: number;
-    increase: () => void;
-    decrease: () => void;
-    setScore: (value: number) => void;
-    reset: () => void;
+    roomCode: string;
+    setRoomCode: (roomCode: string) => void;
+    name: string;
+    setName: (name: string) => void;
+    isConnectedToGameRoom: boolean;
+    setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) => void;
 };
 
 export const useGameStore = create<GameStore>((set) => ({
-    score: 0,
-
-    increase: () =>
-        set((state) => ({
-            score: state.score + 1,
-        })),
-
-    decrease: () =>
-        set((state) => ({
-            score: state.score - 1,
-        })),
-
-    setScore: (value: number) =>
-        set({
-            score: value,
-        }),
-
-    reset: () =>
-        set({
-            score: 0,
-        }),
+  roomCode: '',
+  setRoomCode: (roomCode: string) => set(() => ({ roomCode })),
+  name: '',
+  setName: (name: string) => set(() => ({ name })),
+  isConnectedToGameRoom: false,
+  setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) =>
+    set(() => ({ isConnectedToGameRoom })),
 }));
