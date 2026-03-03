@@ -4,6 +4,7 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
     "lib": ["dom"],
     "types": [
       "node",
