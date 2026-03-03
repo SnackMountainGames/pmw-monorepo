@@ -1,33 +1,37 @@
 import { type PointerEvent } from 'react';
-import { CanvasState } from '../../state/GameState';
+import { CanvasState, PointerObject } from '../../state/GameState';
+import { BOTTOM_HUD_HEIGHT, TOP_HUD_HEIGHT } from '../hud/Hud';
+
+const getCanvasCoords = (
+  e: PointerEvent<HTMLCanvasElement>
+): PointerObject => {
+  return {
+    x: e.clientX,
+    y: e.clientY - TOP_HUD_HEIGHT,
+  };
+};
 
 export const handleResizeCanvas = (canvas: HTMLCanvasElement) => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight - 60;
+  const containingNode = canvas.parentNode as HTMLElement;
+  canvas.width = containingNode.clientWidth;
+  canvas.height = containingNode.clientHeight - TOP_HUD_HEIGHT - BOTTOM_HUD_HEIGHT;
 };
 
 export const handlePointerDown = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
   if (e.pointerType === 'mouse' && !(e.buttons & 1)) return;
 
-  canvasState.pointer = {
-    x: e.clientX,
-    y: e.clientY,
-  };
+  canvasState.pointer = getCanvasCoords(e);
   canvasState.isPointerDown = true;
   canvasState.pointerDownStart = {
     time: Date.now(),
-    x: e.clientX,
-    y: e.clientY,
+    ...canvasState.pointer,
   };
 };
 
 export const handlePointerMove = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
   if (e.pointerType === "mouse" && !(e.buttons & 1)) return;
 
-  canvasState.pointer = {
-    x: e.clientX,
-    y: e.clientY,
-  };
+  canvasState.pointer = getCanvasCoords(e);
 }
 
 export const handlePointerUp = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
@@ -37,9 +41,11 @@ export const handlePointerUp = (e: PointerEvent<HTMLCanvasElement>, canvasState:
   canvasState.pointer = undefined;
   canvasState.isPointerDown = false;
 
+  const pointerUp = getCanvasCoords(e);
+
   if (canvasState.pointerDownStart) {
-    const dx = e.clientX - canvasState.pointerDownStart.x;
-    const dy = e.clientY - canvasState.pointerDownStart.y;
+    const dx = pointerUp.x - canvasState.pointerDownStart.x;
+    const dy = pointerUp.y - canvasState.pointerDownStart.y;
     const dt = Date.now() - canvasState.pointerDownStart.time;
 
     if (dt > MAX_TIME) return;

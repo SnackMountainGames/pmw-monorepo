@@ -10,7 +10,7 @@ export function App() {
   return (
     <WebSocketProvider>
       {!isConnectedToGameRoom ? (
-       <WelcomeMenu />
+        <WelcomeMenu />
       ) : (
         <>
           <Hud />
