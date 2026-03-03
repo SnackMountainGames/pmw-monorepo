@@ -8,11 +8,15 @@ export const Hud = () => {
       id="game-hud"
       style={{
         position: 'absolute',
-        width: '100%',
+        left: 0,
+        right: 0,
+        boxSizing: 'border-box',
         pointerEvents: 'none',
         touchAction: 'none',
         userSelect: 'none',
-        paddingLeft: 20,
+        display: 'flex',
+        justifyContent: 'center',
+        margin: 20,
       }}
     >
       {roomCode ? (

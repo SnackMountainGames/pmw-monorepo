@@ -35,7 +35,15 @@ export const WelcomeMenu = () => {
   }
 
   return (
-    <div>
+    <div
+      style={{
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        margin: 20,
+      }}
+    >
       <h1>PMW Phone Client</h1>
       <ConnectionStatus />
 
@@ -44,6 +52,9 @@ export const WelcomeMenu = () => {
         value={roomCode}
         onChange={(e) => setRoomCode(e.target.value)}
         style={{ display: 'block', marginBottom: 10 }}
+        type="text"
+        autoComplete="off"
+        maxLength={4}
       />
 
       <input
@@ -51,6 +62,9 @@ export const WelcomeMenu = () => {
         value={name}
         onChange={(e) => setName(e.target.value)}
         style={{ display: 'block', marginBottom: 10 }}
+        type="text"
+        autoComplete="off"
+        maxLength={20}
       />
 
       <button onClick={joinRoom} disabled={!connected}>

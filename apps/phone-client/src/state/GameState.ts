@@ -40,7 +40,9 @@ type GameStore = {
 
 export const useGameStore = create<GameStore>((set) => ({
   roomCode: '',
-  setRoomCode: (roomCode: string) => set(() => ({ roomCode })),
+  setRoomCode: (roomCode: string) => set(() => ({
+    roomCode: roomCode.toUpperCase(),
+  })),
   name: '',
   setName: (name: string) => set(() => ({ name })),
   isConnectedToGameRoom: false,
