@@ -9,7 +9,7 @@ import {
 
 export const GameCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasStateRef = useRef<CanvasState>(defaultCanvasState);
+  const canvasStateRef = useRef<CanvasState>(defaultCanvasState());
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -108,7 +108,7 @@ export const GameCanvas = () => {
       ctx.ellipse(object.x, object.y, 25, 25, 0, 0, 360);
       ctx.stroke();
     });
-  }
+  };
 
   const resizeCanvas = () => {
     const canvas = canvasRef.current;
@@ -122,7 +122,7 @@ export const GameCanvas = () => {
     if (!canvas) return;
 
     handlePointerDown(event, canvas, canvasStateRef.current);
-  }
+  };
 
   const onPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -136,11 +136,12 @@ export const GameCanvas = () => {
     if (!canvas) return;
 
     handlePointerUp(event, canvas, canvasStateRef.current);
-  }
+  };
 
   return (
     <canvas
-      id='game-canvas'
+      id="game-canvas"
+      key={`game-canvas-${Math.random()}`}
       ref={canvasRef}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

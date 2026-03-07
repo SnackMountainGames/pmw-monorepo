@@ -84,7 +84,7 @@ export const handlePointerUp = (
         y: canvasState.pointerDownStart.y,
         dx: 0,
         dy: 0,
-        time: 0.5,
+        time: 0.1,
       });
       return;
     }

@@ -1,22 +1,13 @@
+import { PhoneClientStoreProvider } from './state/PhoneClientStoreProvider';
 import { WebSocketProvider } from 'shared-component-library';
-import { useGameStore } from './state/GameState';
-import { WelcomeMenu } from './components/WelcomeMenu';
-import { GameCanvas } from './components/canvas/GameCanvas';
-import { Hud } from './components/hud/Hud';
+import { Router } from './components/Router';
 
-export function PhoneClientApp() {
-  const { isConnectedToGameRoom } = useGameStore();
-
+export const PhoneClientApp = () => {
   return (
     <WebSocketProvider>
-      {!isConnectedToGameRoom ? (
-        <WelcomeMenu />
-      ) : (
-        <>
-          <Hud />
-          <GameCanvas />
-        </>
-      )}
+      <PhoneClientStoreProvider>
+        <Router />
+      </PhoneClientStoreProvider>
     </WebSocketProvider>
   );
 }
