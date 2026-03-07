@@ -3,12 +3,14 @@ import { CanvasState, PointerObject } from '../../state/GameState';
 import { BOTTOM_HUD_HEIGHT, TOP_HUD_HEIGHT } from '../hud/Hud';
 
 const getCanvasCoords = (
-  e: PointerEvent<HTMLCanvasElement>
+  e: PointerEvent<HTMLCanvasElement>,
+  canvas: HTMLCanvasElement,
 ): PointerObject => {
+  const rect = canvas.getBoundingClientRect();
   return {
-    x: e.clientX,
-    y: e.clientY - TOP_HUD_HEIGHT,
-  };
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top,
+  }
 };
 
 export const handleResizeCanvas = (canvas: HTMLCanvasElement) => {
@@ -17,10 +19,14 @@ export const handleResizeCanvas = (canvas: HTMLCanvasElement) => {
   canvas.height = containingNode.clientHeight - TOP_HUD_HEIGHT - BOTTOM_HUD_HEIGHT;
 };
 
-export const handlePointerDown = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
+export const handlePointerDown = (
+  e: PointerEvent<HTMLCanvasElement>,
+  canvas: HTMLCanvasElement,
+  canvasState: CanvasState
+) => {
   if (e.pointerType === 'mouse' && !(e.buttons & 1)) return;
 
-  canvasState.pointer = getCanvasCoords(e);
+  canvasState.pointer = getCanvasCoords(e, canvas);
   canvasState.isPointerDown = true;
   canvasState.pointerDownStart = {
     time: Date.now(),
@@ -28,20 +34,28 @@ export const handlePointerDown = (e: PointerEvent<HTMLCanvasElement>, canvasStat
   };
 };
 
-export const handlePointerMove = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
-  if (e.pointerType === "mouse" && !(e.buttons & 1)) return;
+export const handlePointerMove = (
+  e: PointerEvent<HTMLCanvasElement>,
+  canvas: HTMLCanvasElement,
+  canvasState: CanvasState
+) => {
+  if (e.pointerType === 'mouse' && !(e.buttons & 1)) return;
 
-  canvasState.pointer = getCanvasCoords(e);
-}
+  canvasState.pointer = getCanvasCoords(e, canvas);
+};
 
-export const handlePointerUp = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
+export const handlePointerUp = (
+  e: PointerEvent<HTMLCanvasElement>,
+  canvas: HTMLCanvasElement,
+  canvasState: CanvasState
+) => {
   const MIN_DISTANCE = 50;
   const MAX_TIME = 500;
 
   canvasState.pointer = undefined;
   canvasState.isPointerDown = false;
 
-  const pointerUp = getCanvasCoords(e);
+  const pointerUp = getCanvasCoords(e, canvas);
 
   if (canvasState.pointerDownStart) {
     const dx = pointerUp.x - canvasState.pointerDownStart.x;

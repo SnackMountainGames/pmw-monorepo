@@ -1,7 +1,6 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -26,14 +25,6 @@ export default defineConfig(() => ({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
-    lib: {
-      entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'PhoneClient',
-      fileName: 'index',
-    },
-    rollupOptions: {
-      external: ['react', 'react-dom'],
-    },
   },
   test: {
     name: 'phone-client',
@@ -46,6 +37,6 @@ export default defineConfig(() => ({
       reportsDirectory: './test-output/vitest/coverage',
       provider: 'v8' as const,
     },
-    setupFiles: `vitest.setup.ts`,
+    setupFiles: `vitest.setup.ts`
   },
 }));

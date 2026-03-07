@@ -1,5 +1,5 @@
 import * as ReactDOM from 'react-dom/client';
-import { PhoneClientApp } from './App';
+import { GameCommandCenterApp } from './App';
 import './styles.css';
 
 const root = ReactDOM.createRoot(
@@ -7,5 +7,5 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <PhoneClientApp />
+  <GameCommandCenterApp />
 );

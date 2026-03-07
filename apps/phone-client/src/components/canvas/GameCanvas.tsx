@@ -118,15 +118,24 @@ export const GameCanvas = () => {
   };
 
   const onPointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
-    handlePointerDown(event, canvasStateRef.current);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    handlePointerDown(event, canvas, canvasStateRef.current);
   }
 
   const onPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
-    handlePointerMove(event, canvasStateRef.current);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    handlePointerMove(event, canvas, canvasStateRef.current);
   };
 
   const onPointerUp = (event: PointerEvent<HTMLCanvasElement>) => {
-    handlePointerUp(event, canvasStateRef.current);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    handlePointerUp(event, canvas, canvasStateRef.current);
   }
 
   return (

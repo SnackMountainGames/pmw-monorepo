@@ -49,3 +49,16 @@ export const useGameStore = create<GameStore>((set) => ({
   setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) =>
     set(() => ({ isConnectedToGameRoom })),
 }));
+
+import { createStore } from 'zustand/vanilla';
+
+export type PhoneState = {
+  count: number;
+  increment: () => void;
+};
+
+export const createPhoneStore = () =>
+  createStore<PhoneState>((set) => ({
+    count: 0,
+    increment: () => set((s) => ({ count: s.count + 1 })),
+  }));

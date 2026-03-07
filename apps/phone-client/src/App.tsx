@@ -4,7 +4,7 @@ import { WelcomeMenu } from './components/WelcomeMenu';
 import { GameCanvas } from './components/canvas/GameCanvas';
 import { Hud } from './components/hud/Hud';
 
-export function App() {
+export function PhoneClientApp() {
   const { isConnectedToGameRoom } = useGameStore();
 
   return (
