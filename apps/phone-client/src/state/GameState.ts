@@ -1,4 +1,5 @@
 import { createStore } from 'zustand/vanilla';
+import { PhoneClientAppsOptionalProps } from '../App';
 
 export type CanvasState = {
   pointer?: PointerObject;
@@ -40,16 +41,16 @@ export type PhoneClientState = {
   setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) => void;
 };
 
-export const createPhoneClientStore = () =>
+export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalProps) =>
   createStore<PhoneClientState>((set) => ({
     count: 0,
     increment: () => set((s) => ({ count: s.count + 1 })),
-    roomCode: '',
+    roomCode: optionalProps.roomCode || '',
     setRoomCode: (roomCode: string) =>
       set(() => ({
         roomCode: roomCode.toUpperCase(),
       })),
-    name: '',
+    name: optionalProps.name || '',
     setName: (name: string) => set(() => ({ name })),
     isConnectedToGameRoom: false,
     setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) =>

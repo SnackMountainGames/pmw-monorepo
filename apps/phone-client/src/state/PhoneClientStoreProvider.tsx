@@ -2,22 +2,22 @@
 import { createContext, ReactNode, useContext, useRef } from 'react';
 import { useStore } from 'zustand';
 import { createPhoneClientStore } from './GameState';
+import { PhoneClientAppsOptionalProps } from '../App';
 
 const PhoneClientStoreContext = createContext<ReturnType<
   typeof createPhoneClientStore
 > | null>(null);
 
-export const PhoneClientStoreProvider = ({
-  children,
-}: {
+export type PhoneClientStoreProviderProps = {
   children: ReactNode;
-}) => {
-  const storeRef =
-    useRef<ReturnType<typeof createPhoneClientStore>>(createPhoneClientStore());
+} & PhoneClientAppsOptionalProps;
 
-  if (!storeRef.current) {
-    storeRef.current = createPhoneClientStore();
-  }
+export const PhoneClientStoreProvider = (props: PhoneClientStoreProviderProps) => {
+  const { children, roomCode, name } = props;
+
+  const storeRef = useRef<ReturnType<typeof createPhoneClientStore>>(
+    createPhoneClientStore({ roomCode, name })
+  );
 
   return (
     <PhoneClientStoreContext.Provider value={storeRef.current}>
