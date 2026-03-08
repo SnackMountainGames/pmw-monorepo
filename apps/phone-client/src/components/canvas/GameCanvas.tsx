@@ -1,4 +1,10 @@
-import { type PointerEvent, useEffect, useRef } from 'react';
+import {
+  forwardRef,
+  type PointerEvent,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { CanvasState, defaultCanvasState } from '../../state/GameState';
 import {
   handlePointerDown,
@@ -6,10 +12,40 @@ import {
   handlePointerUp,
   handleResizeCanvas,
 } from './CanvasUtilities';
+import { GameCanvasControls } from '../../types/types';
 
-export const GameCanvas = () => {
+export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasStateRef = useRef<CanvasState>(defaultCanvasState());
+
+  useImperativeHandle(ref, () => ({
+    pointerDown(x, y) {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      console.log("simulatePointerDown", x, y);
+
+      // handlePointerDown({ clientX: x, clientY: y } as any, canvas, canvasState);
+    },
+
+    pointerMove(x, y) {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      console.log('simulatePointerMove', x, y);
+
+      // handlePointerMove({ clientX: x, clientY: y } as any, canvas, canvasState);
+    },
+
+    pointerUp(x, y) {
+      const canvas = canvasRef.current;
+
+      console.log('simulatePointerUp', x, y);
+      if (!canvas) return;
+
+      // handlePointerUp({ clientX: x, clientY: y } as any, canvas, canvasState);
+    },
+  }));
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -149,4 +185,4 @@ export const GameCanvas = () => {
       onContextMenu={(e) => e.preventDefault()}
     />
   );
-}
+});

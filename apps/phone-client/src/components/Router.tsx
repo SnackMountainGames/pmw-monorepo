@@ -7,6 +7,9 @@ export const Router = () => {
   const isConnectedToGameRoom = usePhoneClientStore(
     (state) => state.isConnectedToGameRoom
   );
+  const ref = usePhoneClientStore((state) => state.ref);
+
+  console.log("K3", ref);
 
   if (!isConnectedToGameRoom) {
     return (
@@ -17,7 +20,7 @@ export const Router = () => {
   return (
     <>
       <Hud />
-      <GameCanvas />
+      <GameCanvas ref={ref} />
     </>
   );
 }

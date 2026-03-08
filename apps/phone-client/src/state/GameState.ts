@@ -1,5 +1,7 @@
 import { createStore } from 'zustand/vanilla';
 import { PhoneClientAppsOptionalProps } from '../App';
+import { GameCanvasControls } from '../types/types';
+import { Ref } from 'react';
 
 export type CanvasState = {
   pointer?: PointerObject;
@@ -39,6 +41,7 @@ export type PhoneClientState = {
   setName: (name: string) => void;
   isConnectedToGameRoom: boolean;
   setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) => void;
+  ref?: Ref<GameCanvasControls>;
 };
 
 export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalProps) =>
@@ -55,4 +58,5 @@ export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalPro
     isConnectedToGameRoom: false,
     setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) =>
       set(() => ({ isConnectedToGameRoom })),
+    ref: optionalProps.ref,
   }));
