@@ -58,7 +58,8 @@ export const handlePointerMove = (
 export const handlePointerUp = (
   e: SimulatedPointerEvent,
   canvas: HTMLCanvasElement,
-  canvasState: CanvasState
+  canvasState: CanvasState,
+  send: (data: unknown) => void,
 ) => {
   const MIN_DISTANCE = 50;
   const MAX_TIME = 500;
@@ -79,6 +80,10 @@ export const handlePointerUp = (
       (Math.abs(dx) > MIN_DISTANCE && Math.abs(dx) > Math.abs(dy)) ||
       (Math.abs(dy) > MIN_DISTANCE && Math.abs(dy) > Math.abs(dx))
     ) {
+      send({
+        action: 'sendToHost',
+        text: 'Swiped',
+      });
       canvasState.objects.push({
         x: canvasState.pointerDownStart.x,
         y: canvasState.pointerDownStart.y,
@@ -90,6 +95,10 @@ export const handlePointerUp = (
     }
 
     if (dt < 200) {
+      send({
+        action: "sendToHost",
+        text: "Clicked",
+      });
       canvasState.objects.push({
         x: canvasState.pointerDownStart.x,
         y: canvasState.pointerDownStart.y,

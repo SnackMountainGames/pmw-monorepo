@@ -13,10 +13,13 @@ import {
   handleResizeCanvas,
 } from './CanvasUtilities';
 import { GameCanvasControls } from '../../types/types';
+import { useSharedWebSocket } from 'shared-component-library';
 
 export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasStateRef = useRef<CanvasState>(defaultCanvasState());
+
+  const { send } = useSharedWebSocket();
 
   // This is for the simulated clicks
   useImperativeHandle(ref, () => ({
@@ -67,7 +70,8 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           simulated: true,
         } as any,
         canvas,
-        canvasStateRef.current
+        canvasStateRef.current,
+        send,
       );
     },
   }));
@@ -196,7 +200,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    handlePointerUp(event, canvas, canvasStateRef.current);
+    handlePointerUp(event, canvas, canvasStateRef.current, send);
   };
 
   return (
