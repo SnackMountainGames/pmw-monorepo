@@ -2,15 +2,26 @@ import { type PointerEvent } from 'react';
 import { CanvasState, PointerObject } from '../../state/GameState';
 import { BOTTOM_HUD_HEIGHT, TOP_HUD_HEIGHT } from '../hud/Hud';
 
+type SimulatedPointerEvent = {
+  simulated?: boolean;
+} & PointerEvent<HTMLCanvasElement>;
+
 const getCanvasCoords = (
-  e: PointerEvent<HTMLCanvasElement>,
-  canvas: HTMLCanvasElement,
+  e: SimulatedPointerEvent,
+  canvas: HTMLCanvasElement
 ): PointerObject => {
+  if (e.simulated) {
+    return {
+      x: e.clientX,
+      y: e.clientY,
+    };
+  }
+
   const rect = canvas.getBoundingClientRect();
   return {
     x: e.clientX - rect.left,
     y: e.clientY - rect.top,
-  }
+  };
 };
 
 export const handleResizeCanvas = (canvas: HTMLCanvasElement) => {
@@ -20,7 +31,7 @@ export const handleResizeCanvas = (canvas: HTMLCanvasElement) => {
 };
 
 export const handlePointerDown = (
-  e: PointerEvent<HTMLCanvasElement>,
+  e: SimulatedPointerEvent,
   canvas: HTMLCanvasElement,
   canvasState: CanvasState
 ) => {
@@ -35,7 +46,7 @@ export const handlePointerDown = (
 };
 
 export const handlePointerMove = (
-  e: PointerEvent<HTMLCanvasElement>,
+  e: SimulatedPointerEvent,
   canvas: HTMLCanvasElement,
   canvasState: CanvasState
 ) => {
@@ -45,7 +56,7 @@ export const handlePointerMove = (
 };
 
 export const handlePointerUp = (
-  e: PointerEvent<HTMLCanvasElement>,
+  e: SimulatedPointerEvent,
   canvas: HTMLCanvasElement,
   canvasState: CanvasState
 ) => {

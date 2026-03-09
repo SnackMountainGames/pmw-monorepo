@@ -5,9 +5,6 @@ export const TOP_HUD_HEIGHT = 60;
 export const BOTTOM_HUD_HEIGHT = 60;
 
 const TopHud = styled.div`
-  //position: absolute;
-  //left: 0;
-  //right: 0;
   height: ${TOP_HUD_HEIGHT}px;
   box-sizing: border-box;
   pointer-events: none;
@@ -19,6 +16,7 @@ const TopHud = styled.div`
 `;
 
 const HudButton = styled.button`
+  background: none;
   border: none;
   pointer-events: all;
   height: ${TOP_HUD_HEIGHT}px;
@@ -32,7 +30,7 @@ export const Hud = () => {
   return (
     <TopHud id="game-hud">
       <div>
-        <HudButton onClick={() => console.log('HUD Button Left')}>L</HudButton>
+        <HudButton onClick={() => console.log('HUD Button Left')}>Menu</HudButton>
       </div>
       <div>
         {roomCode ? (
@@ -44,7 +42,7 @@ export const Hud = () => {
         )}
       </div>
       <div>
-        <HudButton onClick={() => console.log('HUD Button Right')}>R</HudButton>
+        {/*<HudButton onClick={() => console.log('HUD Button Right')}>R</HudButton>*/}
       </div>
     </TopHud>
   );

@@ -2,35 +2,31 @@ import styled from '@emotion/styled';
 import { PhoneClientApp } from 'phone-client';
 import { ReactNode, useRef, useState } from 'react';
 import { GameCanvasControls } from 'phone-client';
+import { useGameSimulationStore } from './state/GameSimulationState';
 
 const PhoneClientContainer = styled.div`
-  margin: 50px;
+  margin: 20px;
   height: 750px;
   width: 360px;
   border: 3px solid black;
   border-radius: 30px;
 `;
 
-// const PhoneClientContainerSmall = styled.div`
-//   margin: 50px;
-//   height: 650px;
-//   width: 312px;
-//   border: 3px solid black;
-//   border-radius: 30px;
-// `;
-
 export const GameCommandCenterApp = () => {
   const [phoneClients, setPhoneClients] = useState<ReactNode[]>([]);
-  const phoneClientRefs = useRef<GameCanvasControls[]>([]);
+  const phoneClientControlRefs = useRef<GameCanvasControls[]>([]);
+
+  const { roomCode } = useGameSimulationStore();
 
   const addPhone = () => {
     setPhoneClients((prev) => [
       ...prev,
-      <PhoneClientContainer>
+      <PhoneClientContainer key={Date.now()}>
         <PhoneClientApp
-          roomCode="KVVA"
+          roomCode={roomCode}
+          name={`Player ${phoneClients.length + 1}`}
           ref={(el) => {
-            if (el) phoneClientRefs.current[0] = el;
+            if (el) phoneClientControlRefs.current[phoneClients.length] = el;
           }}
         />
       </PhoneClientContainer>,
@@ -39,7 +35,7 @@ export const GameCommandCenterApp = () => {
 
   return (
     <>
-      <div style={{ position: 'absolute' }}>
+      <div>
         <span>Game Command Center</span>
         <button
           onClick={addPhone}
@@ -47,7 +43,12 @@ export const GameCommandCenterApp = () => {
           Add phone client
         </button>
         <button
-          onClick={() => phoneClientRefs.current[0].pointerDown(50, 60)}
+          onClick={() => {
+            phoneClientControlRefs.current[0].pointerDown(50, 50);
+            phoneClientControlRefs.current[0].pointerUp(50, 50);
+            phoneClientControlRefs.current[1].pointerDown(100, 50);
+            phoneClientControlRefs.current[1].pointerUp(160, 50);
+          }}
         >
           Simulate button click
         </button>

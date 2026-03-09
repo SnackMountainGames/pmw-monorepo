@@ -18,32 +18,57 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasStateRef = useRef<CanvasState>(defaultCanvasState());
 
+  // This is for the simulated clicks
   useImperativeHandle(ref, () => ({
     pointerDown(x, y) {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      console.log("simulatePointerDown", x, y);
-
-      // handlePointerDown({ clientX: x, clientY: y } as any, canvas, canvasState);
+      handlePointerDown(
+        {
+          clientX: x,
+          clientY: y,
+          pointerType: 'mouse',
+          buttons: 1,
+          simulated: true,
+        } as any,
+        canvas,
+        canvasStateRef.current
+      );
     },
 
     pointerMove(x, y) {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      console.log('simulatePointerMove', x, y);
-
-      // handlePointerMove({ clientX: x, clientY: y } as any, canvas, canvasState);
+      handlePointerMove(
+        {
+          clientX: x,
+          clientY: y,
+          pointerType: 'mouse',
+          buttons: 1,
+          simulated: true,
+        } as any,
+        canvas,
+        canvasStateRef.current
+      );
     },
 
     pointerUp(x, y) {
       const canvas = canvasRef.current;
-
-      console.log('simulatePointerUp', x, y);
       if (!canvas) return;
 
-      // handlePointerUp({ clientX: x, clientY: y } as any, canvas, canvasState);
+      handlePointerUp(
+        {
+          clientX: x,
+          clientY: y,
+          pointerType: 'mouse',
+          buttons: 1,
+          simulated: true,
+        } as any,
+        canvas,
+        canvasStateRef.current
+      );
     },
   }));
 

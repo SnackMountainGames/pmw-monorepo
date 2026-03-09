@@ -9,8 +9,6 @@ export const Router = () => {
   );
   const ref = usePhoneClientStore((state) => state.ref);
 
-  console.log("K3", ref);
-
   if (!isConnectedToGameRoom) {
     return (
       <WelcomeMenu />
