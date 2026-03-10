@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
-import { PhoneClientApp } from 'phone-client';
+import { GameCanvasControls, PhoneClientApp } from 'phone-client';
 import { useRef } from 'react';
-import { GameCanvasControls } from 'phone-client';
 import { useGameSimulationStore } from './state/GameSimulationState';
 import { PhoneClientSection } from './components/PhoneClientSection';
 import { GameHostSection } from './components/GameHostSection';
