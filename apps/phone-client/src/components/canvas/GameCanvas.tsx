@@ -1,4 +1,10 @@
-import { type PointerEvent, useEffect, useRef } from 'react';
+import {
+  forwardRef,
+  type PointerEvent,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { CanvasState, defaultCanvasState } from '../../state/GameState';
 import {
   handlePointerDown,
@@ -6,10 +12,69 @@ import {
   handlePointerUp,
   handleResizeCanvas,
 } from './CanvasUtilities';
+import { GameCanvasControls } from '../../types/types';
+import { useSharedWebSocket } from 'shared-component-library';
 
-export const GameCanvas = () => {
+export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasStateRef = useRef<CanvasState>(defaultCanvasState);
+  const canvasStateRef = useRef<CanvasState>(defaultCanvasState());
+
+  const { send } = useSharedWebSocket();
+
+  // This is for the simulated clicks
+  useImperativeHandle(ref, () => ({
+    pointerDown(x, y) {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      handlePointerDown(
+        {
+          clientX: x,
+          clientY: y,
+          pointerType: 'mouse',
+          buttons: 1,
+          simulated: true,
+        } as any,
+        canvas,
+        canvasStateRef.current
+      );
+    },
+
+    pointerMove(x, y) {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      handlePointerMove(
+        {
+          clientX: x,
+          clientY: y,
+          pointerType: 'mouse',
+          buttons: 1,
+          simulated: true,
+        } as any,
+        canvas,
+        canvasStateRef.current
+      );
+    },
+
+    pointerUp(x, y) {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      handlePointerUp(
+        {
+          clientX: x,
+          clientY: y,
+          pointerType: 'mouse',
+          buttons: 1,
+          simulated: true,
+        } as any,
+        canvas,
+        canvasStateRef.current,
+        send,
+      );
+    },
+  }));
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -108,7 +173,7 @@ export const GameCanvas = () => {
       ctx.ellipse(object.x, object.y, 25, 25, 0, 0, 360);
       ctx.stroke();
     });
-  }
+  };
 
   const resizeCanvas = () => {
     const canvas = canvasRef.current;
@@ -118,20 +183,30 @@ export const GameCanvas = () => {
   };
 
   const onPointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
-    handlePointerDown(event, canvasStateRef.current);
-  }
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    handlePointerDown(event, canvas, canvasStateRef.current);
+  };
 
   const onPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
-    handlePointerMove(event, canvasStateRef.current);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    handlePointerMove(event, canvas, canvasStateRef.current);
   };
 
   const onPointerUp = (event: PointerEvent<HTMLCanvasElement>) => {
-    handlePointerUp(event, canvasStateRef.current);
-  }
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    handlePointerUp(event, canvas, canvasStateRef.current, send);
+  };
 
   return (
     <canvas
-      id='game-canvas'
+      id="game-canvas"
+      key={`game-canvas-${Math.random()}`}
       ref={canvasRef}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -139,4 +214,4 @@ export const GameCanvas = () => {
       onContextMenu={(e) => e.preventDefault()}
     />
   );
-}
+});

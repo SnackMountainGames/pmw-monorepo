@@ -11,6 +11,9 @@
     },
     {
       "path": "./packages/shared-component-library"
+    },
+    {
+      "path": "./apps/game-command-center"
     }
   ]
 }

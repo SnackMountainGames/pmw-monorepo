@@ -8905,6 +8905,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"game-command-center@workspace:apps/game-command-center":
+  version: 0.0.0-use.local
+  resolution: "game-command-center@workspace:apps/game-command-center"
+  dependencies:
+    phone-client: "workspace:^"
+    react: "npm:^19.2.4"
+    react-dom: "npm:^19.2.4"
+    shared-component-library: "workspace:^"
+  languageName: unknown
+  linkType: soft
+
 "generator-function@npm:^2.0.0":
   version: 2.0.1
   resolution: "generator-function@npm:2.0.1"
@@ -12051,7 +12062,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"phone-client@workspace:apps/phone-client":
+"phone-client@workspace:^, phone-client@workspace:apps/phone-client":
   version: 0.0.0-use.local
   resolution: "phone-client@workspace:apps/phone-client"
   dependencies:

@@ -2,12 +2,25 @@ import { type PointerEvent } from 'react';
 import { CanvasState, PointerObject } from '../../state/GameState';
 import { BOTTOM_HUD_HEIGHT, TOP_HUD_HEIGHT } from '../hud/Hud';
 
+type SimulatedPointerEvent = {
+  simulated?: boolean;
+} & PointerEvent<HTMLCanvasElement>;
+
 const getCanvasCoords = (
-  e: PointerEvent<HTMLCanvasElement>
+  e: SimulatedPointerEvent,
+  canvas: HTMLCanvasElement
 ): PointerObject => {
+  if (e.simulated) {
+    return {
+      x: e.clientX,
+      y: e.clientY,
+    };
+  }
+
+  const rect = canvas.getBoundingClientRect();
   return {
-    x: e.clientX,
-    y: e.clientY - TOP_HUD_HEIGHT,
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top,
   };
 };
 
@@ -17,10 +30,14 @@ export const handleResizeCanvas = (canvas: HTMLCanvasElement) => {
   canvas.height = containingNode.clientHeight - TOP_HUD_HEIGHT - BOTTOM_HUD_HEIGHT;
 };
 
-export const handlePointerDown = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
+export const handlePointerDown = (
+  e: SimulatedPointerEvent,
+  canvas: HTMLCanvasElement,
+  canvasState: CanvasState
+) => {
   if (e.pointerType === 'mouse' && !(e.buttons & 1)) return;
 
-  canvasState.pointer = getCanvasCoords(e);
+  canvasState.pointer = getCanvasCoords(e, canvas);
   canvasState.isPointerDown = true;
   canvasState.pointerDownStart = {
     time: Date.now(),
@@ -28,20 +45,29 @@ export const handlePointerDown = (e: PointerEvent<HTMLCanvasElement>, canvasStat
   };
 };
 
-export const handlePointerMove = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
-  if (e.pointerType === "mouse" && !(e.buttons & 1)) return;
+export const handlePointerMove = (
+  e: SimulatedPointerEvent,
+  canvas: HTMLCanvasElement,
+  canvasState: CanvasState
+) => {
+  if (e.pointerType === 'mouse' && !(e.buttons & 1)) return;
 
-  canvasState.pointer = getCanvasCoords(e);
-}
+  canvasState.pointer = getCanvasCoords(e, canvas);
+};
 
-export const handlePointerUp = (e: PointerEvent<HTMLCanvasElement>, canvasState: CanvasState) => {
+export const handlePointerUp = (
+  e: SimulatedPointerEvent,
+  canvas: HTMLCanvasElement,
+  canvasState: CanvasState,
+  send: (data: unknown) => void,
+) => {
   const MIN_DISTANCE = 50;
   const MAX_TIME = 500;
 
   canvasState.pointer = undefined;
   canvasState.isPointerDown = false;
 
-  const pointerUp = getCanvasCoords(e);
+  const pointerUp = getCanvasCoords(e, canvas);
 
   if (canvasState.pointerDownStart) {
     const dx = pointerUp.x - canvasState.pointerDownStart.x;
@@ -54,6 +80,10 @@ export const handlePointerUp = (e: PointerEvent<HTMLCanvasElement>, canvasState:
       (Math.abs(dx) > MIN_DISTANCE && Math.abs(dx) > Math.abs(dy)) ||
       (Math.abs(dy) > MIN_DISTANCE && Math.abs(dy) > Math.abs(dx))
     ) {
+      send({
+        action: 'sendToHost',
+        text: 'Swiped',
+      });
       canvasState.objects.push({
         x: canvasState.pointerDownStart.x,
         y: canvasState.pointerDownStart.y,
@@ -65,6 +95,10 @@ export const handlePointerUp = (e: PointerEvent<HTMLCanvasElement>, canvasState:
     }
 
     if (dt < 200) {
+      send({
+        action: "sendToHost",
+        text: "Clicked",
+      });
       canvasState.objects.push({
         x: canvasState.pointerDownStart.x,
         y: canvasState.pointerDownStart.y,

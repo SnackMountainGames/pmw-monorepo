@@ -5,7 +5,8 @@ export {
 
 export type {
   ClientMessage,
-  ClientMessageAction
+  ClientMessageAction,
+  Player
 } from './types/ClientMessages';
 
 export { ServerMessageAction } from "./types/ServerMessages";

@@ -1,13 +1,10 @@
-import { useGameStore } from '../../state/GameState';
 import styled from '@emotion/styled';
+import { usePhoneClientStore } from '../../state/PhoneClientStoreProvider';
 
 export const TOP_HUD_HEIGHT = 60;
 export const BOTTOM_HUD_HEIGHT = 60;
 
 const TopHud = styled.div`
-  //position: absolute;
-  //left: 0;
-  //right: 0;
   height: ${TOP_HUD_HEIGHT}px;
   box-sizing: border-box;
   pointer-events: none;
@@ -19,6 +16,7 @@ const TopHud = styled.div`
 `;
 
 const HudButton = styled.button`
+  background: none;
   border: none;
   pointer-events: all;
   height: ${TOP_HUD_HEIGHT}px;
@@ -26,22 +24,25 @@ const HudButton = styled.button`
 `;
 
 export const Hud = () => {
-  const { roomCode, name } = useGameStore();
+  const roomCode = usePhoneClientStore((state) => state.roomCode);
+  const name = usePhoneClientStore((state) => state.name);
 
   return (
     <TopHud id="game-hud">
       <div>
-        <HudButton onClick={() => console.log('HUD Button Left')}>?</HudButton>
+        <HudButton onClick={() => console.log('HUD Button Left')}>Menu</HudButton>
       </div>
       <div>
         {roomCode ? (
-          <span>Successfully joined room {roomCode} as {name} 🎉</span>
+          <span>
+            Successfully joined room {roomCode} as {name} 🎉
+          </span>
         ) : (
           <span>⚠ Not actually in a room (testing) ⚠</span>
         )}
       </div>
       <div>
-        <HudButton onClick={() => console.log('HUD Button Right')}>?</HudButton>
+        {/*<HudButton onClick={() => console.log('HUD Button Right')}>R</HudButton>*/}
       </div>
     </TopHud>
   );

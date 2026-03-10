@@ -1,22 +1,23 @@
+import { PhoneClientStoreProvider } from './state/PhoneClientStoreProvider';
 import { WebSocketProvider } from 'shared-component-library';
-import { useGameStore } from './state/GameState';
-import { WelcomeMenu } from './components/WelcomeMenu';
-import { GameCanvas } from './components/canvas/GameCanvas';
-import { Hud } from './components/hud/Hud';
+import { Router } from './components/Router';
+import { GameCanvasControls } from './types/types';
+import { Ref } from 'react';
 
-export function App() {
-  const { isConnectedToGameRoom } = useGameStore();
+export type PhoneClientAppsOptionalProps = {
+  roomCode?: string;
+  name?: string;
+  ref?: Ref<GameCanvasControls>;
+}
+
+export const PhoneClientApp = (optionalProps: PhoneClientAppsOptionalProps) => {
+  const { roomCode, name, ref } = optionalProps;
 
   return (
     <WebSocketProvider>
-      {!isConnectedToGameRoom ? (
-        <WelcomeMenu />
-      ) : (
-        <>
-          <Hud />
-          <GameCanvas />
-        </>
-      )}
+      <PhoneClientStoreProvider roomCode={roomCode} name={name} ref={ref}>
+        <Router />
+      </PhoneClientStoreProvider>
     </WebSocketProvider>
   );
 }

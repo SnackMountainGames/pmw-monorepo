@@ -4,11 +4,15 @@ import {
   ServerMessageAction,
   useSharedWebSocket,
 } from 'shared-component-library';
-import { useGameStore } from '../state/GameState';
 import { useEffect } from 'react';
+import { usePhoneClientStore } from '../state/PhoneClientStoreProvider';
 
 export const WelcomeMenu = () => {
-  const { roomCode, setRoomCode, name, setName, setIsConnectedToGameRoom } = useGameStore();
+  const roomCode = usePhoneClientStore((state) => state.roomCode);
+  const setRoomCode = usePhoneClientStore((state) => state.setRoomCode);
+  const name = usePhoneClientStore((state) => state.name);
+  const setName = usePhoneClientStore((state) => state.setName);
+  const setIsConnectedToGameRoom = usePhoneClientStore((state) => state.setIsConnectedToGameRoom);
 
   const { connected, subscribe, send } = useSharedWebSocket();
 
