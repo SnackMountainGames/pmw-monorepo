@@ -20,15 +20,15 @@
         "defaultConfiguration": "production",
         "options": {
           "platform": "node",
-          "outputPath": "apps/websocket-lambda/dist",
+          "outputPath": "{projectRoot}/dist",
           "format": [
             "cjs"
           ],
           "bundle": true,
-          "main": "apps/websocket-lambda/src/handler.ts",
-          "tsConfig": "apps/websocket-lambda/tsconfig.app.json",
+          "main": "{projectRoot}/src/handler.ts",
+          "tsConfig": "{projectRoot}/tsconfig.app.json",
           "assets": [
-            "apps/websocket-lambda/src/assets"
+            "{projectRoot}/src/assets"
           ],
           "esbuildOptions": {
             "sourcemap": true,
