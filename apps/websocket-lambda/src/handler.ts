@@ -57,7 +57,6 @@ export const handler = async (
 
     if (routeKey === '$disconnect') {
       console.log('Disconnected:', connectionId);
-
       return { statusCode: 200, body: '' };
     }
 

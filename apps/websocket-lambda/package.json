@@ -57,7 +57,7 @@
         "options": {
           "cwd": "{projectRoot}",
           "commands": [
-            "7z a deploy/function.zip dist/handler.js -y",
+            "cd dist && 7z a -tzip ../deploy/function.zip handler.js -y",
             "aws lambda update-function-code --function-name GameWebSocketHandler --zip-file fileb://deploy/function.zip",
             "aws lambda wait function-updated --function-name GameWebSocketHandler",
             "aws lambda wait function-active --function-name GameWebSocketHandler"
