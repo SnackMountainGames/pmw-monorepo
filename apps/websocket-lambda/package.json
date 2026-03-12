@@ -2,6 +2,14 @@
   "name": "websocket-lambda",
   "version": "0.0.1",
   "private": true,
+  "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.1007.0",
+    "@aws-sdk/client-dynamodb": "^3.1007.0",
+    "@aws-sdk/lib-dynamodb": "^3.1007.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.161"
+  },
   "nx": {
     "targets": {
       "build": {
@@ -41,6 +49,22 @@
           }
         }
       },
+      "deploy": {
+        "executor": "nx:run-commands",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "cwd": "{projectRoot}",
+          "commands": [
+            "7z a deploy/function.zip dist/handler.js -y",
+            "aws lambda update-function-code --function-name GameWebSocketHandler --zip-file fileb://deploy/function.zip",
+            "aws lambda wait function-updated --function-name GameWebSocketHandler",
+            "aws lambda wait function-active --function-name GameWebSocketHandler"
+          ],
+          "parallel": false
+        }
+      },
       "serve": {
         "continuous": true,
         "executor": "@nx/js:node",
@@ -62,13 +86,5 @@
         }
       }
     }
-  },
-  "dependencies": {
-    "@aws-sdk/client-apigatewaymanagementapi": "^3.1007.0",
-    "@aws-sdk/client-dynamodb": "^3.1007.0",
-    "@aws-sdk/lib-dynamodb": "^3.1007.0"
-  },
-  "devDependencies": {
-    "@types/aws-lambda": "^8.10.161"
   }
 }
