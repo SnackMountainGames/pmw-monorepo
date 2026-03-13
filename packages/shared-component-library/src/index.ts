@@ -3,7 +3,7 @@ export {
   useSharedWebSocket,
 } from './providers/WebSocketProvider';
 
-export { OutboundMessageAction, OutboundMessageSendMessageType } from "./types/OutboundMessages";
+export { OutboundMessageAction, SendMessageType } from "./types/OutboundMessages";
 export type {
   ClientMessage,
   ClientMessageAction,

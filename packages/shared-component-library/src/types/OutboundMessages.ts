@@ -1,11 +1,6 @@
 /**
- * (Client/Host -> Server)
+ * Outbound messages (Client/Host -> Server)
  */
-export type OutboundMessage =
-  | OutboundMessageHeartbeat
-  | OutboundMessageSendMessageText
-  | OutboundMessageSendMessageTap;
-
 export enum OutboundMessageAction {
   HEARTBEAT = 'heartbeat',
   SEND_MESSAGE = 'sendMessage',
@@ -13,29 +8,33 @@ export enum OutboundMessageAction {
 
 export type OutboundMessageHeartbeat = {
   action: OutboundMessageAction.HEARTBEAT;
-}
-
-export type OutboundMessageSendMessage = {
-  action: OutboundMessageAction.SEND_MESSAGE;
-  to: string | "host";
 };
 
-export enum OutboundMessageSendMessageType {
-  TEXT = "text",
-  TAP = "click",
+export enum SendMessageType {
+  TEXT = 'text',
+  TAP = 'tap'
 }
 
-export type OutboundMessageSendMessageText = {
-  type: OutboundMessageSendMessageType.TEXT;
-  text: string;
-} & OutboundMessageSendMessage;
+type OutboundMessageSendMessageBase = {
+  action: OutboundMessageAction.SEND_MESSAGE;
+  to: string | 'host';
+};
 
-export type OutboundMessageSendMessageTap = {
-  type: OutboundMessageSendMessageType.TAP;
+export type OutboundMessageSendMessageText = OutboundMessageSendMessageBase & {
+  type: SendMessageType.TEXT;
+  text: string;
+};
+
+export type OutboundMessageSendMessageTap = OutboundMessageSendMessageBase & {
+  type: SendMessageType.TAP;
   x: number;
   y: number;
-} & OutboundMessageSendMessage;
+};
 
+export type OutboundMessage =
+  | OutboundMessageHeartbeat
+  | OutboundMessageSendMessageText
+  | OutboundMessageSendMessageTap;
 
 /**
  * Client messages (Client/Host -> Server)

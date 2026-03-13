@@ -4,7 +4,7 @@ import { BOTTOM_HUD_HEIGHT, TOP_HUD_HEIGHT } from '../hud/Hud';
 import {
   OutboundMessage,
   OutboundMessageAction,
-  OutboundMessageSendMessageType,
+  SendMessageType,
 } from 'shared-component-library';
 
 type SimulatedPointerEvent = {
@@ -88,7 +88,7 @@ export const handlePointerUp = (
       send({
         action: OutboundMessageAction.SEND_MESSAGE,
         to: "host",
-        type: OutboundMessageSendMessageType.TEXT,
+        type: SendMessageType.TEXT,
         text: 'Swiped',
       });
       canvasState.objects.push({
@@ -105,7 +105,7 @@ export const handlePointerUp = (
       send({
         action: OutboundMessageAction.SEND_MESSAGE,
         to: 'host',
-        type: OutboundMessageSendMessageType.TAP,
+        type: SendMessageType.TAP,
         x: canvasState.pointerDownStart.x,
         y: canvasState.pointerDownStart.y,
       });
