@@ -16194,6 +16194,7 @@ __metadata:
     "@aws-sdk/client-dynamodb": "npm:^3.1007.0"
     "@aws-sdk/lib-dynamodb": "npm:^3.1007.0"
     "@types/aws-lambda": "npm:^8.10.161"
+    shared-component-library: "workspace:^"
   languageName: unknown
   linkType: soft
 

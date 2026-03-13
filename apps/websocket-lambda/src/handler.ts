@@ -6,20 +6,11 @@ import {
   PostToConnectionCommand,
 } from '@aws-sdk/client-apigatewaymanagementapi';
 import { getTs } from './utilities';
-
+import { OutboundMessage } from 'shared-component-library';
 
 interface WebSocketEvent {
   body?: string;
   requestContext: APIGatewayEventWebsocketRequestContextV2;
-}
-
-interface ActionBody {
-  action?: string;
-  roomCode?: string;
-  name?: string;
-  text?: string;
-  mimeType?: string;
-  data?: string;
 }
 
 export const handler = async (
@@ -60,15 +51,20 @@ export const handler = async (
       return { statusCode: 200, body: '' };
     }
 
-    const body: ActionBody = JSON.parse(event.body || '{}');
+    const body: OutboundMessage = JSON.parse(event.body || '{}');
 
-    if (body.action === 'heartbeat') {
-      await sendMessage(connectionId, {
-        type: `heartbeat ${getTs()}`,
-        timestamp: Date.now(),
-      });
-
-      return { statusCode: 200, body: '' };
+    switch (body.action) {
+      case 'heartbeat':
+        await sendMessage(connectionId, {
+          type: `heartbeat ${getTs()}`,
+          timestamp: Date.now(),
+        });
+        return { statusCode: 200, body: '' };
+      case 'sendMessage':
+        if (body.type === 'text') {
+          console.log(body.to, body.text);
+        }
+        return { statusCode: 200, body: '' };
     }
 
     return { statusCode: 200, body: '' };

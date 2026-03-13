@@ -1,6 +1,8 @@
 /**
  * Outbound messages (Client/Host -> Server)
  */
+export type ClientMessageAction = 'heartbeat' | 'sendMessage';
+
 export enum OutboundMessageAction {
   HEARTBEAT = 'heartbeat',
   SEND_MESSAGE = 'sendMessage',
@@ -39,10 +41,6 @@ export type OutboundMessage =
 /**
  * Client messages (Client/Host -> Server)
  */
-export enum ClientMessageAction {
-  HEARTBEAT = "heartbeat",
-  SEND_MESSAGE = "sendMessage",
-}
 
 export interface ClientMessage {
   type: ClientMessageAction;
