@@ -1,5 +1,5 @@
 /**
- * Server messages (Server -> Client)
+ * Server messages (Server -> Client/Host)
  */
 export enum ServerMessageAction {
   HEARTBEAT = 'heartbeat',

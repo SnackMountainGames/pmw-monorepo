@@ -6,11 +6,18 @@ import {
     useState,
     useCallback, type ReactNode,
 } from "react";
-import { ServerMessage, ServerMessageListener } from '../types/ServerMessages';
+import {
+  ServerMessage,
+  ServerMessageListener,
+} from '../types/ServerMessages';
+import {
+  OutboundMessage,
+  OutboundMessageAction,
+} from '../types/OutboundMessages';
 
 type WebSocketContextType = {
   connected: boolean;
-  send: (data: unknown) => void;
+  send: (data: OutboundMessage) => void;
   subscribe: (listener: ServerMessageListener) => () => void;
 };
 
@@ -29,7 +36,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     /**
      * Send function (stable reference)
      */
-    const send = useCallback((data: unknown) => {
+    const send = useCallback((data: OutboundMessage) => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
             socketRef.current.send(JSON.stringify(data));
         } else {
@@ -47,7 +54,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const startHeartbeat = useCallback(() => {
         stopHeartbeat();
         heartbeatRef.current = window.setInterval(() => {
-            send({ action: "heartbeat" });
+            send({ action: OutboundMessageAction.HEARTBEAT });
         }, 20000);
     }, [send, stopHeartbeat]);
 

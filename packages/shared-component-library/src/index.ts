@@ -3,11 +3,13 @@ export {
   useSharedWebSocket,
 } from './providers/WebSocketProvider';
 
+export { OutboundMessageAction, OutboundMessageSendMessageType } from "./types/OutboundMessages";
 export type {
   ClientMessage,
   ClientMessageAction,
-  Player
-} from './types/ClientMessages';
+  Player,
+  OutboundMessage,
+} from './types/OutboundMessages';
 
 export { ServerMessageAction } from "./types/ServerMessages";
 export type { ServerMessage, ServerMessageListener } from "./types/ServerMessages";
