@@ -26,7 +26,7 @@
             "cjs"
           ],
           "bundle": true,
-          "main": "{projectRoot}/src/handler.ts",
+          "main": "{projectRoot}/src/main.ts",
           "tsConfig": "{projectRoot}/tsconfig.app.json",
           "assets": [
             "{projectRoot}/src/assets"
@@ -58,7 +58,7 @@
         "options": {
           "cwd": "{projectRoot}",
           "commands": [
-            "cd dist && 7z a -tzip ../deploy/function.zip handler.js -y",
+            "cd dist && 7z a -tzip ../deploy/function.zip main.js -y",
             "aws lambda update-function-code --function-name GameWebSocketHandler --zip-file fileb://deploy/function.zip",
             "aws lambda wait function-updated --function-name GameWebSocketHandler",
             "aws lambda wait function-active --function-name GameWebSocketHandler"
