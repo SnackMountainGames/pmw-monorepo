@@ -4,6 +4,8 @@
 export enum ServerEventType {
   HEARTBEAT = "heartbeat",
   ROOM_CREATED = "roomCreated",
+  JOINED_ROOM = "joinedRoom",
+  CLIENT_MESSAGE = "clientMessage"
 }
 
 /**
@@ -21,6 +23,26 @@ export type ServerEventRoomCreated = {
   roomCode: string;
 }
 
-export type ServerEvent = ServerEventHeartbeat | ServerEventRoomCreated;
+/**
+ * Joined room
+ */
+export type ServerEventJoinedRoom = {
+  type: ServerEventType.JOINED_ROOM;
+  roomCode: string;
+};
+
+/**
+ * Client message
+ */
+export type ServerEventClientMessageText = {
+  type: ServerEventType.CLIENT_MESSAGE;
+  text: string;
+}
+
+export type ServerEvent =
+  | ServerEventHeartbeat
+  | ServerEventRoomCreated
+  | ServerEventJoinedRoom
+  | ServerEventClientMessageText;
 
 export type ServerEventListener = (message: ServerEvent) => void;

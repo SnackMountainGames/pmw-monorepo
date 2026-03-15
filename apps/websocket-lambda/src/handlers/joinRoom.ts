@@ -1,32 +1,36 @@
 import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagementapi';
-import { ServerEventType } from 'shared-type-library';
-import { generateRoomCode, oneHourFromNow, sendEvent } from '../utilities';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { doesRoomCodeExist } from './helpers/getRoomCode';
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { RoomNotFoundError } from '../types/errors';
 import { DB_TABLE_NAME } from '../main';
+import { sendEvent } from '../utilities';
+import { ClientEventJoinRoom, ServerEventType } from 'shared-type-library';
 
-export const handleEventCreateRoom = async (
+export const handleEventJoinRoom = async (
   apiClient: ApiGatewayManagementApiClient,
   ddb: DynamoDBDocumentClient,
-  connectionId: string
+  connectionId: string,
+  eventBody: ClientEventJoinRoom
 ): Promise<APIGatewayProxyResult> => {
-  const roomCode = generateRoomCode();
+  const { roomCode, name } = eventBody;
 
-  // Create room entry in the database
+  if (!(await doesRoomCodeExist(ddb, roomCode))) {
+    throw new RoomNotFoundError();
+  }
+
   await ddb.send(
     new PutCommand({
       TableName: DB_TABLE_NAME,
       Item: {
         PK: `ROOM#${roomCode}`,
-        SK: 'METADATA',
-        hostConnectionId: connectionId,
-        createdAt: Date.now(),
-        expiresAt: oneHourFromNow,
+        SK: `PLAYER#${connectionId}`,
+        name,
+        joinedAt: Date.now(),
       },
     })
   );
 
-  // Create connection entry in the database
   await ddb.send(
     new PutCommand({
       TableName: DB_TABLE_NAME,
@@ -34,14 +38,12 @@ export const handleEventCreateRoom = async (
         PK: `CONNECTION#${connectionId}`,
         SK: 'METADATA',
         roomCode,
-        expiresAt: oneHourFromNow,
       },
     })
   );
 
-  // Send the room created event
   await sendEvent(apiClient, connectionId, {
-    type: ServerEventType.ROOM_CREATED,
+    type: ServerEventType.JOINED_ROOM,
     roomCode,
   });
 

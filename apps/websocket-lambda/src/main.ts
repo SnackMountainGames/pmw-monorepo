@@ -3,9 +3,7 @@ import {
   APIGatewayProxyResult,
 } from 'aws-lambda';
 
-import {
-  ApiGatewayManagementApiClient,
-} from '@aws-sdk/client-apigatewaymanagementapi';
+import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagementapi';
 import {
   ClientEvent,
   ClientEventAction,
@@ -15,6 +13,12 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { handleEventHeartbeat } from './handlers/heartbeat';
 import { handleEventCreateRoom } from './handlers/createRoom';
+import { handleEventSendMessage } from './handlers/sendMessage';
+import {
+  HostConnectionIdNotFoundError,
+  RoomNotFoundError,
+} from './types/errors';
+import { handleEventJoinRoom } from './handlers/joinRoom';
 
 const ddbClient = new DynamoDBClient({});
 const ddb = DynamoDBDocumentClient.from(ddbClient);
@@ -59,7 +63,7 @@ export const handler = async (
 
       case ClientEventAction.SEND_MESSAGE:
         if (body.type === ClientEventSendMessageType.TEXT) {
-          console.log(body.to, body.text);
+          return handleEventSendMessage(apiClient, ddb, connectionId, body);
         }
         if (body.type === ClientEventSendMessageType.TAP) {
           console.log(body.x, body.y);
@@ -68,11 +72,20 @@ export const handler = async (
 
       case ClientEventAction.CREATE_ROOM:
         return handleEventCreateRoom(apiClient, ddb, connectionId);
-    }
 
-    return { statusCode: 200, body: '' };
-  } catch (err) {
-    console.error('Handler error:', err);
+      case ClientEventAction.JOIN_ROOM:
+        return handleEventJoinRoom(apiClient, ddb, connectionId, body);
+
+      default:
+        return { statusCode: 200, body: '' };
+    }
+  } catch (error) {
+    if (
+      error instanceof RoomNotFoundError ||
+      error instanceof HostConnectionIdNotFoundError
+    ) {
+      return { statusCode: 404, body: 'Not found' };
+    }
     return { statusCode: 500, body: 'Internal error' };
   }
 };

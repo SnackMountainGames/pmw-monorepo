@@ -8,6 +8,8 @@ export type {
   ClientEventHeartbeat,
   ClientEventSendMessageText,
   ClientEventSendMessageTap,
+  ClientEventCreateRoom,
+  ClientEventJoinRoom,
 } from './network/ClientTypes.js';
 
 export {

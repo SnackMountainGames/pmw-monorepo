@@ -7,6 +7,7 @@ export enum ClientEventAction {
   HEARTBEAT = 'heartbeat',
   SEND_MESSAGE = 'sendMessage',
   CREATE_ROOM = 'createRoom',
+  JOIN_ROOM = 'joinRoom',
 }
 
 /**
@@ -47,8 +48,19 @@ export type ClientEventCreateRoom = {
   action: ClientEventAction.CREATE_ROOM;
 };
 
+/**
+ * Join room
+ */
+export type ClientEventJoinRoom = {
+  action: ClientEventAction.JOIN_ROOM;
+  roomCode: string;
+  name: string;
+  // playerId: string;
+}
+
 export type ClientEvent =
   | ClientEventHeartbeat
   | ClientEventSendMessageText
   | ClientEventSendMessageTap
-  | ClientEventCreateRoom;
+  | ClientEventCreateRoom
+  | ClientEventJoinRoom;

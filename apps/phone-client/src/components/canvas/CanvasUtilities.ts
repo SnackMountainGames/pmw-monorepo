@@ -105,6 +105,12 @@ export const handlePointerUp = (
       send({
         action: ClientEventAction.SEND_MESSAGE,
         to: 'host',
+        type: ClientEventSendMessageType.TEXT,
+        text: "It's a click!",
+      });
+      send({
+        action: ClientEventAction.SEND_MESSAGE,
+        to: 'host',
         type: ClientEventSendMessageType.TAP,
         x: canvasState.pointerDownStart.x,
         y: canvasState.pointerDownStart.y,

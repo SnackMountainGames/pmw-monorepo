@@ -7,15 +7,9 @@ export const handleEventHeartbeat = async (
   apiClient: ApiGatewayManagementApiClient,
   connectionId: string
 ): Promise<APIGatewayProxyResult> => {
-  try {
-    // Send the heartbeat event
-    await sendEvent(apiClient, connectionId, {
-      type: ServerEventType.HEARTBEAT,
-    });
-    return { statusCode: 200, body: '' };
-  }
-  catch (err) {
-    console.error('Error in heartbeat handler:', err);
-    return { statusCode: 500, body: 'Internal error' };
-  }
+  // Send the heartbeat event
+  await sendEvent(apiClient, connectionId, {
+    type: ServerEventType.HEARTBEAT,
+  });
+  return { statusCode: 200, body: '' };
 };

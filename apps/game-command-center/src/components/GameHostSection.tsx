@@ -29,7 +29,7 @@ export const GameHostSection = () => {
 
   useEffect(() => {
     return subscribe((message: ServerEvent) => {
-      console.log(message);
+      console.log("Host", message);
       if (message.type === ServerEventType.ROOM_CREATED) {
         setRoomCode(message.roomCode);
         setIsRoomCreated(true);
@@ -39,10 +39,10 @@ export const GameHostSection = () => {
       //   setPlayers(message.players || []);
       // }
       //
-      // if (message.type === ServerEventType.PHONE_MESSAGE) {
-      //   console.log('Message from phone:', message.text);
-      //   console.log('From:', message.from);
-      // }
+      if (message.type === ServerEventType.CLIENT_MESSAGE) {
+        console.log('Message from phone:', message.text);
+        // console.log('From:', message.from);
+      }
     });
   }, [setRoomCode, subscribe]);
 
