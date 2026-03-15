@@ -39,6 +39,9 @@
   "references": [
     {
       "path": "../../packages/shared-component-library/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/shared-type-library/tsconfig.lib.json"
     }
   ]
 }

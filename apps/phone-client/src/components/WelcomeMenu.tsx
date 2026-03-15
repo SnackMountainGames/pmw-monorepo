@@ -1,24 +1,27 @@
-import {
-  ConnectionStatus,
-  ServerMessage,
-  ServerMessageAction,
-  useSharedWebSocket,
-} from 'shared-component-library';
+import { ConnectionStatus, useSharedWebSocket } from 'shared-component-library';
 import { useEffect } from 'react';
 import { usePhoneClientStore } from '../state/PhoneClientStoreProvider';
+import {
+  ClientEventAction,
+  ServerEvent,
+  ServerEventType,
+} from 'shared-type-library';
 
 export const WelcomeMenu = () => {
   const roomCode = usePhoneClientStore((state) => state.roomCode);
   const setRoomCode = usePhoneClientStore((state) => state.setRoomCode);
   const name = usePhoneClientStore((state) => state.name);
   const setName = usePhoneClientStore((state) => state.setName);
-  const setIsConnectedToGameRoom = usePhoneClientStore((state) => state.setIsConnectedToGameRoom);
+  const setIsConnectedToGameRoom = usePhoneClientStore(
+    (state) => state.setIsConnectedToGameRoom
+  );
 
   const { connected, subscribe, send } = useSharedWebSocket();
 
   useEffect(() => {
-    return subscribe((message: ServerMessage) => {
-      if (message.type === ServerMessageAction.JOINED_ROOM) {
+    return subscribe((message: ServerEvent) => {
+      console.log('Client', message);
+      if (message.type === ServerEventType.JOINED_ROOM) {
         setIsConnectedToGameRoom(true);
       }
     });
@@ -32,11 +35,11 @@ export const WelcomeMenu = () => {
     }
 
     send({
-      action: 'joinRoom',
+      action: ClientEventAction.JOIN_ROOM,
       roomCode,
       name,
     });
-  }
+  };
 
   return (
     <div

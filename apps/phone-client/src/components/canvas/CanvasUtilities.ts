@@ -1,6 +1,11 @@
 import { type PointerEvent } from 'react';
 import { CanvasState, PointerObject } from '../../state/GameState';
 import { BOTTOM_HUD_HEIGHT, TOP_HUD_HEIGHT } from '../hud/Hud';
+import {
+  ClientEvent,
+  ClientEventAction,
+  ClientEventSendMessageType,
+} from 'shared-type-library';
 
 type SimulatedPointerEvent = {
   simulated?: boolean;
@@ -59,7 +64,7 @@ export const handlePointerUp = (
   e: SimulatedPointerEvent,
   canvas: HTMLCanvasElement,
   canvasState: CanvasState,
-  send: (data: unknown) => void,
+  send: (data: ClientEvent) => void
 ) => {
   const MIN_DISTANCE = 50;
   const MAX_TIME = 500;
@@ -81,7 +86,9 @@ export const handlePointerUp = (
       (Math.abs(dy) > MIN_DISTANCE && Math.abs(dy) > Math.abs(dx))
     ) {
       send({
-        action: 'sendToHost',
+        action: ClientEventAction.SEND_MESSAGE,
+        to: 'host',
+        type: ClientEventSendMessageType.TEXT,
         text: 'Swiped',
       });
       canvasState.objects.push({
@@ -96,8 +103,17 @@ export const handlePointerUp = (
 
     if (dt < 200) {
       send({
-        action: "sendToHost",
-        text: "Clicked",
+        action: ClientEventAction.SEND_MESSAGE,
+        to: 'host',
+        type: ClientEventSendMessageType.TEXT,
+        text: "It's a click!",
+      });
+      send({
+        action: ClientEventAction.SEND_MESSAGE,
+        to: 'host',
+        type: ClientEventSendMessageType.TAP,
+        x: canvasState.pointerDownStart.x,
+        y: canvasState.pointerDownStart.y,
       });
       canvasState.objects.push({
         x: canvasState.pointerDownStart.x,

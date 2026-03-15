@@ -6,12 +6,17 @@ import {
     useState,
     useCallback, type ReactNode,
 } from "react";
-import { ServerMessage, ServerMessageListener } from '../types/ServerMessages';
+import {
+  ClientEvent,
+  ClientEventAction,
+  ServerEvent,
+  ServerEventListener,
+} from 'shared-type-library';
 
 type WebSocketContextType = {
   connected: boolean;
-  send: (data: unknown) => void;
-  subscribe: (listener: ServerMessageListener) => () => void;
+  send: (data: ClientEvent) => void;
+  subscribe: (listener: ServerEventListener) => () => void;
 };
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
@@ -21,7 +26,7 @@ const WEBSOCKET_URL = "wss://6dwbd9e1d8.execute-api.us-west-2.amazonaws.com/dev/
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const socketRef = useRef<WebSocket | null>(null);
-    const listenersRef = useRef<ServerMessageListener[]>([]);
+    const listenersRef = useRef<ServerEventListener[]>([]);
     const heartbeatRef = useRef<number | null>(null);
 
     const [connected, setConnected] = useState(false);
@@ -29,12 +34,12 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     /**
      * Send function (stable reference)
      */
-    const send = useCallback((data: unknown) => {
-        if (socketRef.current?.readyState === WebSocket.OPEN) {
-            socketRef.current.send(JSON.stringify(data));
-        } else {
-            console.warn("WebSocket not open. Cannot send message.");
-        }
+    const send = useCallback((data: ClientEvent) => {
+      if (socketRef.current?.readyState === WebSocket.OPEN) {
+        socketRef.current.send(JSON.stringify(data));
+      } else {
+        console.warn('WebSocket not open. Cannot send message.');
+      }
     }, []);
 
     const stopHeartbeat = useCallback(() => {
@@ -47,8 +52,8 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const startHeartbeat = useCallback(() => {
         stopHeartbeat();
         heartbeatRef.current = window.setInterval(() => {
-            send({ action: "heartbeat" });
-        }, 20000);
+            send({ action: ClientEventAction.HEARTBEAT });
+        }, 60000);
     }, [send, stopHeartbeat]);
 
 
@@ -79,7 +84,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
         socket.onmessage = (event) => {
             try {
-                const message: ServerMessage = JSON.parse(event.data);
+                const message: ServerEvent = JSON.parse(event.data);
 
                 // Broadcast to all subscribers
                 listenersRef.current.forEach((listener) => {
@@ -100,7 +105,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
      * Subscribe to incoming messages
      * Returns unsubscribe function
      */
-    const subscribe = useCallback((listener: ServerMessageListener) => {
+    const subscribe = useCallback((listener: ServerEventListener) => {
       listenersRef.current.push(listener);
 
       return () => {

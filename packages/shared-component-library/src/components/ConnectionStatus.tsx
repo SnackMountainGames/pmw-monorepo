@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSharedWebSocket } from '../providers/WebSocketProvider';
-import { ServerMessage, ServerMessageAction } from '../types/ServerMessages';
+import { ServerEvent, ServerEventType } from 'shared-type-library';
 
 export const ConnectionStatus = () => {
   const { connected, subscribe } = useSharedWebSocket();
@@ -8,8 +8,8 @@ export const ConnectionStatus = () => {
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const unsubscribe = subscribe((message: ServerMessage) => {
-      if (message.type === ServerMessageAction.HEARTBEAT) {
+    return subscribe((message: ServerEvent) => {
+      if (message.type === ServerEventType.HEARTBEAT) {
         setShowHeartbeat(true);
 
         if (timerRef.current) {
@@ -21,8 +21,6 @@ export const ConnectionStatus = () => {
         }, 5000);
       }
     });
-
-    return unsubscribe;
   }, [subscribe]);
 
   return (

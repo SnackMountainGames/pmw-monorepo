@@ -14,12 +14,13 @@ import {
 } from './CanvasUtilities';
 import { GameCanvasControls } from '../../types/types';
 import { useSharedWebSocket } from 'shared-component-library';
+import { ServerEvent } from 'shared-type-library';
 
 export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasStateRef = useRef<CanvasState>(defaultCanvasState());
 
-  const { send } = useSharedWebSocket();
+  const { subscribe, send } = useSharedWebSocket();
 
   // This is for the simulated clicks
   useImperativeHandle(ref, () => ({
@@ -71,10 +72,16 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         } as any,
         canvas,
         canvasStateRef.current,
-        send,
+        send
       );
     },
   }));
+
+  useEffect(() => {
+    return subscribe((message: ServerEvent) => {
+      console.log('Client', message);
+    });
+  }, [subscribe]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

@@ -1,0 +1,91 @@
+{
+  "name": "websocket-lambda",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.1007.0",
+    "@aws-sdk/client-dynamodb": "^3.1007.0",
+    "@aws-sdk/lib-dynamodb": "^3.1007.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.161",
+    "shared-type-library": "workspace:^"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "{projectRoot}/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": true,
+          "main": "{projectRoot}/src/main.ts",
+          "tsConfig": "{projectRoot}/tsconfig.app.json",
+          "assets": [
+            "{projectRoot}/src/assets"
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
+      "deploy": {
+        "executor": "nx:run-commands",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "cwd": "{projectRoot}",
+          "commands": [
+            "cd dist && 7z a -tzip ../deploy/function.zip main.js -y",
+            "aws lambda update-function-code --function-name GameWebSocketHandler --zip-file fileb://deploy/function.zip",
+            "aws lambda wait function-updated --function-name GameWebSocketHandler",
+            "aws lambda wait function-active --function-name GameWebSocketHandler"
+          ],
+          "parallel": false
+        }
+      },
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "websocket-lambda:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "websocket-lambda:build:development"
+          },
+          "production": {
+            "buildTarget": "websocket-lambda:build:production"
+          }
+        }
+      }
+    }
+  }
+}

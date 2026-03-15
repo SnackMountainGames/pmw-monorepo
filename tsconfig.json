@@ -14,6 +14,12 @@
     },
     {
       "path": "./apps/game-command-center"
+    },
+    {
+      "path": "./apps/websocket-lambda"
+    },
+    {
+      "path": "./packages/shared-type-library"
     }
   ]
 }

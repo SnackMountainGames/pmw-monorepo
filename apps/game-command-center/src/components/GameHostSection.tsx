@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 import { useGameSimulationStore } from '../state/GameSimulationState';
-import {
-  Player,
-  ServerMessage,
-  ServerMessageAction,
-  useSharedWebSocket,
-} from 'shared-component-library';
+import { useSharedWebSocket } from 'shared-component-library';
 import { useEffect, useState } from 'react';
+import {
+  ClientEventAction,
+  Rider,
+  ServerEvent,
+  ServerEventType,
+} from 'shared-type-library';
 
 const Container = styled.div`
   display: flex;
@@ -24,30 +25,30 @@ export const GameHostSection = () => {
   const { connected, subscribe, send } = useSharedWebSocket();
 
   const [isRoomCreated, setIsRoomCreated] = useState(false);
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [riders, setRiders] = useState<Rider[]>([]);
 
   useEffect(() => {
-    return subscribe((message: ServerMessage) => {
-      console.log(message);
-      if (message.type === ServerMessageAction.ROOM_CREATED && message.roomCode) {
+    return subscribe((message: ServerEvent) => {
+      console.log("Host", message);
+      if (message.type === ServerEventType.ROOM_CREATED) {
         setRoomCode(message.roomCode);
         setIsRoomCreated(true);
       }
 
-      if (message.type === ServerMessageAction.PLAYER_LIST_UPDATED) {
-        setPlayers(message.players || []);
+      if (message.type === ServerEventType.PLAYER_LIST_UPDATED) {
+        setRiders(message.players || []);
       }
 
-      if (message.type === ServerMessageAction.PHONE_MESSAGE) {
-        console.log('Message from phone:', message.text);
-        console.log('From:', message.from);
+      if (message.type === ServerEventType.CLIENT_MESSAGE) {
+        const rider = riders.find((rider) => rider.playerId === message.from);
+        console.log(`${rider?.name} says "${message.text}"`);
       }
     });
-  }, [subscribe]);
+  }, [setRoomCode, subscribe]);
 
   const createRoom = () => {
     send({
-      action: 'createRoom',
+      action: ClientEventAction.CREATE_ROOM,
     });
   };
 
@@ -62,11 +63,11 @@ export const GameHostSection = () => {
         <>
           <h2>Room Code: {roomCode}</h2>
 
-          <h3>Active Players: {players.length}</h3>
+          <h3>Connected Riders: {riders.length}</h3>
 
           <ul>
-            {players.map((player, index) => (
-              <li key={index}>{player.name}</li>
+            {riders.map((rider) => (
+              <li key={rider.playerId}>{rider.name}</li>
             ))}
           </ul>
         </>
