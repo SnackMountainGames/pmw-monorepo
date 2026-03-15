@@ -33,8 +33,6 @@ export const defaultCanvasState = (): CanvasState => ({
 });
 
 export type PhoneClientState = {
-  count: number;
-  increment: () => void;
   roomCode: string;
   setRoomCode: (roomCode: string) => void;
   name: string;
@@ -46,8 +44,6 @@ export type PhoneClientState = {
 
 export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalProps) =>
   createStore<PhoneClientState>((set) => ({
-    count: 0,
-    increment: () => set((s) => ({ count: s.count + 1 })),
     roomCode: optionalProps.roomCode || '',
     setRoomCode: (roomCode: string) =>
       set(() => ({

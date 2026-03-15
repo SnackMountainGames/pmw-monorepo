@@ -4,6 +4,7 @@ import { useSharedWebSocket } from 'shared-component-library';
 import { useEffect, useState } from 'react';
 import {
   ClientEventAction,
+  Rider,
   ServerEvent,
   ServerEventType,
 } from 'shared-type-library';
@@ -24,8 +25,7 @@ export const GameHostSection = () => {
   const { connected, subscribe, send } = useSharedWebSocket();
 
   const [isRoomCreated, setIsRoomCreated] = useState(false);
-  // const [players, setPlayers] = useState<Player[]>([]);
-  const [players, setPlayers] = useState<{ name: string }[]>([]);
+  const [riders, setRiders] = useState<Rider[]>([]);
 
   useEffect(() => {
     return subscribe((message: ServerEvent) => {
@@ -34,14 +34,14 @@ export const GameHostSection = () => {
         setRoomCode(message.roomCode);
         setIsRoomCreated(true);
       }
-      //
-      // if (message.type === ServerEventType.PLAYER_LIST_UPDATED) {
-      //   setPlayers(message.players || []);
-      // }
-      //
+
+      if (message.type === ServerEventType.PLAYER_LIST_UPDATED) {
+        setRiders(message.players || []);
+      }
+
       if (message.type === ServerEventType.CLIENT_MESSAGE) {
-        console.log('Message from phone:', message.text);
-        // console.log('From:', message.from);
+        const rider = riders.find((rider) => rider.playerId === message.from);
+        console.log(`${rider?.name} says "${message.text}"`);
       }
     });
   }, [setRoomCode, subscribe]);
@@ -63,11 +63,11 @@ export const GameHostSection = () => {
         <>
           <h2>Room Code: {roomCode}</h2>
 
-          <h3>Active Players: {players.length}</h3>
+          <h3>Connected Riders: {riders.length}</h3>
 
           <ul>
-            {players.map((player, index) => (
-              <li key={index}>{player.name}</li>
+            {riders.map((rider) => (
+              <li key={rider.playerId}>{rider.name}</li>
             ))}
           </ul>
         </>

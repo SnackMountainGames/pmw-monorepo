@@ -1,7 +1,7 @@
 import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import { DB_TABLE_NAME } from '../../main';
 import { ConnectionMetadata } from '../../types/databaseTypes';
-import { RoomNotFoundError } from '../../types/errors';
+import { RoomNotFoundError } from '../../errors';
 
 export const doesRoomCodeExist = async (
   ddb: DynamoDBDocumentClient,

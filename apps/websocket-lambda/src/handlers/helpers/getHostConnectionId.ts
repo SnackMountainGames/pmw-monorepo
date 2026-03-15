@@ -1,7 +1,7 @@
 import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import { DB_TABLE_NAME } from '../../main';
 import { RoomMetadata } from '../../types/databaseTypes';
-import { HostConnectionIdNotFoundError } from '../../types/errors';
+import { HostConnectionIdNotFoundError } from '../../errors';
 import { getRoomCode } from './getRoomCode';
 
 export const getHostConnectionId = async (

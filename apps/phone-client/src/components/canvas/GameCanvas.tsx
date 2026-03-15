@@ -14,7 +14,7 @@ import {
 } from './CanvasUtilities';
 import { GameCanvasControls } from '../../types/types';
 import { useSharedWebSocket } from 'shared-component-library';
-import { ServerEvent, ServerEventType } from 'shared-type-library';
+import { ServerEvent } from 'shared-type-library';
 
 export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -72,7 +72,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         } as any,
         canvas,
         canvasStateRef.current,
-        send,
+        send
       );
     },
   }));

@@ -21,3 +21,7 @@ export type {
   ServerEventHeartbeat,
   ServerEventListener
 } from './network/ServerTypes.js'
+
+export type {
+  Rider
+} from "./network/GameTypes.js"

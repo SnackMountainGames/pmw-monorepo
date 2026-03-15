@@ -1,3 +1,5 @@
+import { Rider } from './GameTypes.js';
+
 /**
  * Server messages (server -> client/host)
  */
@@ -5,7 +7,8 @@ export enum ServerEventType {
   HEARTBEAT = "heartbeat",
   ROOM_CREATED = "roomCreated",
   JOINED_ROOM = "joinedRoom",
-  CLIENT_MESSAGE = "clientMessage"
+  CLIENT_MESSAGE = "clientMessage",
+  PLAYER_LIST_UPDATED = "playerListUpdated",
 }
 
 /**
@@ -36,13 +39,23 @@ export type ServerEventJoinedRoom = {
  */
 export type ServerEventClientMessageText = {
   type: ServerEventType.CLIENT_MESSAGE;
+  from: string;
   text: string;
 }
+
+/**
+ * Player list updated
+ */
+export type ServerEventPlayerListUpdated = {
+  type: ServerEventType.PLAYER_LIST_UPDATED;
+  players: Rider[];
+};
 
 export type ServerEvent =
   | ServerEventHeartbeat
   | ServerEventRoomCreated
   | ServerEventJoinedRoom
-  | ServerEventClientMessageText;
+  | ServerEventClientMessageText
+  | ServerEventPlayerListUpdated;
 
 export type ServerEventListener = (message: ServerEvent) => void;

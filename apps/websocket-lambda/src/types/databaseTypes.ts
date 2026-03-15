@@ -12,3 +12,11 @@ export type RoomMetadata = {
   createdAt: number;
   expiresAt: number;
 }
+
+export type RoomPlayer = {
+  PK: string;
+  SK: string;
+  name: string;
+  createdAt: number;
+  expiresAt: number;
+};

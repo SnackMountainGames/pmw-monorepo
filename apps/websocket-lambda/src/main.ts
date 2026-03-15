@@ -17,7 +17,7 @@ import { handleEventSendMessage } from './handlers/sendMessage';
 import {
   HostConnectionIdNotFoundError,
   RoomNotFoundError,
-} from './types/errors';
+} from './errors';
 import { handleEventJoinRoom } from './handlers/joinRoom';
 
 const ddbClient = new DynamoDBClient({});

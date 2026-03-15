@@ -53,7 +53,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         stopHeartbeat();
         heartbeatRef.current = window.setInterval(() => {
             send({ action: ClientEventAction.HEARTBEAT });
-        }, 20000);
+        }, 60000);
     }, [send, stopHeartbeat]);
 
 

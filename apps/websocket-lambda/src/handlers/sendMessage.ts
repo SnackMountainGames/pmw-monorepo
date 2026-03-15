@@ -25,6 +25,7 @@ export const handleEventSendMessage = async (
   // Send the room created event
   await sendEvent(apiClient, to, {
     type: ServerEventType.CLIENT_MESSAGE,
+    from: connectionId,
     text: eventBody.text,
   });
 
