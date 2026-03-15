@@ -1,12 +1,20 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
-import { APIGatewayEventWebsocketRequestContextV2 } from 'aws-lambda';
+import {
+  APIGatewayEventWebsocketRequestContextV2,
+  APIGatewayProxyResult,
+} from 'aws-lambda';
 
 import {
   ApiGatewayManagementApiClient,
   PostToConnectionCommand,
 } from '@aws-sdk/client-apigatewaymanagementapi';
-import { getTs } from './utilities';
-import { OutboundMessage } from 'shared-component-library';
+import { generateRoomCode } from './utilities';
+import {
+  ClientEvent,
+  ClientEventAction,
+  ClientEventSendMessageType,
+  ServerEvent,
+  ServerEventType,
+} from 'shared-type-library';
 
 interface WebSocketEvent {
   body?: string;
@@ -27,7 +35,7 @@ export const handler = async (
     endpoint,
   });
 
-  async function sendMessage(targetConnectionId: string, data: unknown) {
+  async function sendMessage(targetConnectionId: string, data: ServerEvent) {
     try {
       await apiClient.send(
         new PostToConnectionCommand({
@@ -41,30 +49,37 @@ export const handler = async (
   }
 
   try {
-    if (routeKey === '$connect') {
+    if (routeKey === ClientEventAction.$CONNECT) {
       console.log('Connected:', connectionId);
       return { statusCode: 200, body: '' };
     }
 
-    if (routeKey === '$disconnect') {
+    if (routeKey === ClientEventAction.$DISCONNECT) {
       console.log('Disconnected:', connectionId);
       return { statusCode: 200, body: '' };
     }
 
-    const body: OutboundMessage = JSON.parse(event.body || '{}');
+    const body: ClientEvent = JSON.parse(event.body || '{}');
 
     switch (body.action) {
-      case 'heartbeat':
+      case ClientEventAction.HEARTBEAT:
         await sendMessage(connectionId, {
-          type: `heartbeat ${getTs()}`,
-          timestamp: Date.now(),
+          type: ServerEventType.HEARTBEAT,
         });
         return { statusCode: 200, body: '' };
-      case 'sendMessage':
-        if (body.type === 'text') {
+      case ClientEventAction.SEND_MESSAGE:
+        if (body.type === ClientEventSendMessageType.TEXT) {
           console.log(body.to, body.text);
         }
+        if (body.type === ClientEventSendMessageType.TAP) {
+          console.log(body.x, body.y);
+        }
         return { statusCode: 200, body: '' };
+      case ClientEventAction.CREATE_ROOM:
+        await sendMessage(connectionId, {
+          type: ServerEventType.ROOM_CREATED,
+          roomCode: generateRoomCode(),
+        });
     }
 
     return { statusCode: 200, body: '' };
@@ -73,3 +88,4 @@ export const handler = async (
     return { statusCode: 500, body: 'Internal error' };
   }
 };
+

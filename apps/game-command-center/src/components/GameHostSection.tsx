@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import { useGameSimulationStore } from '../state/GameSimulationState';
-import {
-  Player,
-  ServerMessage,
-  ServerMessageAction,
-  useSharedWebSocket,
-} from 'shared-component-library';
+import { useSharedWebSocket } from 'shared-component-library';
 import { useEffect, useState } from 'react';
+import {
+  ClientEventAction,
+  ServerEvent,
+  ServerEventType,
+} from 'shared-type-library';
 
 const Container = styled.div`
   display: flex;
@@ -24,30 +24,31 @@ export const GameHostSection = () => {
   const { connected, subscribe, send } = useSharedWebSocket();
 
   const [isRoomCreated, setIsRoomCreated] = useState(false);
-  const [players, setPlayers] = useState<Player[]>([]);
+  // const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<{ name: string }[]>([]);
 
   useEffect(() => {
-    return subscribe((message: ServerMessage) => {
+    return subscribe((message: ServerEvent) => {
       console.log(message);
-      if (message.type === ServerMessageAction.ROOM_CREATED && message.roomCode) {
+      if (message.type === ServerEventType.ROOM_CREATED) {
         setRoomCode(message.roomCode);
         setIsRoomCreated(true);
       }
-
-      if (message.type === ServerMessageAction.PLAYER_LIST_UPDATED) {
-        setPlayers(message.players || []);
-      }
-
-      if (message.type === ServerMessageAction.PHONE_MESSAGE) {
-        console.log('Message from phone:', message.text);
-        console.log('From:', message.from);
-      }
+      //
+      // if (message.type === ServerEventType.PLAYER_LIST_UPDATED) {
+      //   setPlayers(message.players || []);
+      // }
+      //
+      // if (message.type === ServerEventType.PHONE_MESSAGE) {
+      //   console.log('Message from phone:', message.text);
+      //   console.log('From:', message.from);
+      // }
     });
-  }, [subscribe]);
+  }, [setRoomCode, subscribe]);
 
   const createRoom = () => {
     send({
-      action: 'createRoom',
+      action: ClientEventAction.CREATE_ROOM,
     });
   };
 

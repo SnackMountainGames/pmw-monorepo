@@ -38,10 +38,13 @@
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
-      "path": "../phone-client/tsconfig.app.json"
+      "path": "../../packages/shared-type-library/tsconfig.lib.json"
     },
     {
       "path": "../../packages/shared-component-library/tsconfig.lib.json"
+    },
+    {
+      "path": "../phone-client/tsconfig.app.json"
     }
   ]
 }

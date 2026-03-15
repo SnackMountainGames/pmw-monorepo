@@ -17,6 +17,9 @@
     },
     {
       "path": "./apps/websocket-lambda"
+    },
+    {
+      "path": "./packages/shared-type-library"
     }
   ]
 }
