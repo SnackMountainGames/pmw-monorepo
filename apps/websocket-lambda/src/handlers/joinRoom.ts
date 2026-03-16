@@ -13,6 +13,16 @@ import { getHostConnectionId } from './helpers/getHostConnectionId';
 import { RoomPlayer } from '../types/databaseTypes';
 import { getRoomPlayers } from './helpers/getRoomPlayers';
 
+/**
+ * General steps
+ *
+ * 1. Validate room code exists
+ * 2. Add a room player entity in the db
+ * 3. Create connection metadata entity in db (or possibly update connection metadata entity with room code)
+ * 4. Send joined room event back to sender
+ * 5. Get list of player in the room
+ * 6. Send player list updated event to room host
+ */
 export const handleEventJoinRoom = async (
   apiClient: ApiGatewayManagementApiClient,
   ddb: DynamoDBDocumentClient,

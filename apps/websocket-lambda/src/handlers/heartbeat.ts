@@ -3,6 +3,11 @@ import { ServerEventType } from 'shared-type-library';
 import { sendEvent } from '../utilities';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
+/**
+ * General steps
+ *
+ * 1. Simply send a heartbeat event back to sender
+ */
 export const handleEventHeartbeat = async (
   apiClient: ApiGatewayManagementApiClient,
   connectionId: string

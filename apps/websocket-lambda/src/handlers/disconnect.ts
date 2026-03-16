@@ -1,7 +1,4 @@
-import {
-  DeleteCommand,
-  DynamoDBDocumentClient, GetCommand,
-} from '@aws-sdk/lib-dynamodb';
+import { DeleteCommand, DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { DB_TABLE_NAME } from '../main';
 import { getRoomPlayers } from './helpers/getRoomPlayers';
@@ -11,6 +8,14 @@ import { ServerEventType } from 'shared-type-library';
 import { ConnectionMetadata, RoomPlayer } from '../types/databaseTypes';
 import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagementapi';
 
+/**
+ * General steps
+ *
+ * 1. Get connection metadata
+ * 2. Delete room player entity in db
+ * 3. Send player list updated event to room host
+ * 4. Delete connection metadata entity in db
+ */
 export const handleDisconnect = async (
   apiClient: ApiGatewayManagementApiClient,
   ddb: DynamoDBDocumentClient,
