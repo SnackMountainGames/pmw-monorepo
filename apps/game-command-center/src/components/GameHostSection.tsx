@@ -66,9 +66,11 @@ export const GameHostSection = () => {
           <h3>Connected Riders: {riders.length}</h3>
 
           <ul>
-            {riders.map((rider) => (
-              <li key={rider.playerId}>{rider.name}</li>
-            ))}
+            {riders
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((rider) => (
+                <li key={rider.playerId}>{rider.name}</li>
+              ))}
           </ul>
         </>
       )}

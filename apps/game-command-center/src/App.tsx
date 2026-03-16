@@ -6,6 +6,15 @@ import { PhoneClientSection } from './components/PhoneClientSection';
 import { GameHostSection } from './components/GameHostSection';
 import { WebSocketProvider } from 'shared-component-library';
 
+const ButtonBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  
+  button {
+    margin-right: 8px;
+  }
+`;
+
 const FAKE_PHONE_SCALE = 0.6;
 
 const FakePhone = styled.div`
@@ -28,7 +37,11 @@ export const GameCommandCenterApp = () => {
       <FakePhone key={Date.now()}>
         <PhoneClientApp
           roomCode={roomCode}
-          name={`Player ${phoneClients.length + 1}`}
+          name={`Player ${(phoneClients.length + 1).toLocaleString('en-US', {
+            minimumIntegerDigits: 2,
+            useGrouping: false,
+          })}`}
+          playerId={`fake-player-${Math.floor(Math.random() * 10000)}`}
           ref={(el) => {
             if (el) phoneClientControlRefs.current[phoneClients.length] = el;
           }}
@@ -37,10 +50,14 @@ export const GameCommandCenterApp = () => {
     ]);
   };
 
+  const removePhone = () => {
+    setPhoneClients([...phoneClients.splice(0, phoneClients.length -1)]);
+  }
+
   return (
     <>
-      <div>
-        <span>Game Command Center</span>
+      <h1>Game Command Center</h1>
+      <ButtonBar>
         <button onClick={addPhone}>Add phone client</button>
         <button
           onClick={() => {
@@ -52,7 +69,8 @@ export const GameCommandCenterApp = () => {
         >
           Simulate button click
         </button>
-      </div>
+        <button onClick={removePhone}>Remove phone client</button>
+      </ButtonBar>
       <div style={{ display: 'flex' }}>
         <WebSocketProvider>
           <GameHostSection />
