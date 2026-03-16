@@ -44,7 +44,7 @@ export const GameHostSection = () => {
         console.log(`${rider?.name} says "${message.text}"`);
       }
     });
-  }, [setRoomCode, subscribe]);
+  }, [setRoomCode, subscribe, riders]);
 
   const createRoom = () => {
     send({

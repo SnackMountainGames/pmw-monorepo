@@ -2,14 +2,14 @@ import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import { DB_TABLE_NAME } from '../../main';
 import { RoomMetadata } from '../../types/databaseTypes';
 import { HostConnectionIdNotFoundError } from '../../errors';
-import { getRoomCode } from './getRoomCode';
+import { getConnection } from './getConnection';
 
 export const getHostConnectionId = async (
   ddb: DynamoDBDocumentClient,
   connectionId: string
 ): Promise<string> => {
   // Get room code for this connection
-  const roomCode = await getRoomCode(ddb, connectionId);
+  const roomCode = (await getConnection(ddb, connectionId)).roomCode;
 
   // Get host connectionId for the room
   const roomMetadata = await ddb.send(

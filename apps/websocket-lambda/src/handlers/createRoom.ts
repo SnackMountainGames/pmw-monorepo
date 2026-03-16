@@ -20,7 +20,6 @@ export const handleEventCreateRoom = async (
         PK: `ROOM#${roomCode}`,
         SK: 'METADATA',
         hostConnectionId: connectionId,
-        createdAt: Date.now(),
         expiresAt: oneHourFromNow,
       },
     })

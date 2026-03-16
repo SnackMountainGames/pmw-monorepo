@@ -55,7 +55,7 @@ export type ClientEventJoinRoom = {
   action: ClientEventAction.JOIN_ROOM;
   roomCode: string;
   name: string;
-  // playerId: string;
+  playerId: string;
 }
 
 export type ClientEvent =

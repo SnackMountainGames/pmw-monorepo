@@ -37,6 +37,8 @@ export type PhoneClientState = {
   setRoomCode: (roomCode: string) => void;
   name: string;
   setName: (name: string) => void;
+  playerId: string;
+  setPlayerId: (playerId: string) => void;
   isConnectedToGameRoom: boolean;
   setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) => void;
   ref?: Ref<GameCanvasControls>;
@@ -51,6 +53,8 @@ export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalPro
       })),
     name: optionalProps.name || '',
     setName: (name: string) => set(() => ({ name })),
+    playerId: optionalProps.playerId || '',
+    setPlayerId: (playerId: string) => set(() => ({ playerId })),
     isConnectedToGameRoom: false,
     setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) =>
       set(() => ({ isConnectedToGameRoom })),

@@ -7,6 +7,7 @@ import { sendEvent } from '../utilities';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { getHostConnectionId } from './helpers/getHostConnectionId';
+import { getConnection } from './helpers/getConnection';
 
 export const handleEventSendMessage = async (
   apiClient: ApiGatewayManagementApiClient,
@@ -19,13 +20,18 @@ export const handleEventSendMessage = async (
   if (eventBody.to === 'host') {
     to = await getHostConnectionId(ddb, connectionId);
   } else {
+    // Eventually...
+    // Go from connectionId to roomCode
+    // pk roomcode, sk player and the eventBody.to to get that connection id
     to = eventBody.to;
   }
+
+  const from = (await getConnection(ddb, connectionId)).playerId;
 
   // Send the room created event
   await sendEvent(apiClient, to, {
     type: ServerEventType.CLIENT_MESSAGE,
-    from: connectionId,
+    from,
     text: eventBody.text,
   });
 

@@ -7,7 +7,21 @@ export class RoomNotFoundError extends Error {
 
 export class HostConnectionIdNotFoundError extends Error {
   constructor() {
-    super(`The host connection Id was not found`);
+    super(`The host connection id was not found`);
     this.name = 'HostConnectionIdNotFoundError';
+  }
+}
+
+export class PlayerNotFoundError extends Error {
+  constructor() {
+    super(`Player id was not found for this user`);
+    this.name = 'PlayerNotFoundError';
+  }
+}
+
+export class ConnectionNotFoundError extends Error {
+  constructor() {
+    super(`Connection information was not found for this connection`);
+    this.name = 'ConnectionNotFoundError';
   }
 }

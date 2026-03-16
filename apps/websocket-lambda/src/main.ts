@@ -19,6 +19,7 @@ import {
   RoomNotFoundError,
 } from './errors';
 import { handleEventJoinRoom } from './handlers/joinRoom';
+import { handleDisconnect } from './handlers/disconnect';
 
 const ddbClient = new DynamoDBClient({});
 const ddb = DynamoDBDocumentClient.from(ddbClient);
@@ -52,7 +53,7 @@ export const handler = async (
 
     if (routeKey === ClientEventAction.$DISCONNECT) {
       console.log('Disconnected:', connectionId);
-      return { statusCode: 200, body: '' };
+      return handleDisconnect(apiClient, ddb, connectionId);
     }
 
     const body: ClientEvent = JSON.parse(event.body || '{}');

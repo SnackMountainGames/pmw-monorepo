@@ -1,10 +1,9 @@
 import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagementapi';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { doesRoomCodeExist } from './helpers/getRoomCode';
+import { doesRoomExist } from './helpers/doesRoomExist';
 import {
   DynamoDBDocumentClient,
   PutCommand,
-  QueryCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { RoomNotFoundError } from '../errors';
 import { DB_TABLE_NAME } from '../main';
@@ -12,6 +11,7 @@ import { oneHourFromNow, sendEvent } from '../utilities';
 import { ClientEventJoinRoom, ServerEventType } from 'shared-type-library';
 import { getHostConnectionId } from './helpers/getHostConnectionId';
 import { RoomPlayer } from '../types/databaseTypes';
+import { getRoomPlayers } from './helpers/getRoomPlayers';
 
 export const handleEventJoinRoom = async (
   apiClient: ApiGatewayManagementApiClient,
@@ -19,9 +19,9 @@ export const handleEventJoinRoom = async (
   connectionId: string,
   eventBody: ClientEventJoinRoom
 ): Promise<APIGatewayProxyResult> => {
-  const { roomCode, name } = eventBody;
+  const { roomCode, name, playerId } = eventBody;
 
-  if (!(await doesRoomCodeExist(ddb, roomCode))) {
+  if (!(await doesRoomExist(ddb, roomCode))) {
     throw new RoomNotFoundError();
   }
 
@@ -30,9 +30,9 @@ export const handleEventJoinRoom = async (
       TableName: DB_TABLE_NAME,
       Item: {
         PK: `ROOM#${roomCode}`,
-        SK: `PLAYER#${connectionId}`,
+        SK: `PLAYER#${playerId}`,
         name,
-        joinedAt: Date.now(),
+        connectionId,
         expiresAt: oneHourFromNow,
       },
     })
@@ -45,6 +45,7 @@ export const handleEventJoinRoom = async (
         PK: `CONNECTION#${connectionId}`,
         SK: 'METADATA',
         roomCode,
+        playerId,
         expiresAt: oneHourFromNow,
       },
     })
@@ -55,22 +56,13 @@ export const handleEventJoinRoom = async (
     roomCode,
   });
 
-  const roomData = await ddb.send(
-    new QueryCommand({
-      TableName: DB_TABLE_NAME,
-      KeyConditionExpression: 'PK = :pk AND begins_with(SK, :playerPrefix)',
-      ExpressionAttributeValues: {
-        ':pk': `ROOM#${roomCode}`,
-        ':playerPrefix': 'PLAYER#',
-      },
-    })
-  );
+  const roomPlayers = await getRoomPlayers(ddb, roomCode);
 
   await sendEvent(apiClient, await getHostConnectionId(ddb, connectionId), {
     type: ServerEventType.PLAYER_LIST_UPDATED,
-    players: (roomData.Items as RoomPlayer[]).map((player: RoomPlayer) => ({
+    players: roomPlayers.map((player: RoomPlayer) => ({
       name: player.name,
-      playerId: player.SK.split("#")[1],
+      playerId: player.SK.split('#')[1],
     })),
   });
 

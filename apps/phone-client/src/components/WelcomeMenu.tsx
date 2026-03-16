@@ -12,6 +12,7 @@ export const WelcomeMenu = () => {
   const setRoomCode = usePhoneClientStore((state) => state.setRoomCode);
   const name = usePhoneClientStore((state) => state.name);
   const setName = usePhoneClientStore((state) => state.setName);
+  const playerId = usePhoneClientStore((state) => state.playerId);
   const setIsConnectedToGameRoom = usePhoneClientStore(
     (state) => state.setIsConnectedToGameRoom
   );
@@ -38,6 +39,7 @@ export const WelcomeMenu = () => {
       action: ClientEventAction.JOIN_ROOM,
       roomCode,
       name,
+      playerId,
     });
   };
 
