@@ -1,10 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
-html, body, #root {
-    box-sizing: border-box;
+html,
+body,
+#root {
+  box-sizing: border-box;
 }
 
 input,
 textarea,
 select {
-    font-size: 16px; /* This is to prevent iPhones from zooming in when these are selected */
+  font-size: 16px; /* This is to prevent iPhones from zooming in when these are selected */
 }

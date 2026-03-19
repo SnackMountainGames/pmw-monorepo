@@ -1,13 +1,13 @@
-import styled from '@emotion/styled';
-import { useGameSimulationStore } from '../state/GameSimulationState';
-import { useSharedWebSocket } from 'shared-component-library';
-import { useEffect, useState } from 'react';
+import styled from "@emotion/styled";
+import { useGameSimulationStore } from "../state/GameSimulationState";
+import { useSharedWebSocket } from "shared-component-library";
+import { useEffect, useState } from "react";
 import {
   ClientEventAction,
   Rider,
   ServerEvent,
   ServerEventType,
-} from 'shared-type-library';
+} from "shared-type-library";
 
 const Container = styled.div`
   display: flex;

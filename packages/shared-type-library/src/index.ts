@@ -1,7 +1,7 @@
 export {
   ClientEventAction,
   ClientEventSendMessageType,
-} from './network/ClientTypes.js';
+} from "./network/ClientTypes.js";
 
 export type {
   ClientEvent,
@@ -10,18 +10,14 @@ export type {
   ClientEventSendMessageTap,
   ClientEventCreateRoom,
   ClientEventJoinRoom,
-} from './network/ClientTypes.js';
+} from "./network/ClientTypes.js";
 
-export {
-  ServerEventType
-} from './network/ServerTypes.js';
+export { ServerEventType } from "./network/ServerTypes.js";
 
 export type {
   ServerEvent,
   ServerEventHeartbeat,
-  ServerEventListener
-} from './network/ServerTypes.js'
+  ServerEventListener,
+} from "./network/ServerTypes.js";
 
-export type {
-  Rider
-} from "./network/GameTypes.js"
+export type { Rider } from "./network/GameTypes.js";

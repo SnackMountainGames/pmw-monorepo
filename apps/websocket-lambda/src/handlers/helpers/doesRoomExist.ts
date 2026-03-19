@@ -1,5 +1,5 @@
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
-import { DB_TABLE_NAME } from '../../main';
+import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { DB_TABLE_NAME } from "../../main";
 
 export const doesRoomExist = async (
   ddb: DynamoDBDocumentClient,
@@ -10,10 +10,10 @@ export const doesRoomExist = async (
       TableName: DB_TABLE_NAME,
       Key: {
         PK: `ROOM#${roomCode}`,
-        SK: 'METADATA',
+        SK: "METADATA",
       },
-    })
+    }),
   );
 
   return !!roomMetadata.Item;
-}
+};

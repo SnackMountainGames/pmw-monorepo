@@ -1,11 +1,11 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('has title', async ({ page }) => {
-  await page.goto('/');
+test("has title", async ({ page }) => {
+  await page.goto("/");
 
-  const h1s = await page.$$('h1');
+  const h1s = await page.$$("h1");
   expect(h1s).toHaveLength(1);
 
   // Expect h1 to contain a substring.
-  expect(await page.locator('h1').innerText()).toContain('PMW Phone Client');
+  expect(await page.locator("h1").innerText()).toContain("PMW Phone Client");
 });

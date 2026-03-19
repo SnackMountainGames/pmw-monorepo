@@ -48,6 +48,13 @@
       }
     },
     {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint:fix",
+        "fix": true
+      }
+    },
+    {
       "plugin": "@nx/vitest",
       "options": {
         "testTargetName": "test",

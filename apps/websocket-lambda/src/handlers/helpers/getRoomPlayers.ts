@@ -1,6 +1,6 @@
-import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
-import { DB_TABLE_NAME } from '../../main';
-import { RoomPlayer } from '../../types/databaseTypes';
+import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DB_TABLE_NAME } from "../../main";
+import { RoomPlayer } from "../../types/databaseTypes";
 
 export const getRoomPlayers = async (
   ddb: DynamoDBDocumentClient,
@@ -10,12 +10,12 @@ export const getRoomPlayers = async (
   const roomData = await ddb.send(
     new QueryCommand({
       TableName: DB_TABLE_NAME,
-      KeyConditionExpression: 'PK = :pk AND begins_with(SK, :playerPrefix)',
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :playerPrefix)",
       ExpressionAttributeValues: {
-        ':pk': `ROOM#${roomCode}`,
-        ':playerPrefix': 'PLAYER#',
+        ":pk": `ROOM#${roomCode}`,
+        ":playerPrefix": "PLAYER#",
       },
-    })
+    }),
   );
 
   return (roomData.Items as RoomPlayer[]) || [];

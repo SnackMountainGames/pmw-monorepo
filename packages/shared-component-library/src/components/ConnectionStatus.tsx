@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { useSharedWebSocket } from '../providers/WebSocketProvider';
-import { ServerEvent, ServerEventType } from 'shared-type-library';
+import { useEffect, useRef, useState } from "react";
+import { useSharedWebSocket } from "../providers/WebSocketProvider";
+import { ServerEvent, ServerEventType } from "shared-type-library";
 
 export const ConnectionStatus = () => {
   const { connected, subscribe } = useSharedWebSocket();
@@ -25,15 +25,15 @@ export const ConnectionStatus = () => {
 
   return (
     <p>
-      Status:{' '}
-      <strong style={{ color: connected ? 'green' : 'red' }}>
-        {connected ? 'Connected' : 'Disconnected'}
+      Status:{" "}
+      <strong style={{ color: connected ? "green" : "red" }}>
+        {connected ? "Connected" : "Disconnected"}
       </strong>
       <span
         style={{
           marginLeft: 4,
           opacity: showHeartbeat ? 1 : 0.1,
-          transition: 'opacity 1s ease-out',
+          transition: "opacity 1s ease-out",
         }}
       >
         ❤️

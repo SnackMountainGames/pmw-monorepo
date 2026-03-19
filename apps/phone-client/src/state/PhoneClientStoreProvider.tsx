@@ -1,8 +1,8 @@
 // PhoneStoreProvider.tsx
-import { createContext, ReactNode, useContext, useRef } from 'react';
-import { useStore } from 'zustand';
-import { createPhoneClientStore } from './GameState';
-import { PhoneClientAppsOptionalProps } from '../App';
+import { createContext, ReactNode, useContext, useRef } from "react";
+import { useStore } from "zustand";
+import { createPhoneClientStore } from "./GameState";
+import { PhoneClientAppsOptionalProps } from "../App";
 
 const PhoneClientStoreContext = createContext<ReturnType<
   typeof createPhoneClientStore
@@ -12,13 +12,15 @@ export type PhoneClientStoreProviderProps = {
   children: ReactNode;
 } & PhoneClientAppsOptionalProps;
 
-export const PhoneClientStoreProvider = (props: PhoneClientStoreProviderProps) => {
+export const PhoneClientStoreProvider = (
+  props: PhoneClientStoreProviderProps,
+) => {
   const { children, roomCode, name, playerId, ref } = props;
 
-  console.log("create thingy", playerId)
+  console.log("create thingy", playerId);
 
   const storeRef = useRef<ReturnType<typeof createPhoneClientStore>>(
-    createPhoneClientStore({ roomCode, name, playerId, ref })
+    createPhoneClientStore({ roomCode, name, playerId, ref }),
   );
 
   return (
@@ -26,13 +28,15 @@ export const PhoneClientStoreProvider = (props: PhoneClientStoreProviderProps) =
       {children}
     </PhoneClientStoreContext.Provider>
   );
-}
+};
 
 export function usePhoneClientStore<T>(selector: (state: any) => T) {
   const store = useContext(PhoneClientStoreContext);
 
   if (!store) {
-    throw new Error('usePhoneClientStore must be used inside PhoneClientStoreProvider');
+    throw new Error(
+      "usePhoneClientStore must be used inside PhoneClientStoreProvider",
+    );
   }
 
   return useStore(store, selector);

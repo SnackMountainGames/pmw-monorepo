@@ -1,3 +1,3 @@
-export { PhoneClientApp } from './App';
+export { PhoneClientApp } from "./App";
 
-export type { GameCanvasControls } from './types/types';
+export type { GameCanvasControls } from "./types/types";

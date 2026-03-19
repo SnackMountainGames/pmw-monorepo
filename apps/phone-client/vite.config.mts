@@ -1,14 +1,14 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig(({ mode }) => {
-  const isApp = mode === 'app';
+  const isApp = mode === "app";
 
   return {
     root: import.meta.dirname,
-    cacheDir: '../../node_modules/.vite/apps/phone-client',
+    cacheDir: "../../node_modules/.vite/apps/phone-client",
 
     server: {
       port: 4200,
@@ -17,13 +17,13 @@ export default defineConfig(({ mode }) => {
 
     preview: {
       port: 4200,
-      host: 'localhost',
+      host: "localhost",
     },
 
     plugins: [react()],
 
     build: {
-      outDir: './dist',
+      outDir: "./dist",
       emptyOutDir: true,
       reportCompressedSize: true,
 
@@ -33,26 +33,26 @@ export default defineConfig(({ mode }) => {
 
       ...(!isApp && {
         lib: {
-          entry: path.resolve(__dirname, 'src/index.ts'),
-          name: 'PhoneClient',
-          fileName: 'index',
+          entry: path.resolve(__dirname, "src/index.ts"),
+          name: "PhoneClient",
+          fileName: "index",
         },
         rollupOptions: {
-          external: ['react', 'react-dom'],
+          external: ["react", "react-dom"],
         },
       }),
     },
 
     test: {
-      name: 'phone-client',
+      name: "phone-client",
       watch: false,
       globals: true,
-      environment: 'jsdom',
-      include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-      reporters: ['default'],
+      environment: "jsdom",
+      include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+      reporters: ["default"],
       coverage: {
-        reportsDirectory: './test-output/vitest/coverage',
-        provider: 'v8' as const,
+        reportsDirectory: "./test-output/vitest/coverage",
+        provider: "v8" as const,
       },
       setupFiles: `vitest.setup.ts`,
     },

@@ -1,4 +1,4 @@
-import { Rider } from './GameTypes.js';
+import { Rider } from "./GameTypes.js";
 
 /**
  * Server messages (server -> client/host)
@@ -16,7 +16,7 @@ export enum ServerEventType {
  */
 export type ServerEventHeartbeat = {
   type: ServerEventType.HEARTBEAT;
-}
+};
 
 /**
  * Room created
@@ -24,7 +24,7 @@ export type ServerEventHeartbeat = {
 export type ServerEventRoomCreated = {
   type: ServerEventType.ROOM_CREATED;
   roomCode: string;
-}
+};
 
 /**
  * Joined room
@@ -41,7 +41,7 @@ export type ServerEventClientMessageText = {
   type: ServerEventType.CLIENT_MESSAGE;
   from: string;
   text: string;
-}
+};
 
 /**
  * Player list updated

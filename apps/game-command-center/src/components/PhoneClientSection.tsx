@@ -1,5 +1,5 @@
-import { useGameSimulationStore } from '../state/GameSimulationState';
-import styled from '@emotion/styled';
+import { useGameSimulationStore } from "../state/GameSimulationState";
+import styled from "@emotion/styled";
 
 const Container = styled.div`
   display: flex;
@@ -15,9 +15,6 @@ export const PhoneClientSection = () => {
   const { phoneClients } = useGameSimulationStore();
 
   return (
-    <Container>
-      {phoneClients.map((phoneClient) => phoneClient)}
-    </Container
-     >
+    <Container>{phoneClients.map((phoneClient) => phoneClient)}</Container>
   );
-}
+};

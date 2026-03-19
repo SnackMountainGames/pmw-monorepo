@@ -1,17 +1,14 @@
-import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagementapi';
-import { APIGatewayProxyResult } from 'aws-lambda';
-import { doesRoomExist } from './helpers/doesRoomExist';
-import {
-  DynamoDBDocumentClient,
-  PutCommand,
-} from '@aws-sdk/lib-dynamodb';
-import { RoomNotFoundError } from '../errors';
-import { DB_TABLE_NAME } from '../main';
-import { oneHourFromNow, sendEvent } from '../utilities';
-import { ClientEventJoinRoom, ServerEventType } from 'shared-type-library';
-import { getHostConnectionId } from './helpers/getHostConnectionId';
-import { RoomPlayer } from '../types/databaseTypes';
-import { getRoomPlayers } from './helpers/getRoomPlayers';
+import { ApiGatewayManagementApiClient } from "@aws-sdk/client-apigatewaymanagementapi";
+import { APIGatewayProxyResult } from "aws-lambda";
+import { doesRoomExist } from "./helpers/doesRoomExist";
+import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { RoomNotFoundError } from "../errors";
+import { DB_TABLE_NAME } from "../main";
+import { oneHourFromNow, sendEvent } from "../utilities";
+import { ClientEventJoinRoom, ServerEventType } from "shared-type-library";
+import { getHostConnectionId } from "./helpers/getHostConnectionId";
+import { RoomPlayer } from "../types/databaseTypes";
+import { getRoomPlayers } from "./helpers/getRoomPlayers";
 
 /**
  * General steps
@@ -27,7 +24,7 @@ export const handleEventJoinRoom = async (
   apiClient: ApiGatewayManagementApiClient,
   ddb: DynamoDBDocumentClient,
   connectionId: string,
-  eventBody: ClientEventJoinRoom
+  eventBody: ClientEventJoinRoom,
 ): Promise<APIGatewayProxyResult> => {
   const { roomCode, name, playerId } = eventBody;
 
@@ -45,7 +42,7 @@ export const handleEventJoinRoom = async (
         connectionId,
         expiresAt: oneHourFromNow,
       },
-    })
+    }),
   );
 
   await ddb.send(
@@ -53,12 +50,12 @@ export const handleEventJoinRoom = async (
       TableName: DB_TABLE_NAME,
       Item: {
         PK: `CONNECTION#${connectionId}`,
-        SK: 'METADATA',
+        SK: "METADATA",
         roomCode,
         playerId,
         expiresAt: oneHourFromNow,
       },
-    })
+    }),
   );
 
   await sendEvent(apiClient, connectionId, {
@@ -72,9 +69,9 @@ export const handleEventJoinRoom = async (
     type: ServerEventType.PLAYER_LIST_UPDATED,
     players: roomPlayers.map((player: RoomPlayer) => ({
       name: player.name,
-      playerId: player.SK.split('#')[1],
+      playerId: player.SK.split("#")[1],
     })),
   });
 
-  return { statusCode: 200, body: '' };
+  return { statusCode: 200, body: "" };
 };

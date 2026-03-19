@@ -1,25 +1,22 @@
 import {
   APIGatewayEventWebsocketRequestContextV2,
   APIGatewayProxyResult,
-} from 'aws-lambda';
+} from "aws-lambda";
 
-import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagementapi';
+import { ApiGatewayManagementApiClient } from "@aws-sdk/client-apigatewaymanagementapi";
 import {
   ClientEvent,
   ClientEventAction,
   ClientEventSendMessageType,
-} from 'shared-type-library';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import { handleEventHeartbeat } from './handlers/heartbeat';
-import { handleEventCreateRoom } from './handlers/createRoom';
-import { handleEventSendMessage } from './handlers/sendMessage';
-import {
-  HostConnectionIdNotFoundError,
-  RoomNotFoundError,
-} from './errors';
-import { handleEventJoinRoom } from './handlers/joinRoom';
-import { handleDisconnect } from './handlers/disconnect';
+} from "shared-type-library";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { handleEventHeartbeat } from "./handlers/heartbeat";
+import { handleEventCreateRoom } from "./handlers/createRoom";
+import { handleEventSendMessage } from "./handlers/sendMessage";
+import { HostConnectionIdNotFoundError, RoomNotFoundError } from "./errors";
+import { handleEventJoinRoom } from "./handlers/joinRoom";
+import { handleDisconnect } from "./handlers/disconnect";
 
 const ddbClient = new DynamoDBClient({});
 const ddb = DynamoDBDocumentClient.from(ddbClient);
@@ -32,9 +29,9 @@ interface WebSocketEvent {
 }
 
 export const handler = async (
-  event: WebSocketEvent
+  event: WebSocketEvent,
 ): Promise<APIGatewayProxyResult> => {
-  console.log('event', event);
+  console.log("event", event);
 
   const connectionId = event.requestContext.connectionId;
   const routeKey = event.requestContext.routeKey;
@@ -47,16 +44,16 @@ export const handler = async (
 
   try {
     if (routeKey === ClientEventAction.$CONNECT) {
-      console.log('Connected:', connectionId);
-      return { statusCode: 200, body: '' };
+      console.log("Connected:", connectionId);
+      return { statusCode: 200, body: "" };
     }
 
     if (routeKey === ClientEventAction.$DISCONNECT) {
-      console.log('Disconnected:', connectionId);
+      console.log("Disconnected:", connectionId);
       return handleDisconnect(apiClient, ddb, connectionId);
     }
 
-    const body: ClientEvent = JSON.parse(event.body || '{}');
+    const body: ClientEvent = JSON.parse(event.body || "{}");
 
     switch (body.action) {
       case ClientEventAction.HEARTBEAT:
@@ -69,7 +66,7 @@ export const handler = async (
         if (body.type === ClientEventSendMessageType.TAP) {
           console.log(body.x, body.y);
         }
-        return { statusCode: 200, body: '' };
+        return { statusCode: 200, body: "" };
 
       case ClientEventAction.CREATE_ROOM:
         return handleEventCreateRoom(apiClient, ddb, connectionId);
@@ -78,16 +75,15 @@ export const handler = async (
         return handleEventJoinRoom(apiClient, ddb, connectionId, body);
 
       default:
-        return { statusCode: 200, body: '' };
+        return { statusCode: 200, body: "" };
     }
   } catch (error) {
     if (
       error instanceof RoomNotFoundError ||
       error instanceof HostConnectionIdNotFoundError
     ) {
-      return { statusCode: 404, body: 'Not found' };
+      return { statusCode: 404, body: "Not found" };
     }
-    return { statusCode: 500, body: 'Internal error' };
+    return { statusCode: 500, body: "Internal error" };
   }
 };
-

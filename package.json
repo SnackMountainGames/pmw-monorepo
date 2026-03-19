@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build:all": "nx run-many --target=build --all",
+    "format:all": "nx format:write",
     "test:all": "nx run-many --target=test --all"
   },
   "dependencies": {

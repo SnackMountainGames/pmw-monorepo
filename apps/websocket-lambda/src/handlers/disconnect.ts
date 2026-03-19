@@ -1,12 +1,16 @@
-import { DeleteCommand, DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
-import { APIGatewayProxyResult } from 'aws-lambda';
-import { DB_TABLE_NAME } from '../main';
-import { getRoomPlayers } from './helpers/getRoomPlayers';
-import { sendEvent } from '../utilities';
-import { getHostConnectionId } from './helpers/getHostConnectionId';
-import { ServerEventType } from 'shared-type-library';
-import { ConnectionMetadata, RoomPlayer } from '../types/databaseTypes';
-import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagementapi';
+import {
+  DeleteCommand,
+  DynamoDBDocumentClient,
+  GetCommand,
+} from "@aws-sdk/lib-dynamodb";
+import { APIGatewayProxyResult } from "aws-lambda";
+import { DB_TABLE_NAME } from "../main";
+import { getRoomPlayers } from "./helpers/getRoomPlayers";
+import { sendEvent } from "../utilities";
+import { getHostConnectionId } from "./helpers/getHostConnectionId";
+import { ServerEventType } from "shared-type-library";
+import { ConnectionMetadata, RoomPlayer } from "../types/databaseTypes";
+import { ApiGatewayManagementApiClient } from "@aws-sdk/client-apigatewaymanagementapi";
 
 /**
  * General steps
@@ -19,20 +23,20 @@ import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagem
 export const handleDisconnect = async (
   apiClient: ApiGatewayManagementApiClient,
   ddb: DynamoDBDocumentClient,
-  connectionId: string
+  connectionId: string,
 ): Promise<APIGatewayProxyResult> => {
   const connectionMetadata = await ddb.send(
     new GetCommand({
       TableName: DB_TABLE_NAME,
       Key: {
         PK: `CONNECTION#${connectionId}`,
-        SK: 'METADATA',
+        SK: "METADATA",
       },
-    })
+    }),
   );
 
   if (!connectionMetadata.Item) {
-    return { statusCode: 200, body: '' };
+    return { statusCode: 200, body: "" };
   }
 
   const { roomCode, playerId } = connectionMetadata.Item as ConnectionMetadata;
@@ -45,7 +49,7 @@ export const handleDisconnect = async (
           PK: `ROOM#${roomCode}`,
           SK: `PLAYER#${playerId}`,
         },
-      })
+      }),
     );
 
     const roomPlayers = await getRoomPlayers(ddb, roomCode);
@@ -54,7 +58,7 @@ export const handleDisconnect = async (
       type: ServerEventType.PLAYER_LIST_UPDATED,
       players: roomPlayers.map((player: RoomPlayer) => ({
         name: player.name,
-        playerId: player.SK.split('#')[1],
+        playerId: player.SK.split("#")[1],
       })),
     });
   }
@@ -64,10 +68,10 @@ export const handleDisconnect = async (
       TableName: DB_TABLE_NAME,
       Key: {
         PK: `CONNECTION#${connectionId}`,
-        SK: 'METADATA',
+        SK: "METADATA",
       },
-    })
+    }),
   );
 
-  return { statusCode: 200, body: '' };
+  return { statusCode: 200, body: "" };
 };

@@ -1,7 +1,7 @@
-import { createStore } from 'zustand/vanilla';
-import { PhoneClientAppsOptionalProps } from '../App';
-import { GameCanvasControls } from '../types/types';
-import { Ref } from 'react';
+import { createStore } from "zustand/vanilla";
+import { PhoneClientAppsOptionalProps } from "../App";
+import { GameCanvasControls } from "../types/types";
+import { Ref } from "react";
 
 export type CanvasState = {
   pointer?: PointerObject;
@@ -13,19 +13,19 @@ export type CanvasState = {
 export type PointerObject = {
   x: number;
   y: number;
-}
+};
 
 export type PointerDownObject = {
   time: number;
 } & PointerObject;
 
 export type CanvasObject = {
-    x: number;
-    y: number;
-    dx: number;
-    dy: number;
-    time?: number; // optional, number of seconds for this to live on screen
-}
+  x: number;
+  y: number;
+  dx: number;
+  dy: number;
+  time?: number; // optional, number of seconds for this to live on screen
+};
 
 export const defaultCanvasState = (): CanvasState => ({
   isPointerDown: false,
@@ -44,16 +44,18 @@ export type PhoneClientState = {
   ref?: Ref<GameCanvasControls>;
 };
 
-export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalProps) =>
+export const createPhoneClientStore = (
+  optionalProps: PhoneClientAppsOptionalProps,
+) =>
   createStore<PhoneClientState>((set) => ({
-    roomCode: optionalProps.roomCode || '',
+    roomCode: optionalProps.roomCode || "",
     setRoomCode: (roomCode: string) =>
       set(() => ({
         roomCode: roomCode.toUpperCase(),
       })),
-    name: optionalProps.name || '',
+    name: optionalProps.name || "",
     setName: (name: string) => set(() => ({ name })),
-    playerId: optionalProps.playerId || '',
+    playerId: optionalProps.playerId || "",
     setPlayerId: (playerId: string) => set(() => ({ playerId })),
     isConnectedToGameRoom: false,
     setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) =>

@@ -1,6 +1,6 @@
 export {
   WebSocketProvider,
   useSharedWebSocket,
-} from './providers/WebSocketProvider';
+} from "./providers/WebSocketProvider";
 
 export { ConnectionStatus } from "./components/ConnectionStatus";

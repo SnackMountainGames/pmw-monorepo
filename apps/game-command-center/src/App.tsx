@@ -1,15 +1,15 @@
-import styled from '@emotion/styled';
-import { GameCanvasControls, PhoneClientApp } from 'phone-client';
-import { useRef } from 'react';
-import { useGameSimulationStore } from './state/GameSimulationState';
-import { PhoneClientSection } from './components/PhoneClientSection';
-import { GameHostSection } from './components/GameHostSection';
-import { WebSocketProvider } from 'shared-component-library';
+import styled from "@emotion/styled";
+import { GameCanvasControls, PhoneClientApp } from "phone-client";
+import { useRef } from "react";
+import { useGameSimulationStore } from "./state/GameSimulationState";
+import { PhoneClientSection } from "./components/PhoneClientSection";
+import { GameHostSection } from "./components/GameHostSection";
+import { WebSocketProvider } from "shared-component-library";
 
 const ButtonBar = styled.div`
   display: flex;
   flex-direction: row;
-  
+
   button {
     margin-right: 8px;
   }
@@ -37,7 +37,7 @@ export const GameCommandCenterApp = () => {
       <FakePhone key={Date.now()}>
         <PhoneClientApp
           roomCode={roomCode}
-          name={`Player ${(phoneClients.length + 1).toLocaleString('en-US', {
+          name={`Player ${(phoneClients.length + 1).toLocaleString("en-US", {
             minimumIntegerDigits: 2,
             useGrouping: false,
           })}`}
@@ -51,8 +51,8 @@ export const GameCommandCenterApp = () => {
   };
 
   const removePhone = () => {
-    setPhoneClients([...phoneClients.splice(0, phoneClients.length -1)]);
-  }
+    setPhoneClients([...phoneClients.splice(0, phoneClients.length - 1)]);
+  };
 
   return (
     <>
@@ -71,7 +71,7 @@ export const GameCommandCenterApp = () => {
         </button>
         <button onClick={removePhone}>Remove phone client</button>
       </ButtonBar>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: "flex" }}>
         <WebSocketProvider>
           <GameHostSection />
         </WebSocketProvider>
@@ -79,4 +79,4 @@ export const GameCommandCenterApp = () => {
       </div>
     </>
   );
-}
+};

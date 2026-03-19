@@ -2,12 +2,12 @@
  * Client events (client/host -> server)
  */
 export enum ClientEventAction {
-  $CONNECT = '$connect',
-  $DISCONNECT = '$disconnect',
-  HEARTBEAT = 'heartbeat',
-  SEND_MESSAGE = 'sendMessage',
-  CREATE_ROOM = 'createRoom',
-  JOIN_ROOM = 'joinRoom',
+  $CONNECT = "$connect",
+  $DISCONNECT = "$disconnect",
+  HEARTBEAT = "heartbeat",
+  SEND_MESSAGE = "sendMessage",
+  CREATE_ROOM = "createRoom",
+  JOIN_ROOM = "joinRoom",
 }
 
 /**
@@ -21,13 +21,13 @@ export type ClientEventHeartbeat = {
  * Send message
  */
 export enum ClientEventSendMessageType {
-  TEXT = 'text',
-  TAP = 'tap',
+  TEXT = "text",
+  TAP = "tap",
 }
 
 type ClientEventSendMessageBase = {
   action: ClientEventAction.SEND_MESSAGE;
-  to: string | 'host';
+  to: string | "host";
 };
 
 export type ClientEventSendMessageText = ClientEventSendMessageBase & {
@@ -56,7 +56,7 @@ export type ClientEventJoinRoom = {
   roomCode: string;
   name: string;
   playerId: string;
-}
+};
 
 export type ClientEvent =
   | ClientEventHeartbeat

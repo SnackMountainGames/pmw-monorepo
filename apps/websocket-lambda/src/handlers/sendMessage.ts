@@ -1,23 +1,23 @@
-import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagementapi';
+import { ApiGatewayManagementApiClient } from "@aws-sdk/client-apigatewaymanagementapi";
 import {
   ClientEventSendMessageText,
   ServerEventType,
-} from 'shared-type-library';
-import { sendEvent } from '../utilities';
-import { APIGatewayProxyResult } from 'aws-lambda';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import { getHostConnectionId } from './helpers/getHostConnectionId';
-import { getConnection } from './helpers/getConnection';
+} from "shared-type-library";
+import { sendEvent } from "../utilities";
+import { APIGatewayProxyResult } from "aws-lambda";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { getHostConnectionId } from "./helpers/getHostConnectionId";
+import { getConnection } from "./helpers/getConnection";
 
 export const handleEventSendMessage = async (
   apiClient: ApiGatewayManagementApiClient,
   ddb: DynamoDBDocumentClient,
   connectionId: string,
-  eventBody: ClientEventSendMessageText
+  eventBody: ClientEventSendMessageText,
 ): Promise<APIGatewayProxyResult> => {
   let to: string;
 
-  if (eventBody.to === 'host') {
+  if (eventBody.to === "host") {
     to = await getHostConnectionId(ddb, connectionId);
   } else {
     // Eventually...
@@ -35,5 +35,5 @@ export const handleEventSendMessage = async (
     text: eventBody.text,
   });
 
-  return { statusCode: 200, body: '' };
+  return { statusCode: 200, body: "" };
 };

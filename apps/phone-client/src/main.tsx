@@ -1,11 +1,9 @@
-import * as ReactDOM from 'react-dom/client';
-import { PhoneClientApp } from './App';
-import './styles.css';
+import * as ReactDOM from "react-dom/client";
+import { PhoneClientApp } from "./App";
+import "./styles.css";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );
 
-root.render(
-  <PhoneClientApp />
-);
+root.render(<PhoneClientApp />);

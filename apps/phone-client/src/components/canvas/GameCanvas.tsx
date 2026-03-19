@@ -4,17 +4,17 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
-} from 'react';
-import { CanvasState, defaultCanvasState } from '../../state/GameState';
+} from "react";
+import { CanvasState, defaultCanvasState } from "../../state/GameState";
 import {
   handlePointerDown,
   handlePointerMove,
   handlePointerUp,
   handleResizeCanvas,
-} from './CanvasUtilities';
-import { GameCanvasControls } from '../../types/types';
-import { useSharedWebSocket } from 'shared-component-library';
-import { ServerEvent } from 'shared-type-library';
+} from "./CanvasUtilities";
+import { GameCanvasControls } from "../../types/types";
+import { useSharedWebSocket } from "shared-component-library";
+import { ServerEvent } from "shared-type-library";
 
 export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -32,12 +32,12 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         {
           clientX: x,
           clientY: y,
-          pointerType: 'mouse',
+          pointerType: "mouse",
           buttons: 1,
           simulated: true,
         } as any,
         canvas,
-        canvasStateRef.current
+        canvasStateRef.current,
       );
     },
 
@@ -49,12 +49,12 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         {
           clientX: x,
           clientY: y,
-          pointerType: 'mouse',
+          pointerType: "mouse",
           buttons: 1,
           simulated: true,
         } as any,
         canvas,
-        canvasStateRef.current
+        canvasStateRef.current,
       );
     },
 
@@ -66,20 +66,20 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         {
           clientX: x,
           clientY: y,
-          pointerType: 'mouse',
+          pointerType: "mouse",
           buttons: 1,
           simulated: true,
         } as any,
         canvas,
         canvasStateRef.current,
-        send
+        send,
       );
     },
   }));
 
   useEffect(() => {
     return subscribe((message: ServerEvent) => {
-      console.log('Client', message);
+      console.log("Client", message);
     });
   }, [subscribe]);
 
@@ -87,11 +87,11 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
 
     let animationId: number;
     let lastTime = 0;
@@ -120,7 +120,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
 
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener("resize", resizeCanvas);
     };
   }, []);
 
@@ -149,12 +149,12 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
 
     // canvas outline
     ctx.lineWidth = 3;
-    ctx.strokeStyle = 'blue';
+    ctx.strokeStyle = "blue";
     ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
     // pointer
     if (canvasState.pointer) {
-      ctx.strokeStyle = 'green';
+      ctx.strokeStyle = "green";
       ctx.beginPath();
       ctx.ellipse(
         canvasState.pointer.x,
@@ -163,19 +163,19 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         2,
         0,
         0,
-        360
+        360,
       );
       ctx.stroke();
     }
 
     // objects
     canvasState.objects.forEach((object) => {
-      ctx.strokeStyle = 'green';
+      ctx.strokeStyle = "green";
       ctx.beginPath();
       ctx.ellipse(object.x, object.y, 2, 2, 0, 0, 360);
       ctx.stroke();
 
-      ctx.strokeStyle = 'purple';
+      ctx.strokeStyle = "purple";
       ctx.beginPath();
       ctx.ellipse(object.x, object.y, 25, 25, 0, 0, 360);
       ctx.stroke();

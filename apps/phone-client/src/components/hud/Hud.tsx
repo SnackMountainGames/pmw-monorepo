@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
-import { usePhoneClientStore } from '../../state/PhoneClientStoreProvider';
+import styled from "@emotion/styled";
+import { usePhoneClientStore } from "../../state/PhoneClientStoreProvider";
 
 export const TOP_HUD_HEIGHT = 60;
 export const BOTTOM_HUD_HEIGHT = 60;
@@ -30,7 +30,9 @@ export const Hud = () => {
   return (
     <TopHud id="game-hud">
       <div>
-        <HudButton onClick={() => console.log('HUD Button Left')}>Menu</HudButton>
+        <HudButton onClick={() => console.log("HUD Button Left")}>
+          Menu
+        </HudButton>
       </div>
       <div>
         {roomCode ? (
@@ -46,4 +48,4 @@ export const Hud = () => {
       </div>
     </TopHud>
   );
-}
+};

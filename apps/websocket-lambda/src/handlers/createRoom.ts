@@ -1,10 +1,10 @@
-import { ApiGatewayManagementApiClient } from '@aws-sdk/client-apigatewaymanagementapi';
-import { ServerEventType } from 'shared-type-library';
-import { generateRoomCode, oneHourFromNow, sendEvent } from '../utilities';
-import { APIGatewayProxyResult } from 'aws-lambda';
-import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
-import { DB_TABLE_NAME } from '../main';
-import { doesRoomExist } from './helpers/doesRoomExist';
+import { ApiGatewayManagementApiClient } from "@aws-sdk/client-apigatewaymanagementapi";
+import { ServerEventType } from "shared-type-library";
+import { generateRoomCode, oneHourFromNow, sendEvent } from "../utilities";
+import { APIGatewayProxyResult } from "aws-lambda";
+import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { DB_TABLE_NAME } from "../main";
+import { doesRoomExist } from "./helpers/doesRoomExist";
 
 /**
  * General steps
@@ -18,7 +18,7 @@ import { doesRoomExist } from './helpers/doesRoomExist';
 export const handleEventCreateRoom = async (
   apiClient: ApiGatewayManagementApiClient,
   ddb: DynamoDBDocumentClient,
-  connectionId: string
+  connectionId: string,
 ): Promise<APIGatewayProxyResult> => {
   let roomCode;
 
@@ -32,11 +32,11 @@ export const handleEventCreateRoom = async (
       TableName: DB_TABLE_NAME,
       Item: {
         PK: `ROOM#${roomCode}`,
-        SK: 'METADATA',
+        SK: "METADATA",
         hostConnectionId: connectionId,
         expiresAt: oneHourFromNow,
       },
-    })
+    }),
   );
 
   // Create connection entry in the database
@@ -45,11 +45,11 @@ export const handleEventCreateRoom = async (
       TableName: DB_TABLE_NAME,
       Item: {
         PK: `CONNECTION#${connectionId}`,
-        SK: 'METADATA',
+        SK: "METADATA",
         roomCode,
         expiresAt: oneHourFromNow,
       },
-    })
+    }),
   );
 
   // Send the room created event
@@ -58,5 +58,5 @@ export const handleEventCreateRoom = async (
     roomCode,
   });
 
-  return { statusCode: 200, body: '' };
+  return { statusCode: 200, body: "" };
 };
