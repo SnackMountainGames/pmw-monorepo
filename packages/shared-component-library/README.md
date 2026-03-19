@@ -1,7 +1,5 @@
-# shared-netowork-library
+# shared-component-library
 
-This library was generated with [Nx](https://nx.dev).
+## Building
 
-## Running unit tests
-
-Run `nx test shared-ui-library` to execute the unit tests via [Vitest](https://vitest.dev/).
+Run `nx build shared-component-library` to build the library.
