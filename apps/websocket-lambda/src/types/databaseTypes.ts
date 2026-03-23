@@ -17,5 +17,6 @@ export type RoomPlayer = {
   PK: string;
   SK: string;
   name: string;
+  connectionId: string;
   expiresAt: number;
 };

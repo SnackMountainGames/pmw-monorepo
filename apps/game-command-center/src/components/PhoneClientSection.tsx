@@ -9,6 +9,7 @@ const Container = styled.div`
   border: 2px solid grey;
   border-radius: 10px;
   margin: 20px;
+  width: fit-content;
 `;
 
 export const PhoneClientSection = () => {

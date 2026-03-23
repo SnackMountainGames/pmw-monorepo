@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { GameCanvasControls, PhoneClientApp } from "phone-client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useGameSimulationStore } from "./state/GameSimulationState";
 import { PhoneClientSection } from "./components/PhoneClientSection";
 import { GameHostSection } from "./components/GameHostSection";
@@ -28,6 +28,8 @@ const FakePhone = styled.div`
 export const GameCommandCenterApp = () => {
   const { phoneClients, setPhoneClients } = useGameSimulationStore();
   const phoneClientControlRefs = useRef<GameCanvasControls[]>([]);
+
+  const [showGameHostSection, setShowGameHostSection] = useState<boolean>(false);
 
   const { roomCode } = useGameSimulationStore();
 
@@ -58,6 +60,9 @@ export const GameCommandCenterApp = () => {
     <>
       <h1>Game Command Center</h1>
       <ButtonBar>
+        <button onClick={() => setShowGameHostSection(true)}>
+          Enable Game Host
+        </button>
         <button onClick={addPhone}>Add phone client</button>
         <button
           onClick={() => {
@@ -72,10 +77,12 @@ export const GameCommandCenterApp = () => {
         <button onClick={removePhone}>Remove phone client</button>
       </ButtonBar>
       <div style={{ display: "flex" }}>
-        <WebSocketProvider>
-          <GameHostSection />
-        </WebSocketProvider>
-        <PhoneClientSection />
+        {showGameHostSection && (
+          <WebSocketProvider>
+            <GameHostSection />
+          </WebSocketProvider>
+        )}
+        {phoneClients.length > 0 && <PhoneClientSection />}
       </div>
     </>
   );
