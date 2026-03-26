@@ -16,8 +16,13 @@ export { ServerEventType } from "./network/ServerTypes.js";
 
 export type {
   ServerEvent,
+  ServerEventConnected,
+  ServerEventDisconnected,
   ServerEventHeartbeat,
-  ServerEventListener,
+  ServerEventRoomCreated,
+  ServerEventJoinedRoom,
+  ServerEventClientMessageText,
+  ServerEventPlayerListUpdated,
 } from "./network/ServerTypes.js";
 
 export type { Rider } from "./network/GameTypes.js";

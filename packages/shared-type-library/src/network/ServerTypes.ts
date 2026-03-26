@@ -4,12 +4,28 @@ import { Rider } from "./GameTypes.js";
  * Server messages (server -> client/host)
  */
 export enum ServerEventType {
+  CONNECTED = "connected",
+  DISCONNECTED = "disconnected",
   HEARTBEAT = "heartbeat",
   ROOM_CREATED = "roomCreated",
   JOINED_ROOM = "joinedRoom",
   CLIENT_MESSAGE = "clientMessage",
   PLAYER_LIST_UPDATED = "playerListUpdated",
 }
+
+/**
+ * Connected
+ */
+export type ServerEventConnected = {
+  type: ServerEventType.CONNECTED;
+};
+
+/**
+ * Disconnected
+ */
+export type ServerEventDisconnected = {
+  type: ServerEventType.DISCONNECTED;
+};
 
 /**
  * Heartbeat
@@ -52,6 +68,8 @@ export type ServerEventPlayerListUpdated = {
 };
 
 export type ServerEvent =
+  | ServerEventConnected
+  | ServerEventDisconnected
   | ServerEventHeartbeat
   | ServerEventRoomCreated
   | ServerEventJoinedRoom

@@ -17,8 +17,6 @@ export const PhoneClientStoreProvider = (
 ) => {
   const { children, roomCode, name, playerId, ref } = props;
 
-  console.log("create thingy", playerId);
-
   const storeRef = useRef<ReturnType<typeof createPhoneClientStore>>(
     createPhoneClientStore({ roomCode, name, playerId, ref }),
   );
