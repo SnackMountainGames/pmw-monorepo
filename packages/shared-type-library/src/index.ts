@@ -23,6 +23,7 @@ export type {
   ServerEventJoinedRoom,
   ServerEventClientMessageText,
   ServerEventPlayerListUpdated,
+  ServerEventListener,
 } from "./network/ServerTypes.js";
 
 export type { Rider } from "./network/GameTypes.js";

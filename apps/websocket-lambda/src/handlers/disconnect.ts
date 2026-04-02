@@ -1,8 +1,4 @@
-import {
-  DeleteCommand,
-  DynamoDBDocumentClient,
-  GetCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { DeleteCommand, DynamoDBDocumentClient, GetCommand, } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyResult } from "aws-lambda";
 import { DB_TABLE_NAME } from "../main";
 import { getRoomPlayers } from "./helpers/getRoomPlayers";
@@ -25,6 +21,8 @@ export const handleDisconnect = async (
   ddb: DynamoDBDocumentClient,
   connectionId: string,
 ): Promise<APIGatewayProxyResult> => {
+  console.log("Disconnected:", connectionId);
+
   const connectionMetadata = await ddb.send(
     new GetCommand({
       TableName: DB_TABLE_NAME,
@@ -35,32 +33,31 @@ export const handleDisconnect = async (
     }),
   );
 
-  if (!connectionMetadata.Item) {
-    return { statusCode: 200, body: "" };
-  }
+  if (connectionMetadata.Item) {
+    const { roomCode, playerId } =
+      connectionMetadata.Item as ConnectionMetadata;
 
-  const { roomCode, playerId } = connectionMetadata.Item as ConnectionMetadata;
+    if (roomCode && playerId) {
+      await ddb.send(
+        new DeleteCommand({
+          TableName: DB_TABLE_NAME,
+          Key: {
+            PK: `ROOM#${roomCode}`,
+            SK: `PLAYER#${playerId}`,
+          },
+        }),
+      );
 
-  if (roomCode && playerId) {
-    await ddb.send(
-      new DeleteCommand({
-        TableName: DB_TABLE_NAME,
-        Key: {
-          PK: `ROOM#${roomCode}`,
-          SK: `PLAYER#${playerId}`,
-        },
-      }),
-    );
+      const roomPlayers = await getRoomPlayers(ddb, roomCode);
 
-    const roomPlayers = await getRoomPlayers(ddb, roomCode);
-
-    await sendEvent(apiClient, await getHostConnectionId(ddb, connectionId), {
-      type: ServerEventType.PLAYER_LIST_UPDATED,
-      players: roomPlayers.map((player: RoomPlayer) => ({
-        name: player.name,
-        playerId: player.SK.split("#")[1],
-      })),
-    });
+      await sendEvent(apiClient, await getHostConnectionId(ddb, connectionId), {
+        type: ServerEventType.PLAYER_LIST_UPDATED,
+        players: roomPlayers.map((player: RoomPlayer) => ({
+          name: player.name,
+          playerId: player.SK.split("#")[1],
+        })),
+      });
+    }
   }
 
   await ddb.send(

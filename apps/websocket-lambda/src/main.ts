@@ -17,6 +17,7 @@ import { handleEventSendMessage } from "./handlers/sendMessage";
 import { HostConnectionIdNotFoundError, RoomNotFoundError } from "./errors";
 import { handleEventJoinRoom } from "./handlers/joinRoom";
 import { handleDisconnect } from "./handlers/disconnect";
+import { handleConnect } from "./handlers/connect";
 
 const ddbClient = new DynamoDBClient({});
 const ddb = DynamoDBDocumentClient.from(ddbClient);
@@ -43,14 +44,12 @@ export const handler = async (
   });
 
   try {
-    if (routeKey === ClientEventAction.$CONNECT) {
-      console.log("Connected:", connectionId);
-      return { statusCode: 200, body: "" };
-    }
+    switch (routeKey) {
+      case ClientEventAction.$CONNECT:
+        return handleConnect(connectionId);
 
-    if (routeKey === ClientEventAction.$DISCONNECT) {
-      console.log("Disconnected:", connectionId);
-      return handleDisconnect(apiClient, ddb, connectionId);
+      case ClientEventAction.$DISCONNECT:
+        return handleDisconnect(apiClient, ddb, connectionId);
     }
 
     const body: ClientEvent = JSON.parse(event.body || "{}");
