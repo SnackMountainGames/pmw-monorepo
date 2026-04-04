@@ -6,6 +6,7 @@ import {
   ServerEvent,
   ServerEventType,
 } from "shared-type-library";
+import { GameMode } from "../state/GameState";
 
 export const WelcomeMenu = () => {
   const roomCode = usePhoneClientStore((state) => state.roomCode);
@@ -16,8 +17,9 @@ export const WelcomeMenu = () => {
   const setIsConnectedToGameRoom = usePhoneClientStore(
     (state) => state.setIsConnectedToGameRoom,
   );
+  const setGameMode = usePhoneClientStore((state) => state.setGameMode);
 
-  const { connected, subscribe, send } = useSharedWebSocket();
+  const { connected, subscribe, send, disconnect } = useSharedWebSocket();
 
   useEffect(() => {
     return subscribe((message: ServerEvent) => {
@@ -30,8 +32,11 @@ export const WelcomeMenu = () => {
 
   const joinRoom = () => {
     // for now, pretend to join a room if there is no room code
+    setGameMode(GameMode.BLANK);
+
     if (!roomCode) {
       setIsConnectedToGameRoom(true);
+      disconnect();
       return;
     }
 

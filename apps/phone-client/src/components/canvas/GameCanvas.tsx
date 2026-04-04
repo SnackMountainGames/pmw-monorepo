@@ -1,24 +1,25 @@
 import {
   forwardRef,
   type PointerEvent,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
 } from "react";
-import { CanvasState, defaultCanvasState } from "../../state/GameState";
-import {
-  handlePointerDown,
-  handlePointerMove,
-  handlePointerUp,
-  handleResizeCanvas,
-} from "./CanvasUtilities";
+import { GameMode, CanvasState, defaultCanvasState, } from "../../state/GameState";
+import { handlePointerDown, handlePointerMove, handlePointerUp, handleResizeCanvas, } from "./CanvasUtilities";
 import { GameCanvasControls } from "../../types/types";
 import { useSharedWebSocket } from "shared-component-library";
 import { ServerEvent } from "shared-type-library";
+import { usePhoneClientStore } from "../../state/PhoneClientStoreProvider";
+import { DebugGameMode } from "../../gameModes/DebugGameMode";
+import { SingleButtonMode } from "../../gameModes/SingleButtonGameMode";
 
 export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasStateRef = useRef<CanvasState>(defaultCanvasState());
+
+  const gameMode = usePhoneClientStore((state) => state.gameMode);
 
   const { subscribe, send } = useSharedWebSocket();
 
@@ -108,7 +109,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         lastTime = time;
 
         update(Math.min(dt, 0.1));
-        render(canvas, ctx);
+        render(canvas, canvasStateRef.current, ctx);
         animationId = requestAnimationFrame(loop);
       };
 
@@ -122,7 +123,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, []);
+  }, [gameMode]);
 
   const update = (dt: number) => {
     const canvasState = canvasStateRef.current;
@@ -141,46 +142,20 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     }
   };
 
-  const render = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
-    const canvasState = canvasStateRef.current;
-
+  const render = useCallback((canvas: HTMLCanvasElement, canvasState: CanvasState, ctx: CanvasRenderingContext2D) => {
     // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // canvas outline
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "blue";
-    ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-    // pointer
-    if (canvasState.pointer) {
-      ctx.strokeStyle = "green";
-      ctx.beginPath();
-      ctx.ellipse(
-        canvasState.pointer.x,
-        canvasState.pointer.y,
-        2,
-        2,
-        0,
-        0,
-        360,
-      );
-      ctx.stroke();
+    switch (gameMode) {
+      case GameMode.BLANK:
+        return;
+      case GameMode.SINGLE_BUTTON:
+        SingleButtonMode.render(canvas, canvasState, ctx);
+        return;
+      case GameMode.DEBUG:
+        DebugGameMode.render(canvas, canvasState, ctx);
     }
-
-    // objects
-    canvasState.objects.forEach((object) => {
-      ctx.strokeStyle = "green";
-      ctx.beginPath();
-      ctx.ellipse(object.x, object.y, 2, 2, 0, 0, 360);
-      ctx.stroke();
-
-      ctx.strokeStyle = "purple";
-      ctx.beginPath();
-      ctx.ellipse(object.x, object.y, 25, 25, 0, 0, 360);
-      ctx.stroke();
-    });
-  };
+  }, [gameMode]);
 
   const resizeCanvas = () => {
     const canvas = canvasRef.current;

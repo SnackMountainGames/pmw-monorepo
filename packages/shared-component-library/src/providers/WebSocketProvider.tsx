@@ -18,6 +18,7 @@ type WebSocketContextType = {
   connected: boolean;
   send: (data: ClientEvent) => void;
   subscribe: (listener: ServerEventListener) => () => void;
+  disconnect: () => void;
 };
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
@@ -40,7 +41,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     if (socketRef.current?.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify(data));
     } else {
-      console.warn("WebSocket not open. Cannot send message.");
+      console.warn("WebSocket not open. Cannot send message.", {data});
     }
   }, []);
 
@@ -67,7 +68,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
     socket.onopen = () => {
       setConnected(true);
-      startHeartbeat();
+      // startHeartbeat();
       console.log("WebSocket connected");
     };
 
@@ -114,8 +115,14 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const disconnect = useCallback(() => {
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.close();
+    }
+  }, []);
+
   return (
-    <WebSocketContext.Provider value={{ connected, send, subscribe }}>
+    <WebSocketContext.Provider value={{ connected, send, subscribe, disconnect }}>
       {children}
     </WebSocketContext.Provider>
   );
