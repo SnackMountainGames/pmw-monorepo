@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import { usePhoneClientStore } from "../state/PhoneClientStoreProvider";
 import {
   ClientEventAction,
+  GameMode,
   ServerEvent,
   ServerEventType,
 } from "shared-type-library";
-import { GameMode } from "../state/GameState";
 
 export const WelcomeMenu = () => {
   const roomCode = usePhoneClientStore((state) => state.roomCode);

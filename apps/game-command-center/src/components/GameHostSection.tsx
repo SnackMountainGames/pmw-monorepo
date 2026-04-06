@@ -4,6 +4,8 @@ import { useSharedWebSocket } from "shared-component-library";
 import { useEffect, useState } from "react";
 import {
   ClientEventAction,
+  ClientEventSendMessageType,
+  GameMode,
   Rider,
   ServerEvent,
   ServerEventType,
@@ -52,6 +54,15 @@ export const GameHostSection = () => {
     });
   };
 
+  const changeGameMode = (mode: GameMode) => {
+    send({
+      action: ClientEventAction.SEND_MESSAGE,
+      to: "all",
+      type: ClientEventSendMessageType.CHANGE_GAME_MODE,
+      mode,
+    });
+  }
+
   return (
     <Container>
       {!isRoomCreated && (
@@ -72,6 +83,11 @@ export const GameHostSection = () => {
                 <li key={rider.playerId}>{rider.name}</li>
               ))}
           </ul>
+
+          <h3>Change game mode</h3>
+          <button onClick={() => changeGameMode(GameMode.BLANK)}>Blank</button>
+          <br/>&nbsp;
+          <button onClick={() => changeGameMode(GameMode.SINGLE_BUTTON)}>Single Button</button>
         </>
       )}
     </Container>

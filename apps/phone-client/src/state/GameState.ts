@@ -2,12 +2,7 @@ import { createStore } from "zustand/vanilla";
 import { PhoneClientAppsOptionalProps } from "../App";
 import { GameCanvasControls } from "../types/types";
 import { Ref } from "react";
-
-export enum GameMode {
-  DEBUG,
-  BLANK,
-  SINGLE_BUTTON,
-}
+import { GameMode } from "shared-type-library";
 
 export type CanvasState = {
   pointer?: PointerObject;

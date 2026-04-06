@@ -6,11 +6,11 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
-import { GameMode, CanvasState, defaultCanvasState, } from "../../state/GameState";
+import { CanvasState, defaultCanvasState, } from "../../state/GameState";
 import { handlePointerDown, handlePointerMove, handlePointerUp, handleResizeCanvas, } from "./CanvasUtilities";
 import { GameCanvasControls } from "../../types/types";
 import { useSharedWebSocket } from "shared-component-library";
-import { ServerEvent } from "shared-type-library";
+import { GameMode, ServerEvent, ServerEventType } from "shared-type-library";
 import { usePhoneClientStore } from "../../state/PhoneClientStoreProvider";
 import { DebugGameMode } from "../../gameModes/DebugGameMode";
 import { SingleButtonMode } from "../../gameModes/SingleButtonGameMode";
@@ -20,6 +20,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasStateRef = useRef<CanvasState>(defaultCanvasState());
 
   const gameMode = usePhoneClientStore((state) => state.gameMode);
+  const setGameMode = usePhoneClientStore((state) => state.setGameMode);
 
   const { subscribe, send } = useSharedWebSocket();
 
@@ -81,6 +82,12 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   useEffect(() => {
     return subscribe((message: ServerEvent) => {
       console.log("Client", message);
+
+      switch (message.type) {
+        case ServerEventType.CHANGE_GAME_MODE:
+          setGameMode(message.mode);
+          break;
+      }
     });
   }, [subscribe]);
 

@@ -27,6 +27,8 @@ const WebSocketContext = createContext<WebSocketContextType | null>(null);
 const WEBSOCKET_URL =
   "wss://6dwbd9e1d8.execute-api.us-west-2.amazonaws.com/dev/";
 
+const HEARTBEAT_ENABLED = false;
+
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   const socketRef = useRef<WebSocket | null>(null);
   const listenersRef = useRef<ServerEventListener[]>([]);
@@ -54,9 +56,11 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
   const startHeartbeat = useCallback(() => {
     stopHeartbeat();
-    heartbeatRef.current = window.setInterval(() => {
-      send({ action: ClientEventAction.HEARTBEAT });
-    }, 60000);
+    if (HEARTBEAT_ENABLED) {
+      heartbeatRef.current = window.setInterval(() => {
+        send({ action: ClientEventAction.HEARTBEAT });
+      }, 60000);
+    }
   }, [send, stopHeartbeat]);
 
   /**
@@ -68,7 +72,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
     socket.onopen = () => {
       setConnected(true);
-      // startHeartbeat();
+      startHeartbeat();
       console.log("WebSocket connected");
     };
 

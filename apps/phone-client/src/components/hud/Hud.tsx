@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { usePhoneClientStore } from "../../state/PhoneClientStoreProvider";
-import { GameMode } from "../../state/GameState";
+import { GameMode } from "shared-type-library";
 
 export const TOP_HUD_HEIGHT = 60;
 export const BOTTOM_HUD_HEIGHT = 60;

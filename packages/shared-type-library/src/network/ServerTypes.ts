@@ -1,4 +1,4 @@
-import { Rider } from "./GameTypes.js";
+import { GameMode, Rider } from "./GameTypes.js";
 
 /**
  * Server messages (server -> client/host)
@@ -11,6 +11,7 @@ export enum ServerEventType {
   JOINED_ROOM = "joinedRoom",
   CLIENT_MESSAGE = "clientMessage",
   PLAYER_LIST_UPDATED = "playerListUpdated",
+  CHANGE_GAME_MODE = "changeGameMode",
 }
 
 /**
@@ -67,6 +68,11 @@ export type ServerEventPlayerListUpdated = {
   players: Rider[];
 };
 
+export type ServerEventChangeGameMode = {
+  type: ServerEventType.CHANGE_GAME_MODE;
+  mode: GameMode;
+}
+
 export type ServerEvent =
   | ServerEventConnected
   | ServerEventDisconnected
@@ -74,6 +80,7 @@ export type ServerEvent =
   | ServerEventRoomCreated
   | ServerEventJoinedRoom
   | ServerEventClientMessageText
-  | ServerEventPlayerListUpdated;
+  | ServerEventPlayerListUpdated
+  | ServerEventChangeGameMode;
 
 export type ServerEventListener = (message: ServerEvent) => void;
