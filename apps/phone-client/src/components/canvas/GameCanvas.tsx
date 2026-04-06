@@ -100,6 +100,16 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     const init = async () => {
       // load any images and other things here
 
+      switch (gameMode) {
+        case GameMode.BLANK:
+          break;
+        case GameMode.SINGLE_BUTTON:
+          SingleButtonMode.initGameMode(canvasStateRef.current);
+          break;
+        case GameMode.DEBUG:
+          break;
+      }
+
       startLoop();
     };
 
@@ -154,6 +164,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         return;
       case GameMode.DEBUG:
         DebugGameMode.render(canvas, canvasState, ctx);
+        return;
     }
   }, [gameMode]);
 
@@ -168,21 +179,54 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    handlePointerDown(event, canvas, canvasStateRef.current);
+    const canvasState = canvasStateRef.current;
+
+    switch (gameMode) {
+      case GameMode.BLANK:
+        return;
+      case GameMode.SINGLE_BUTTON:
+        SingleButtonMode.handlePointerDown(event, canvas, canvasState);
+        return;
+      case GameMode.DEBUG:
+        handlePointerDown(event, canvas, canvasState);
+        return;
+    }
   };
 
   const onPointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    handlePointerMove(event, canvas, canvasStateRef.current);
+    const canvasState = canvasStateRef.current;
+
+    switch (gameMode) {
+      case GameMode.BLANK:
+        return;
+      case GameMode.SINGLE_BUTTON:
+        SingleButtonMode.handlePointerMove(event, canvas, canvasState);
+        return;
+      case GameMode.DEBUG:
+        handlePointerMove(event, canvas, canvasState);
+        return;
+    }
   };
 
   const onPointerUp = (event: PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    handlePointerUp(event, canvas, canvasStateRef.current, send);
+    const canvasState = canvasStateRef.current;
+
+    switch (gameMode) {
+      case GameMode.BLANK:
+        return;
+      case GameMode.SINGLE_BUTTON:
+        SingleButtonMode.handlePointerUp(event, canvas, canvasState, send);
+        return;
+      case GameMode.DEBUG:
+        handlePointerUp(event, canvas, canvasState, send);
+        return;
+    }
   };
 
   return (
