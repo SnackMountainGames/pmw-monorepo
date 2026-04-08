@@ -8,29 +8,49 @@ import {
   ClientEventAction,
   ClientEventSendMessageType,
 } from "shared-type-library";
+import { singleButtonGameModeStore } from "../state/SingleButtonGameModeState";
 
-const BUTTON_RADIUS = 100;
+const BUTTON_ACTIVATION_TIME = 2.0;
 
 export class SingleButtonMode {
-  public static initGameMode(canvasState: CanvasState) {}
+  public static initGameMode(canvasState: CanvasState) {
+    // Nothing to do now
+  }
+
+  public static update = (dt: number) => {
+    const { isButtonActivated, activationPercent, setActivationPercent } =
+      singleButtonGameModeStore.getState();
+
+    if (isButtonActivated) {
+      setActivationPercent(
+        Math.min(activationPercent + dt / BUTTON_ACTIVATION_TIME, 1),
+      );
+    } else {
+      setActivationPercent(
+        Math.max(activationPercent - dt / BUTTON_ACTIVATION_TIME, 0),
+      );
+    }
+  }
 
   public static render = (
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
     ctx: CanvasRenderingContext2D,
   ) => {
+    const BUTTON_RADIUS = getButtonRadius(canvas);
+
+    const { activationPercent } = singleButtonGameModeStore.getState();
+
     ctx.lineWidth = 3;
 
-    if (canvasState.isPointerDown && canvasState.pointerDownStart) {
-      const dt = Date.now() - canvasState.pointerDownStart.time;
-
-      ctx.fillStyle = dt / 1000 > 2 ? "green" : "grey";
+    if (activationPercent > 0) {
+      ctx.fillStyle = activationPercent >= 1 ? "green" : "grey";
       ctx.beginPath();
       ctx.ellipse(
         canvas.width / 2,
         canvas.height / 2,
-        Math.min((dt / 1000 / 2) * BUTTON_RADIUS, BUTTON_RADIUS),
-        Math.min((dt / 1000 / 2) * BUTTON_RADIUS, BUTTON_RADIUS),
+        Math.min(activationPercent * BUTTON_RADIUS, BUTTON_RADIUS),
+        Math.min(activationPercent * BUTTON_RADIUS, BUTTON_RADIUS),
         0,
         0,
         360,
@@ -59,6 +79,10 @@ export class SingleButtonMode {
   ) => {
     if (e.pointerType === "mouse" && !(e.buttons & 1)) return;
 
+    const BUTTON_RADIUS = getButtonRadius(canvas);
+
+    const { setIsButtonActivated } = singleButtonGameModeStore.getState();
+
     canvasState.pointer = getCanvasCoords(e, canvas);
 
     if (
@@ -70,11 +94,13 @@ export class SingleButtonMode {
       return;
     }
 
-    canvasState.isPointerDown = true;
-    canvasState.pointerDownStart = {
-      time: Date.now(),
-      ...canvasState.pointer,
-    };
+    setIsButtonActivated(true);
+
+    // canvasState.isPointerDown = true;
+    // canvasState.pointerDownStart = {
+    //   time: Date.now(),
+    //   ...canvasState.pointer,
+    // };
   };
 
   public static handlePointerMove = (
@@ -84,6 +110,10 @@ export class SingleButtonMode {
   ) => {
     if (e.pointerType === "mouse" && !(e.buttons & 1)) return;
 
+    const BUTTON_RADIUS = getButtonRadius(canvas);
+
+    const { setIsButtonActivated } = singleButtonGameModeStore.getState();
+
     canvasState.pointer = getCanvasCoords(e, canvas);
 
     if (
@@ -92,9 +122,12 @@ export class SingleButtonMode {
         canvasState.pointer.y - canvas.height / 2,
       ) > BUTTON_RADIUS
     ) {
-      canvasState.pointer = undefined;
-      canvasState.isPointerDown = false;
-      canvasState.pointerDownStart = undefined;
+
+      setIsButtonActivated(false);
+
+      // canvasState.pointer = undefined;
+      // canvasState.isPointerDown = false;
+      // canvasState.pointerDownStart = undefined;
       return;
     }
   };
@@ -105,20 +138,29 @@ export class SingleButtonMode {
     canvasState: CanvasState,
     send: (data: ClientEvent) => void,
   ) => {
-    if (canvasState.pointerDownStart) {
-      const dt = Date.now() - canvasState.pointerDownStart.time;
-      if (dt / 1000 >= 2) {
+
+    const { isButtonActivated, setIsButtonActivated, activationPercent, setActivationPercent } = singleButtonGameModeStore.getState();
+
+    if (isButtonActivated) {
+      if (activationPercent >= 1) {
         send({
           action: ClientEventAction.SEND_MESSAGE,
           to: "host",
           type: ClientEventSendMessageType.TEXT,
           text: "Click",
         });
+        setActivationPercent(0);
       }
     }
 
-    canvasState.pointer = undefined;
-    canvasState.isPointerDown = false;
-    canvasState.pointerDownStart = undefined;
+    setIsButtonActivated(false);
+
+    // canvasState.pointer = undefined;
+    // canvasState.isPointerDown = false;
+    // canvasState.pointerDownStart = undefined;
   };
+}
+
+const getButtonRadius = (canvas: HTMLCanvasElement) => {
+  return Math.min(canvas.width / 2 * 0.8, 150);
 }

@@ -142,22 +142,31 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     };
   }, [gameMode]);
 
-  const update = (dt: number) => {
+  const update = useCallback((dt: number) => {
     const canvasState = canvasStateRef.current;
 
-    for (let i = canvasState.objects.length - 1; i >= 0; i--) {
-      const object = canvasState.objects[i];
-      object.x += object.dx * dt;
-      object.y += object.dy * dt;
+    switch (gameMode) {
+      case GameMode.BLANK:
+        return;
+      case GameMode.SINGLE_BUTTON:
+        SingleButtonMode.update(dt);
+        return;
+      case GameMode.DEBUG:
+        for (let i = canvasState.objects.length - 1; i >= 0; i--) {
+          const object = canvasState.objects[i];
+          object.x += object.dx * dt;
+          object.y += object.dy * dt;
 
-      if (object.time) {
-        object.time -= dt;
-        if (object.time <= 0) {
-          canvasState.objects.splice(i, 1);
+          if (object.time) {
+            object.time -= dt;
+            if (object.time <= 0) {
+              canvasState.objects.splice(i, 1);
+            }
+          }
         }
-      }
+        return;
     }
-  };
+  }, [gameMode]);
 
   const render = useCallback((canvas: HTMLCanvasElement, canvasState: CanvasState, ctx: CanvasRenderingContext2D) => {
     // clear canvas
