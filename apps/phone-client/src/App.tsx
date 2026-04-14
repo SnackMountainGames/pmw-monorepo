@@ -4,6 +4,7 @@ import { Router } from "./components/Router";
 import { GameCanvasControls } from "./types/types";
 import { Ref } from "react";
 import { generatePlayerId } from "./utilities/generatePlayerId";
+import { SingleButtonGameModeStoreProvider } from "./state/SingleButtonGameModeState";
 
 export type PhoneClientAppsOptionalProps = {
   roomCode?: string;
@@ -34,7 +35,9 @@ export const PhoneClientApp = (optionalProps: PhoneClientAppsOptionalProps) => {
         playerId={playerId}
         ref={ref}
       >
-        <Router />
+        <SingleButtonGameModeStoreProvider>
+          <Router />
+        </SingleButtonGameModeStoreProvider>
       </PhoneClientStoreProvider>
     </WebSocketProvider>
   );

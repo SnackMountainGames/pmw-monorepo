@@ -18,6 +18,7 @@ type WebSocketContextType = {
   connected: boolean;
   send: (data: ClientEvent) => void;
   subscribe: (listener: ServerEventListener) => () => void;
+  disconnect: () => void;
 };
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
@@ -25,6 +26,8 @@ const WebSocketContext = createContext<WebSocketContextType | null>(null);
 // const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;
 const WEBSOCKET_URL =
   "wss://6dwbd9e1d8.execute-api.us-west-2.amazonaws.com/dev/";
+
+const HEARTBEAT_ENABLED = false;
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   const socketRef = useRef<WebSocket | null>(null);
@@ -40,7 +43,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     if (socketRef.current?.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify(data));
     } else {
-      console.warn("WebSocket not open. Cannot send message.");
+      console.warn("WebSocket not open. Cannot send message.", {data});
     }
   }, []);
 
@@ -53,9 +56,11 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
   const startHeartbeat = useCallback(() => {
     stopHeartbeat();
-    heartbeatRef.current = window.setInterval(() => {
-      send({ action: ClientEventAction.HEARTBEAT });
-    }, 60000);
+    if (HEARTBEAT_ENABLED) {
+      heartbeatRef.current = window.setInterval(() => {
+        send({ action: ClientEventAction.HEARTBEAT });
+      }, 60000);
+    }
   }, [send, stopHeartbeat]);
 
   /**
@@ -114,8 +119,14 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const disconnect = useCallback(() => {
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.close();
+    }
+  }, []);
+
   return (
-    <WebSocketContext.Provider value={{ connected, send, subscribe }}>
+    <WebSocketContext.Provider value={{ connected, send, subscribe, disconnect }}>
       {children}
     </WebSocketContext.Provider>
   );

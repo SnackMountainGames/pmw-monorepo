@@ -1,3 +1,5 @@
+import { GameMode } from "./GameTypes.js";
+
 /**
  * Client events (client/host -> server)
  */
@@ -23,11 +25,12 @@ export type ClientEventHeartbeat = {
 export enum ClientEventSendMessageType {
   TEXT = "text",
   TAP = "tap",
+  CHANGE_GAME_MODE = "changeGameMode",
 }
 
 type ClientEventSendMessageBase = {
   action: ClientEventAction.SEND_MESSAGE;
-  to: string | "host";
+  to: string | "host" | "all";
 };
 
 export type ClientEventSendMessageText = ClientEventSendMessageBase & {
@@ -39,6 +42,11 @@ export type ClientEventSendMessageTap = ClientEventSendMessageBase & {
   type: ClientEventSendMessageType.TAP;
   x: number;
   y: number;
+};
+
+export type ClientEventSendMessageChangeGameMode = ClientEventSendMessageBase & {
+  type: ClientEventSendMessageType.CHANGE_GAME_MODE;
+  mode: GameMode;
 };
 
 /**
@@ -62,5 +70,6 @@ export type ClientEvent =
   | ClientEventHeartbeat
   | ClientEventSendMessageText
   | ClientEventSendMessageTap
+  | ClientEventSendMessageChangeGameMode
   | ClientEventCreateRoom
   | ClientEventJoinRoom;

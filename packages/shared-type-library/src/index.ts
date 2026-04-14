@@ -8,6 +8,7 @@ export type {
   ClientEventHeartbeat,
   ClientEventSendMessageText,
   ClientEventSendMessageTap,
+  ClientEventSendMessageChangeGameMode,
   ClientEventCreateRoom,
   ClientEventJoinRoom,
 } from "./network/ClientTypes.js";
@@ -23,7 +24,12 @@ export type {
   ServerEventJoinedRoom,
   ServerEventClientMessageText,
   ServerEventPlayerListUpdated,
+  ServerEventChangeGameMode,
   ServerEventListener,
 } from "./network/ServerTypes.js";
 
-export type { Rider } from "./network/GameTypes.js";
+export { GameMode } from "./network/GameTypes.js";
+
+export type {
+  Rider
+} from "./network/GameTypes.js";

@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { usePhoneClientStore } from "../../state/PhoneClientStoreProvider";
+import { GameMode } from "shared-type-library";
 
 export const TOP_HUD_HEIGHT = 60;
 export const BOTTOM_HUD_HEIGHT = 60;
@@ -26,12 +27,20 @@ const HudButton = styled.button`
 export const Hud = () => {
   const roomCode = usePhoneClientStore((state) => state.roomCode);
   const name = usePhoneClientStore((state) => state.name);
+  const gameMode = usePhoneClientStore((state) => state.gameMode);
+  const setGameMode = usePhoneClientStore((state) => state.setGameMode);
 
   return (
     <TopHud id="game-hud">
       <div>
-        <HudButton onClick={() => console.log("HUD Button Left")}>
-          Menu
+        <HudButton onClick={() => {
+          setGameMode(
+            gameMode === GameMode.DEBUG
+              ? GameMode.SINGLE_BUTTON
+              : GameMode.DEBUG,
+          );
+        }}>
+          Menu {gameMode}
         </HudButton>
       </div>
       <div>

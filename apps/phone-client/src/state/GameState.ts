@@ -2,6 +2,7 @@ import { createStore } from "zustand/vanilla";
 import { PhoneClientAppsOptionalProps } from "../App";
 import { GameCanvasControls } from "../types/types";
 import { Ref } from "react";
+import { GameMode } from "shared-type-library";
 
 export type CanvasState = {
   pointer?: PointerObject;
@@ -42,11 +43,11 @@ export type PhoneClientState = {
   isConnectedToGameRoom: boolean;
   setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) => void;
   ref?: Ref<GameCanvasControls>;
+  gameMode: GameMode;
+  setGameMode: (gameMode: GameMode) => void;
 };
 
-export const createPhoneClientStore = (
-  optionalProps: PhoneClientAppsOptionalProps,
-) =>
+export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalProps) =>
   createStore<PhoneClientState>((set) => ({
     roomCode: optionalProps.roomCode || "",
     setRoomCode: (roomCode: string) =>
@@ -61,4 +62,6 @@ export const createPhoneClientStore = (
     setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) =>
       set(() => ({ isConnectedToGameRoom })),
     ref: optionalProps.ref,
+    gameMode: GameMode.DEBUG,
+    setGameMode: (gameMode: GameMode) => set(() => ({ gameMode })),
   }));

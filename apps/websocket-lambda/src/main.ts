@@ -1,14 +1,7 @@
-import {
-  APIGatewayEventWebsocketRequestContextV2,
-  APIGatewayProxyResult,
-} from "aws-lambda";
+import { APIGatewayEventWebsocketRequestContextV2, APIGatewayProxyResult, } from "aws-lambda";
 
 import { ApiGatewayManagementApiClient } from "@aws-sdk/client-apigatewaymanagementapi";
-import {
-  ClientEvent,
-  ClientEventAction,
-  ClientEventSendMessageType,
-} from "shared-type-library";
+import { ClientEvent, ClientEventAction, ClientEventSendMessageType, } from "shared-type-library";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { handleEventHeartbeat } from "./handlers/heartbeat";
@@ -64,6 +57,9 @@ export const handler = async (
         }
         if (body.type === ClientEventSendMessageType.TAP) {
           console.log(body.x, body.y);
+        }
+        if (body.type === ClientEventSendMessageType.CHANGE_GAME_MODE) {
+          return handleEventSendMessage(apiClient, ddb, connectionId, body);
         }
         return { statusCode: 200, body: "" };
 

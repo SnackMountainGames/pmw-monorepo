@@ -7,11 +7,11 @@ import {
   ClientEventSendMessageType,
 } from "shared-type-library";
 
-type SimulatedPointerEvent = {
+export type SimulatedPointerEvent = {
   simulated?: boolean;
 } & PointerEvent<HTMLCanvasElement>;
 
-const getCanvasCoords = (
+export const getCanvasCoords = (
   e: SimulatedPointerEvent,
   canvas: HTMLCanvasElement,
 ): PointerObject => {
