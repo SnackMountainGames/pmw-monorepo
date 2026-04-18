@@ -1,80 +1,49 @@
 import styled from "@emotion/styled";
-import { GameCanvasControls, PhoneClientApp } from "phone-client";
-import { useRef, useState } from "react";
-import { useGameSimulationStore } from "./state/GameSimulationState";
+import { useState } from "react";
 import { PhoneClientSection } from "./components/PhoneClientSection";
 import { GameHostSection } from "./components/GameHostSection";
 import { WebSocketProvider } from "shared-component-library";
+import "./styles.css";
 
 const ButtonBar = styled.div`
   display: flex;
   flex-direction: row;
-
+  
   button {
     margin-right: 8px;
   }
 `;
 
-const FAKE_PHONE_SCALE = 0.6;
-
-const FakePhone = styled.div`
-  margin: 20px;
-  height: ${750 * FAKE_PHONE_SCALE}px;
-  width: ${360 * FAKE_PHONE_SCALE}px;
-  border: 3px solid black;
-  border-radius: 30px;
+const ToggleAndLabel = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 8px;
+  
+  label {
+    margin-right: 4px;
+  }
 `;
 
 export const GameCommandCenterApp = () => {
-  const { phoneClients, setPhoneClients } = useGameSimulationStore();
-  const phoneClientControlRefs = useRef<GameCanvasControls[]>([]);
-
   const [showGameHostSection, setShowGameHostSection] = useState<boolean>(false);
-
-  const { roomCode } = useGameSimulationStore();
-
-  const addPhone = () => {
-    setPhoneClients([
-      ...phoneClients,
-      <FakePhone key={Date.now()}>
-        <PhoneClientApp
-          roomCode={roomCode}
-          name={`Player ${(phoneClients.length + 1).toLocaleString("en-US", {
-            minimumIntegerDigits: 2,
-            useGrouping: false,
-          })}`}
-          playerId={`fake-player-${Math.floor(Math.random() * 10000)}`}
-          ref={(el) => {
-            if (el) phoneClientControlRefs.current[phoneClients.length] = el;
-          }}
-        />
-      </FakePhone>,
-    ]);
-  };
-
-  const removePhone = () => {
-    setPhoneClients([...phoneClients.splice(0, phoneClients.length - 1)]);
-  };
 
   return (
     <>
       <h1>Game Command Center</h1>
       <ButtonBar>
-        <button onClick={() => setShowGameHostSection(true)}>
-          Enable Game Host
-        </button>
-        <button onClick={addPhone}>Add phone client</button>
-        <button
-          onClick={() => {
-            phoneClientControlRefs.current[0].pointerDown(50, 50);
-            phoneClientControlRefs.current[0].pointerUp(50, 50);
-            phoneClientControlRefs.current[1].pointerDown(100, 50);
-            phoneClientControlRefs.current[1].pointerUp(160, 50);
-          }}
-        >
-          Simulate button click
-        </button>
-        <button onClick={removePhone}>Remove phone client</button>
+        <ToggleAndLabel>
+          <label className="toggle">
+            <input
+              type="checkbox"
+              id="btnToggle"
+              name="btnToggle"
+              onClick={() => setShowGameHostSection(!showGameHostSection)}
+            />
+            <span className="slider"></span>
+          </label>
+          <span>Enable Game Host</span>
+        </ToggleAndLabel>
       </ButtonBar>
       <div style={{ display: "flex" }}>
         {showGameHostSection && (
@@ -82,7 +51,7 @@ export const GameCommandCenterApp = () => {
             <GameHostSection />
           </WebSocketProvider>
         )}
-        {phoneClients.length > 0 && <PhoneClientSection />}
+        <PhoneClientSection />
       </div>
     </>
   );

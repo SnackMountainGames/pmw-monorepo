@@ -18,7 +18,7 @@ const Container = styled.div`
   padding: 20px;
   border: 2px solid grey;
   border-radius: 10px;
-  margin: 20px;
+  margin: 20px 20px 20px 0;
 `;
 
 export const GameHostSection = () => {
@@ -65,6 +65,7 @@ export const GameHostSection = () => {
 
   return (
     <Container>
+      <h2>Game Host</h2>
       {!isRoomCreated && (
         <button onClick={createRoom} disabled={!connected}>
           Create Room

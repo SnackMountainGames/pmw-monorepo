@@ -11,13 +11,6 @@ body,
   box-sizing: border-box;
 }
 
-canvas {
-  display: block;
-  touch-action: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
 input,
 textarea,
 select {

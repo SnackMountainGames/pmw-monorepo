@@ -7,6 +7,24 @@ import {
   ServerEvent,
   ServerEventType,
 } from "shared-type-library";
+import styled from "@emotion/styled";
+
+const WelcomePage = styled.div`
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+`;
+
+const Title = styled.h1`
+  text-align: center;
+`;
+
+const Button = styled.button`
+  border: 2px solid darkslateblue;
+  font-size: 20px;
+`;
 
 export const WelcomeMenu = () => {
   const roomCode = usePhoneClientStore((state) => state.roomCode);
@@ -49,16 +67,8 @@ export const WelcomeMenu = () => {
   };
 
   return (
-    <div
-      style={{
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        margin: 20,
-      }}
-    >
-      <h1>PMW Phone Client</h1>
+    <WelcomePage>
+      <Title>PMW Phone Client</Title>
       <ConnectionStatus />
 
       <input
@@ -81,9 +91,9 @@ export const WelcomeMenu = () => {
         maxLength={20}
       />
 
-      <button onClick={joinRoom} disabled={!connected}>
+      <Button onClick={joinRoom} disabled={!connected}>
         Join Room
-      </button>
-    </div>
+      </Button>
+    </WelcomePage>
   );
 };

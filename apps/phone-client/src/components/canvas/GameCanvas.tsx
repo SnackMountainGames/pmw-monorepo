@@ -15,6 +15,14 @@ import { usePhoneClientStore } from "../../state/PhoneClientStoreProvider";
 import { DebugGameMode } from "../../gameModes/DebugGameMode";
 import { SingleButtonMode } from "../../gameModes/SingleButtonGameMode";
 import { useSingleButtonGameModeStore } from "../../state/SingleButtonGameModeState";
+import styled from "@emotion/styled";
+
+const Canvas = styled.canvas`
+  display: block;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+`;
 
 export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -30,55 +38,33 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   // This is for the simulated clicks
   useImperativeHandle(ref, () => ({
     pointerDown(x, y) {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      handlePointerDown(
-        {
-          clientX: x,
-          clientY: y,
-          pointerType: "mouse",
-          buttons: 1,
-          simulated: true,
-        } as any,
-        canvas,
-        canvasStateRef.current,
-      );
+      onPointerDown({
+        clientX: x,
+        clientY: y,
+        pointerType: "mouse",
+        buttons: 1,
+        simulated: true,
+      } as any);
     },
 
     pointerMove(x, y) {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      handlePointerMove(
-        {
-          clientX: x,
-          clientY: y,
-          pointerType: "mouse",
-          buttons: 1,
-          simulated: true,
-        } as any,
-        canvas,
-        canvasStateRef.current,
-      );
+      onPointerMove({
+        clientX: x,
+        clientY: y,
+        pointerType: "mouse",
+        buttons: 1,
+        simulated: true,
+      } as any);
     },
 
     pointerUp(x, y) {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      handlePointerUp(
-        {
-          clientX: x,
-          clientY: y,
-          pointerType: "mouse",
-          buttons: 1,
-          simulated: true,
-        } as any,
-        canvas,
-        canvasStateRef.current,
-        send,
-      );
+      onPointerUp({
+        clientX: x,
+        clientY: y,
+        pointerType: "mouse",
+        buttons: 1,
+        simulated: true,
+      } as any);
     },
   }));
 
@@ -273,7 +259,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   };
 
   return (
-    <canvas
+    <Canvas
       id="game-canvas"
       key={`game-canvas-${Math.random()}`}
       ref={canvasRef}

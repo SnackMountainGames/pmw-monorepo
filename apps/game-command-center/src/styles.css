@@ -5,8 +5,69 @@ body,
   box-sizing: border-box;
 }
 
+body {
+  padding: 20px;
+}
+
 input,
 textarea,
 select {
   font-size: 16px; /* This is to prevent iPhones from zooming in when these are selected */
+}
+
+button {
+  border: 2px solid black;
+  border-radius: 6px;
+}
+
+h1, h2, h3 {
+  margin-top: 0;
+  font-family: "Cascadia Code",monospace;
+}
+
+/* Cool looking toggle
+ * Taken directly from https://stackoverflow.com/questions/76837048/creating-the-simplest-html-toggle-button
+ * but with the numbers changed
+ */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 18px;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #FFF;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #080;
+}
+
+input:checked + .slider:before {
+  transform: translateX(12px);
 }

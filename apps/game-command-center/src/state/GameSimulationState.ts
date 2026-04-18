@@ -1,13 +1,17 @@
 import { create } from "zustand";
 import { ReactNode } from "react";
+import { GameCanvasControls } from "phone-client";
 
 type GameSimulationStore = {
   roomCode: string;
   setRoomCode: (roomCode: string) => void;
   isConnectedToGameRoom: boolean;
   setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) => void;
-  phoneClients: ReactNode[];
-  setPhoneClients: (phoneClients: ReactNode[]) => void;
+  phoneClientMap: Map<string, ReactNode>;
+  setPhoneClientMap: (phoneClientMap: Map<string, ReactNode>) => void;
+  phoneClientRefMap: Map<string, GameCanvasControls>;
+  // phoneClients: ReactNode[];
+  // setPhoneClients: (phoneClients: ReactNode[]) => void;
 };
 
 export const useGameSimulationStore = create<GameSimulationStore>((set) => ({
@@ -19,6 +23,9 @@ export const useGameSimulationStore = create<GameSimulationStore>((set) => ({
   isConnectedToGameRoom: false,
   setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) =>
     set(() => ({ isConnectedToGameRoom })),
-  phoneClients: [],
-  setPhoneClients: (phoneClients: ReactNode[]) => set(() => ({ phoneClients })),
+  phoneClientMap: new Map(),
+  setPhoneClientMap: (phoneClientMap: Map<string, ReactNode>) => set(() => ({ phoneClientMap })),
+  phoneClientRefMap: new Map(),
+  // phoneClients: [],
+  // setPhoneClients: (phoneClients: ReactNode[]) => set(() => ({ phoneClients })),
 }));
