@@ -41,7 +41,7 @@ export const GameHostSection = () => {
         setRiders(message.players || []);
       }
 
-      if (message.type === ServerEventType.CLIENT_MESSAGE) {
+      if (message.type === ServerEventType.CLIENT_MESSAGE_TEXT) {
         const rider = riders.find((rider) => rider.playerId === message.from);
         console.log(`${rider?.name} says "${message.text}"`);
       }

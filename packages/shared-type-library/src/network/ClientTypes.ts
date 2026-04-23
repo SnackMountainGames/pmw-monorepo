@@ -26,6 +26,7 @@ export enum ClientEventSendMessageType {
   TEXT = "text",
   TAP = "tap",
   CHANGE_GAME_MODE = "changeGameMode",
+  RIDER_STATUS = "riderStatus"
 }
 
 type ClientEventSendMessageBase = {
@@ -47,6 +48,16 @@ export type ClientEventSendMessageTap = ClientEventSendMessageBase & {
 export type ClientEventSendMessageChangeGameMode = ClientEventSendMessageBase & {
   type: ClientEventSendMessageType.CHANGE_GAME_MODE;
   mode: GameMode;
+};
+
+export enum RiderStatus {
+  IDLE = "idle",
+  ACTIVE = "active"
+}
+
+export type ClientEventSendMessageRiderStatus = ClientEventSendMessageBase & {
+  type: ClientEventSendMessageType.RIDER_STATUS;
+  status: RiderStatus;
 };
 
 /**
@@ -71,5 +82,6 @@ export type ClientEvent =
   | ClientEventSendMessageText
   | ClientEventSendMessageTap
   | ClientEventSendMessageChangeGameMode
+  | ClientEventSendMessageRiderStatus
   | ClientEventCreateRoom
   | ClientEventJoinRoom;

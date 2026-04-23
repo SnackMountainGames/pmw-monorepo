@@ -7,6 +7,7 @@ import {
   ClientEvent,
   ClientEventAction,
   ClientEventSendMessageType,
+  RiderStatus,
 } from "shared-type-library";
 import { SingleButtonGameModeState } from "../state/SingleButtonGameModeState";
 
@@ -84,6 +85,7 @@ export class SingleButtonMode {
     e: SimulatedPointerEvent,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
+    send: (data: ClientEvent) => void,
   ) => {
     if (e.pointerType === "mouse" && !(e.buttons & 1)) return;
 
@@ -104,11 +106,12 @@ export class SingleButtonMode {
 
     setIsButtonActivated(true);
 
-    // canvasState.isPointerDown = true;
-    // canvasState.pointerDownStart = {
-    //   time: Date.now(),
-    //   ...canvasState.pointer,
-    // };
+    send({
+      action: ClientEventAction.SEND_MESSAGE,
+      to: "host",
+      type: ClientEventSendMessageType.RIDER_STATUS,
+      status: RiderStatus.ACTIVE,
+    });
   };
 
   public static handlePointerMove = (
@@ -116,12 +119,15 @@ export class SingleButtonMode {
     e: SimulatedPointerEvent,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
+    send: (data: ClientEvent) => void,
   ) => {
     if (e.pointerType === "mouse" && !(e.buttons & 1)) return;
 
     const BUTTON_RADIUS = getButtonRadius(canvas);
 
-    const { setIsButtonActivated } = singleButtonGameModeState;
+    const { isButtonActivated, setIsButtonActivated } = singleButtonGameModeState;
+
+    if (!isButtonActivated) return;
 
     canvasState.pointer = getCanvasCoords(e, canvas);
 
@@ -133,9 +139,13 @@ export class SingleButtonMode {
     ) {
       setIsButtonActivated(false);
 
-      // canvasState.pointer = undefined;
-      // canvasState.isPointerDown = false;
-      // canvasState.pointerDownStart = undefined;
+      send({
+        action: ClientEventAction.SEND_MESSAGE,
+        to: "host",
+        type: ClientEventSendMessageType.RIDER_STATUS,
+        status: RiderStatus.IDLE,
+      });
+
       return;
     }
   };
@@ -154,23 +164,26 @@ export class SingleButtonMode {
       setActivationPercent,
     } = singleButtonGameModeState;
 
-    if (isButtonActivated) {
-      if (activationPercent >= 1) {
-        send({
-          action: ClientEventAction.SEND_MESSAGE,
-          to: "host",
-          type: ClientEventSendMessageType.TEXT,
-          text: "Click",
-        });
-        setActivationPercent(0);
-      }
+    if (!isButtonActivated) return;
+
+    if (activationPercent >= 1) {
+      // send({
+      //   action: ClientEventAction.SEND_MESSAGE,
+      //   to: "host",
+      //   type: ClientEventSendMessageType.TEXT,
+      //   text: "Click",
+      // });
+      setActivationPercent(0);
     }
 
-    setIsButtonActivated(false);
+    send({
+      action: ClientEventAction.SEND_MESSAGE,
+      to: "host",
+      type: ClientEventSendMessageType.RIDER_STATUS,
+      status: RiderStatus.IDLE,
+    });
 
-    // canvasState.pointer = undefined;
-    // canvasState.isPointerDown = false;
-    // canvasState.pointerDownStart = undefined;
+    setIsButtonActivated(false);
   };
 }
 

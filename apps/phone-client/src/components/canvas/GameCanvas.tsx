@@ -203,6 +203,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           event,
           canvas,
           canvasState,
+          send,
         );
         return;
       case GameMode.DEBUG:
@@ -226,6 +227,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           event,
           canvas,
           canvasState,
+          send,
         );
         return;
       case GameMode.DEBUG:
