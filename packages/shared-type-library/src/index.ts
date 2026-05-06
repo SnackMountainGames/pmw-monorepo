@@ -1,6 +1,7 @@
 export {
   ClientEventAction,
   ClientEventSendMessageType,
+  RiderStatus,
 } from "./network/ClientTypes.js";
 
 export type {
@@ -9,6 +10,7 @@ export type {
   ClientEventSendMessageText,
   ClientEventSendMessageTap,
   ClientEventSendMessageChangeGameMode,
+  ClientEventSendMessageRiderStatus,
   ClientEventCreateRoom,
   ClientEventJoinRoom,
 } from "./network/ClientTypes.js";
@@ -25,6 +27,8 @@ export type {
   ServerEventClientMessageText,
   ServerEventPlayerListUpdated,
   ServerEventChangeGameMode,
+  ServerEventRiderActive,
+  ServerEventRiderIdle,
   ServerEventListener,
 } from "./network/ServerTypes.js";
 

@@ -9,9 +9,11 @@ export enum ServerEventType {
   HEARTBEAT = "heartbeat",
   ROOM_CREATED = "roomCreated",
   JOINED_ROOM = "joinedRoom",
-  CLIENT_MESSAGE = "clientMessage",
+  CLIENT_MESSAGE_TEXT = "clientMessage",
   PLAYER_LIST_UPDATED = "playerListUpdated",
   CHANGE_GAME_MODE = "changeGameMode",
+  RIDER_ACTIVE = "riderActive",
+  RIDER_IDLE = "riderIdle",
 }
 
 /**
@@ -55,7 +57,7 @@ export type ServerEventJoinedRoom = {
  * Client message
  */
 export type ServerEventClientMessageText = {
-  type: ServerEventType.CLIENT_MESSAGE;
+  type: ServerEventType.CLIENT_MESSAGE_TEXT;
   from: string;
   text: string;
 };
@@ -73,6 +75,18 @@ export type ServerEventChangeGameMode = {
   mode: GameMode;
 }
 
+export type ServerEventRiderActive = {
+  type: ServerEventType.RIDER_ACTIVE;
+  from: string;
+  at: number;
+};
+
+export type ServerEventRiderIdle = {
+  type: ServerEventType.RIDER_IDLE;
+  from: string;
+  at: number;
+};
+
 export type ServerEvent =
   | ServerEventConnected
   | ServerEventDisconnected
@@ -81,6 +95,8 @@ export type ServerEvent =
   | ServerEventJoinedRoom
   | ServerEventClientMessageText
   | ServerEventPlayerListUpdated
-  | ServerEventChangeGameMode;
+  | ServerEventChangeGameMode
+  | ServerEventRiderActive
+  | ServerEventRiderIdle;
 
 export type ServerEventListener = (message: ServerEvent) => void;
