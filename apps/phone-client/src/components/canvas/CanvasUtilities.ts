@@ -1,5 +1,5 @@
 import { type PointerEvent } from "react";
-import { CanvasState, PointerObject } from "../../state/GameState";
+import { CanvasState, Vector2D } from "../../state/GameState";
 import { BOTTOM_HUD_HEIGHT, TOP_HUD_HEIGHT } from "../hud/Hud";
 import {
   ClientEvent,
@@ -14,7 +14,7 @@ export type SimulatedPointerEvent = {
 export const getCanvasCoords = (
   e: SimulatedPointerEvent,
   canvas: HTMLCanvasElement,
-): PointerObject => {
+): Vector2D => {
   if (e.simulated) {
     return {
       x: e.clientX,

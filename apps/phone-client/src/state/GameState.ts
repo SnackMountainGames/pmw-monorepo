@@ -5,20 +5,20 @@ import { Ref } from "react";
 import { GameMode } from "shared-type-library";
 
 export type CanvasState = {
-  pointer?: PointerObject;
+  pointer?: Vector2D;
   isPointerDown: boolean;
   objects: CanvasObject[];
   pointerDownStart?: PointerDownObject;
 };
 
-export type PointerObject = {
+export type Vector2D = {
   x: number;
   y: number;
 };
 
 export type PointerDownObject = {
   time: number;
-} & PointerObject;
+} & Vector2D;
 
 export type CanvasObject = {
   x: number;

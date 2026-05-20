@@ -16,6 +16,8 @@ import { DebugGameMode } from "../../gameModes/DebugGameMode";
 import { SingleButtonMode } from "../../gameModes/SingleButtonGameMode";
 import { useSingleButtonGameModeStore } from "../../state/SingleButtonGameModeState";
 import styled from "@emotion/styled";
+import { TraceShapeGameMode } from "../../gameModes/TraceShapeGameMode";
+import { useTraceShapeGameModeStore } from "../../state/TraceShapeGameModeState";
 
 const Canvas = styled.canvas`
   display: block;
@@ -32,6 +34,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const setGameMode = usePhoneClientStore((state) => state.setGameMode);
 
   const singleButtonGameModeState = useSingleButtonGameModeStore();
+  const traceShapeGameModeState = useTraceShapeGameModeStore();
 
   const { subscribe, send } = useSharedWebSocket();
 
@@ -95,14 +98,18 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
 
     const init = async () => {
       // load any images and other things here
+      const canvasState = canvasStateRef.current;
 
       switch (gameMode) {
         case GameMode.BLANK:
           break;
         case GameMode.SINGLE_BUTTON:
-          SingleButtonMode.initGameMode(
-            singleButtonGameModeState.getState(),
-            canvasStateRef.current,
+          break;
+        case GameMode.TRACE_SHAPE:
+          TraceShapeGameMode.initGameMode(
+            traceShapeGameModeState.getState(),
+            canvas,
+            canvasState,
           );
           break;
         case GameMode.DEBUG:
@@ -143,6 +150,8 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
       case GameMode.SINGLE_BUTTON:
         SingleButtonMode.update(singleButtonGameModeState.getState(), dt);
         return;
+      case GameMode.TRACE_SHAPE:
+        break;
       case GameMode.DEBUG:
         for (let i = canvasState.objects.length - 1; i >= 0; i--) {
           const object = canvasState.objects[i];
@@ -164,19 +173,25 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    const standardArgs = [canvas, canvasState, ctx] as const;
+
     switch (gameMode) {
       case GameMode.BLANK:
         return;
       case GameMode.SINGLE_BUTTON:
         SingleButtonMode.render(
           singleButtonGameModeState.getState(),
-          canvas,
-          canvasState,
-          ctx,
+          ...standardArgs,
         );
         return;
+      case GameMode.TRACE_SHAPE:
+        TraceShapeGameMode.render(
+          traceShapeGameModeState.getState(),
+          ...standardArgs,
+        );
+        break;
       case GameMode.DEBUG:
-        DebugGameMode.render(canvas, canvasState, ctx);
+        DebugGameMode.render(...standardArgs);
         return;
     }
   }, [gameMode]);
@@ -192,7 +207,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const canvasState = canvasStateRef.current;
+    const standardArgs = [event, canvas, canvasStateRef.current, send] as const;
 
     switch (gameMode) {
       case GameMode.BLANK:
@@ -200,14 +215,17 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
       case GameMode.SINGLE_BUTTON:
         SingleButtonMode.handlePointerDown(
           singleButtonGameModeState.getState(),
-          event,
-          canvas,
-          canvasState,
-          send,
+          ...standardArgs,
         );
         return;
+      case GameMode.TRACE_SHAPE:
+        TraceShapeGameMode.handlePointerDown(
+          traceShapeGameModeState.getState(),
+          ...standardArgs,
+        );
+        break;
       case GameMode.DEBUG:
-        handlePointerDown(event, canvas, canvasState);
+        handlePointerDown(event, canvas, canvasStateRef.current);
         return;
     }
   };
@@ -216,7 +234,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const canvasState = canvasStateRef.current;
+    const standardArgs = [event, canvas, canvasStateRef.current, send] as const;
 
     switch (gameMode) {
       case GameMode.BLANK:
@@ -224,14 +242,17 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
       case GameMode.SINGLE_BUTTON:
         SingleButtonMode.handlePointerMove(
           singleButtonGameModeState.getState(),
-          event,
-          canvas,
-          canvasState,
-          send,
+          ...standardArgs,
         );
         return;
+      case GameMode.TRACE_SHAPE:
+        TraceShapeGameMode.handlePointerMove(
+          traceShapeGameModeState.getState(),
+          ...standardArgs,
+        );
+        break;
       case GameMode.DEBUG:
-        handlePointerMove(event, canvas, canvasState);
+        handlePointerMove(event, canvas, canvasStateRef.current);
         return;
     }
   };
@@ -240,7 +261,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const canvasState = canvasStateRef.current;
+    const standardArgs = [event, canvas, canvasStateRef.current, send] as const;
 
     switch (gameMode) {
       case GameMode.BLANK:
@@ -248,14 +269,17 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
       case GameMode.SINGLE_BUTTON:
         SingleButtonMode.handlePointerUp(
           singleButtonGameModeState.getState(),
-          event,
-          canvas,
-          canvasState,
-          send,
+          ...standardArgs,
         );
         return;
+      case GameMode.TRACE_SHAPE:
+        TraceShapeGameMode.handlePointerUp(
+          traceShapeGameModeState.getState(),
+          ...standardArgs,
+        );
+        break;
       case GameMode.DEBUG:
-        handlePointerUp(event, canvas, canvasState, send);
+        handlePointerUp(...standardArgs);
         return;
     }
   };

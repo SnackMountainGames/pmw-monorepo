@@ -14,6 +14,9 @@ export enum ServerEventType {
   CHANGE_GAME_MODE = "changeGameMode",
   RIDER_ACTIVE = "riderActive",
   RIDER_IDLE = "riderIdle",
+  RIDER_SUCCESS = "riderSuccess",
+  RIDER_FAILURE = "riderFailure",
+  UNKNOWN = "unknown",
 }
 
 /**
@@ -87,6 +90,18 @@ export type ServerEventRiderIdle = {
   at: number;
 };
 
+export type ServerEventRiderSuccess = {
+  type: ServerEventType.RIDER_SUCCESS;
+  from: string;
+  at: number;
+};
+
+export type ServerEventRiderFailure = {
+  type: ServerEventType.RIDER_FAILURE;
+  from: string;
+  at: number;
+};
+
 export type ServerEvent =
   | ServerEventConnected
   | ServerEventDisconnected
@@ -97,6 +112,8 @@ export type ServerEvent =
   | ServerEventPlayerListUpdated
   | ServerEventChangeGameMode
   | ServerEventRiderActive
-  | ServerEventRiderIdle;
+  | ServerEventRiderIdle
+  | ServerEventRiderSuccess
+  | ServerEventRiderFailure;
 
 export type ServerEventListener = (message: ServerEvent) => void;

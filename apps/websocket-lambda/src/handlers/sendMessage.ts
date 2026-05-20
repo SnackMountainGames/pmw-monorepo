@@ -8,7 +8,9 @@ import {
   ServerEventChangeGameMode,
   ServerEventClientMessageText,
   ServerEventRiderActive,
+  ServerEventRiderFailure,
   ServerEventRiderIdle,
+  ServerEventRiderSuccess,
   ServerEventType,
 } from "shared-type-library";
 import { sendEvent } from "../utilities";
@@ -44,7 +46,9 @@ export const handleEventSendMessage = async (
     | ServerEventClientMessageText
     | ServerEventChangeGameMode
     | ServerEventRiderActive
-    | ServerEventRiderIdle;
+    | ServerEventRiderIdle
+    | ServerEventRiderSuccess
+    | ServerEventRiderFailure;
 
   switch (eventBody.type) {
     case ClientEventSendMessageType.TEXT: {
@@ -66,16 +70,29 @@ export const handleEventSendMessage = async (
     case ClientEventSendMessageType.RIDER_STATUS: {
       const from = (await getConnection(ddb, connectionId)).playerId;
 
-      eventToSend = {
-          type:
-            eventBody.status === RiderStatus.ACTIVE
-              ? ServerEventType.RIDER_ACTIVE
-              : ServerEventType.RIDER_IDLE,
-          from,
-        at: Date.now(),
-        };
-        break;
+      let type = ServerEventType.UNKNOWN;
+      switch (eventBody.status) {
+        case RiderStatus.ACTIVE:
+          type = ServerEventType.RIDER_ACTIVE;
+          break;
+        case RiderStatus.IDLE:
+          type = ServerEventType.RIDER_IDLE;
+          break;
+        case RiderStatus.SUCCESS:
+          type = ServerEventType.RIDER_SUCCESS;
+          break;
+        case RiderStatus.FAILURE:
+          type = ServerEventType.RIDER_FAILURE;
+          break;
       }
+
+      eventToSend = {
+        type,
+        from,
+        at: Date.now(),
+      };
+      break;
+    }
   }
 
   // Send the room created event
