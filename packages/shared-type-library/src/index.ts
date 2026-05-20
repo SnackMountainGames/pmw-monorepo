@@ -29,6 +29,8 @@ export type {
   ServerEventChangeGameMode,
   ServerEventRiderActive,
   ServerEventRiderIdle,
+  ServerEventRiderSuccess,
+  ServerEventRiderFailure,
   ServerEventListener,
 } from "./network/ServerTypes.js";
 

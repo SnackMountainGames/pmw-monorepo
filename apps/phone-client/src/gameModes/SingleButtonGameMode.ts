@@ -14,19 +14,19 @@ import { SingleButtonGameModeState } from "../state/SingleButtonGameModeState";
 const BUTTON_ACTIVATION_TIME = 0.0;
 
 export class SingleButtonMode {
-  public static initGameMode(
-    singleButtonGameModeState: SingleButtonGameModeState,
+  public static initGameMode = (
+    gameModeState: SingleButtonGameModeState,
     canvasState: CanvasState,
-  ) {
-    // Nothing to do now
-  }
+  ) => {
+    throw new Error("Method not implemented.");
+  };
 
   public static update = (
-    singleButtonGameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonGameModeState,
     dt: number,
   ) => {
     const { isButtonActivated, activationPercent, setActivationPercent } =
-      singleButtonGameModeState;
+      gameModeState;
 
     if (isButtonActivated) {
       setActivationPercent(
@@ -40,14 +40,14 @@ export class SingleButtonMode {
   };
 
   public static render = (
-    singleButtonGameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonGameModeState,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
     ctx: CanvasRenderingContext2D,
   ) => {
     const BUTTON_RADIUS = getButtonRadius(canvas);
 
-    const { activationPercent } = singleButtonGameModeState;
+    const { activationPercent } = gameModeState;
 
     ctx.lineWidth = 3;
 
@@ -81,7 +81,7 @@ export class SingleButtonMode {
   };
 
   public static handlePointerDown = (
-    singleButtonGameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonGameModeState,
     e: SimulatedPointerEvent,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
@@ -91,7 +91,7 @@ export class SingleButtonMode {
 
     const BUTTON_RADIUS = getButtonRadius(canvas);
 
-    const { setIsButtonActivated } = singleButtonGameModeState;
+    const { setIsButtonActivated } = gameModeState;
 
     canvasState.pointer = getCanvasCoords(e, canvas);
 
@@ -115,7 +115,7 @@ export class SingleButtonMode {
   };
 
   public static handlePointerMove = (
-    singleButtonGameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonGameModeState,
     e: SimulatedPointerEvent,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
@@ -125,7 +125,7 @@ export class SingleButtonMode {
 
     const BUTTON_RADIUS = getButtonRadius(canvas);
 
-    const { isButtonActivated, setIsButtonActivated } = singleButtonGameModeState;
+    const { isButtonActivated, setIsButtonActivated } = gameModeState;
 
     if (!isButtonActivated) return;
 
@@ -151,7 +151,7 @@ export class SingleButtonMode {
   };
 
   public static handlePointerUp = (
-    singleButtonGameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonGameModeState,
     e: SimulatedPointerEvent,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
@@ -162,7 +162,7 @@ export class SingleButtonMode {
       setIsButtonActivated,
       activationPercent,
       setActivationPercent,
-    } = singleButtonGameModeState;
+    } = gameModeState;
 
     if (!isButtonActivated) return;
 

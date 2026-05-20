@@ -52,7 +52,9 @@ export type ClientEventSendMessageChangeGameMode = ClientEventSendMessageBase & 
 
 export enum RiderStatus {
   IDLE = "idle",
-  ACTIVE = "active"
+  ACTIVE = "active",
+  SUCCESS = "success",
+  FAILURE = "failure",
 }
 
 export type ClientEventSendMessageRiderStatus = ClientEventSendMessageBase & {

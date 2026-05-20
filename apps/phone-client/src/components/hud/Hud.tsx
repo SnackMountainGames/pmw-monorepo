@@ -34,13 +34,14 @@ export const Hud = () => {
     <TopHud id="game-hud">
       <div>
         <HudButton onClick={() => {
-          setGameMode(
-            gameMode === GameMode.DEBUG
-              ? GameMode.SINGLE_BUTTON
-              : GameMode.DEBUG,
-          );
+          const newGameMode = gameMode + 1;
+          if (newGameMode >= Object.keys(GameMode).length / 2) {
+            setGameMode(0);
+          } else {
+            setGameMode(newGameMode);
+          }
         }}>
-          Menu {gameMode}
+           Mode: {gameMode}
         </HudButton>
       </div>
       <div>
