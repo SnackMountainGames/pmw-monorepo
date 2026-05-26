@@ -1,12 +1,14 @@
 import { ApiGatewayManagementApiClient } from "@aws-sdk/client-apigatewaymanagementapi";
 import {
   ClientEventSendMessageChangeGameMode,
+  ClientEventSendMessageCoordinates,
   ClientEventSendMessageRiderStatus,
   ClientEventSendMessageText,
   ClientEventSendMessageType,
   RiderStatus,
   ServerEventChangeGameMode,
   ServerEventClientMessageText,
+  ServerEventCoordinates,
   ServerEventRiderActive,
   ServerEventRiderFailure,
   ServerEventRiderIdle,
@@ -27,7 +29,8 @@ export const handleEventSendMessage = async (
   eventBody:
     | ClientEventSendMessageText
     | ClientEventSendMessageChangeGameMode
-    | ClientEventSendMessageRiderStatus,
+    | ClientEventSendMessageRiderStatus
+    | ClientEventSendMessageCoordinates,
 ): Promise<APIGatewayProxyResult> => {
   const to: string[] = [];
 
@@ -48,7 +51,8 @@ export const handleEventSendMessage = async (
     | ServerEventRiderActive
     | ServerEventRiderIdle
     | ServerEventRiderSuccess
-    | ServerEventRiderFailure;
+    | ServerEventRiderFailure
+    | ServerEventCoordinates;
 
   switch (eventBody.type) {
     case ClientEventSendMessageType.TEXT: {
@@ -93,6 +97,15 @@ export const handleEventSendMessage = async (
       };
       break;
     }
+
+    case ClientEventSendMessageType.COORDINATES:
+      eventToSend = {
+        type: ServerEventType.COORDINATES,
+        x: eventBody.x,
+        y: eventBody.y,
+        z: eventBody.z,
+      };
+      break;
   }
 
   // Send the room created event

@@ -112,7 +112,7 @@ export const handlePointerUp = (
       send({
         action: ClientEventAction.SEND_MESSAGE,
         to: "host",
-        type: ClientEventSendMessageType.TAP,
+        type: ClientEventSendMessageType.COORDINATES,
         x: canvasState.pointerDownStart.x,
         y: canvasState.pointerDownStart.y,
       });
