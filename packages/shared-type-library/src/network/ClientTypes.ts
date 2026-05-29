@@ -24,7 +24,7 @@ export type ClientEventHeartbeat = {
  */
 export enum ClientEventSendMessageType {
   TEXT = "text",
-  TAP = "tap",
+  COORDINATES = "coordinates",
   CHANGE_GAME_MODE = "changeGameMode",
   RIDER_STATUS = "riderStatus"
 }
@@ -39,10 +39,11 @@ export type ClientEventSendMessageText = ClientEventSendMessageBase & {
   text: string;
 };
 
-export type ClientEventSendMessageTap = ClientEventSendMessageBase & {
-  type: ClientEventSendMessageType.TAP;
+export type ClientEventSendMessageCoordinates = ClientEventSendMessageBase & {
+  type: ClientEventSendMessageType.COORDINATES;
   x: number;
-  y: number;
+  y: number; // height
+  z: number;
 };
 
 export type ClientEventSendMessageChangeGameMode = ClientEventSendMessageBase & {
@@ -82,7 +83,7 @@ export type ClientEventJoinRoom = {
 export type ClientEvent =
   | ClientEventHeartbeat
   | ClientEventSendMessageText
-  | ClientEventSendMessageTap
+  | ClientEventSendMessageCoordinates
   | ClientEventSendMessageChangeGameMode
   | ClientEventSendMessageRiderStatus
   | ClientEventCreateRoom

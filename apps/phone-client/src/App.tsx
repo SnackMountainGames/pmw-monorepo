@@ -6,6 +6,7 @@ import { Ref } from "react";
 import { generatePlayerId } from "./utilities/generatePlayerId";
 import { SingleButtonGameModeStoreProvider } from "./state/SingleButtonGameModeState";
 import { TraceShapeGameModeStoreProvider } from "./state/TraceShapeGameModeState";
+import { RadarGameModeStoreProvider } from "./state/RadarGameModeState";
 
 export type PhoneClientAppsOptionalProps = {
   roomCode?: string;
@@ -38,7 +39,9 @@ export const PhoneClientApp = (optionalProps: PhoneClientAppsOptionalProps) => {
       >
         <SingleButtonGameModeStoreProvider>
           <TraceShapeGameModeStoreProvider>
-            <Router />
+            <RadarGameModeStoreProvider>
+              <Router />
+            </RadarGameModeStoreProvider>
           </TraceShapeGameModeStoreProvider>
         </SingleButtonGameModeStoreProvider>
       </PhoneClientStoreProvider>

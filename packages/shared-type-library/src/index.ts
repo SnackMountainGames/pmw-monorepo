@@ -8,7 +8,7 @@ export type {
   ClientEvent,
   ClientEventHeartbeat,
   ClientEventSendMessageText,
-  ClientEventSendMessageTap,
+  ClientEventSendMessageCoordinates,
   ClientEventSendMessageChangeGameMode,
   ClientEventSendMessageRiderStatus,
   ClientEventCreateRoom,
@@ -31,6 +31,7 @@ export type {
   ServerEventRiderIdle,
   ServerEventRiderSuccess,
   ServerEventRiderFailure,
+  ServerEventCoordinates,
   ServerEventListener,
 } from "./network/ServerTypes.js";
 

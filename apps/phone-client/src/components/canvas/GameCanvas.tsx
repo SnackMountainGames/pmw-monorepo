@@ -18,6 +18,8 @@ import { useSingleButtonGameModeStore } from "../../state/SingleButtonGameModeSt
 import styled from "@emotion/styled";
 import { TraceShapeGameMode } from "../../gameModes/TraceShapeGameMode";
 import { useTraceShapeGameModeStore } from "../../state/TraceShapeGameModeState";
+import { useRadarGameModeStore } from "../../state/RadarGameModeState";
+import { RadarGameMode } from "../../gameModes/RadarGameMode";
 
 const Canvas = styled.canvas`
   display: block;
@@ -35,6 +37,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
 
   const singleButtonGameModeState = useSingleButtonGameModeStore();
   const traceShapeGameModeState = useTraceShapeGameModeStore();
+  const radarGameModeState = useRadarGameModeStore();
 
   const { subscribe, send } = useSharedWebSocket();
 
@@ -79,9 +82,14 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         case ServerEventType.CHANGE_GAME_MODE:
           setGameMode(message.mode);
           break;
+        case ServerEventType.COORDINATES:
+          radarGameModeState.getState().location = {
+            x: message.x,
+            y: message.y,
+          };
       }
     });
-  }, [subscribe]);
+  }, [radarGameModeState, setGameMode, subscribe]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -111,6 +119,8 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
             canvas,
             canvasState,
           );
+          break;
+        case GameMode.RADAR:
           break;
         case GameMode.DEBUG:
           break;
@@ -146,11 +156,13 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
 
     switch (gameMode) {
       case GameMode.BLANK:
-        return;
+        break;
       case GameMode.SINGLE_BUTTON:
         SingleButtonMode.update(singleButtonGameModeState.getState(), dt);
-        return;
+        break;
       case GameMode.TRACE_SHAPE:
+        break;
+      case GameMode.RADAR:
         break;
       case GameMode.DEBUG:
         for (let i = canvasState.objects.length - 1; i >= 0; i--) {
@@ -165,7 +177,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
             }
           }
         }
-        return;
+        break;
     }
   }, [gameMode]);
 
@@ -177,22 +189,28 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
 
     switch (gameMode) {
       case GameMode.BLANK:
-        return;
+        break;
       case GameMode.SINGLE_BUTTON:
         SingleButtonMode.render(
           singleButtonGameModeState.getState(),
           ...standardArgs,
         );
-        return;
+        break;
       case GameMode.TRACE_SHAPE:
         TraceShapeGameMode.render(
           traceShapeGameModeState.getState(),
           ...standardArgs,
         );
         break;
+      case GameMode.RADAR:
+        RadarGameMode.render(
+          radarGameModeState.getState(),
+          ...standardArgs,
+        )
+        break;
       case GameMode.DEBUG:
         DebugGameMode.render(...standardArgs);
-        return;
+        break;
     }
   }, [gameMode]);
 
@@ -224,6 +242,8 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           ...standardArgs,
         );
         break;
+      case GameMode.RADAR:
+        break;
       case GameMode.DEBUG:
         handlePointerDown(event, canvas, canvasStateRef.current);
         return;
@@ -251,6 +271,8 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           ...standardArgs,
         );
         break;
+      case GameMode.RADAR:
+        break;
       case GameMode.DEBUG:
         handlePointerMove(event, canvas, canvasStateRef.current);
         return;
@@ -277,6 +299,8 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           traceShapeGameModeState.getState(),
           ...standardArgs,
         );
+        break;
+      case GameMode.RADAR:
         break;
       case GameMode.DEBUG:
         handlePointerUp(...standardArgs);

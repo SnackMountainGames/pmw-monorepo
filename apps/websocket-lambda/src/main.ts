@@ -68,6 +68,9 @@ export const handler = async (
         if (body.type === ClientEventSendMessageType.RIDER_STATUS) {
           return handleEventSendMessage(apiClient, ddb, connectionId, body);
         }
+        if (body.type === ClientEventSendMessageType.COORDINATES) {
+          return handleEventSendMessage(apiClient, ddb, connectionId, body);
+        }
         return { statusCode: 200, body: "" };
 
       case ClientEventAction.CREATE_ROOM:

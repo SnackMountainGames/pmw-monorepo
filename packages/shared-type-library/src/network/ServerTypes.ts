@@ -16,6 +16,7 @@ export enum ServerEventType {
   RIDER_IDLE = "riderIdle",
   RIDER_SUCCESS = "riderSuccess",
   RIDER_FAILURE = "riderFailure",
+  COORDINATES = "coordinates",
   UNKNOWN = "unknown",
 }
 
@@ -102,6 +103,13 @@ export type ServerEventRiderFailure = {
   at: number;
 };
 
+export type ServerEventCoordinates = {
+  type: ServerEventType.COORDINATES;
+  x: number;
+  y: number; // height
+  z: number;
+}
+
 export type ServerEvent =
   | ServerEventConnected
   | ServerEventDisconnected
@@ -114,6 +122,7 @@ export type ServerEvent =
   | ServerEventRiderActive
   | ServerEventRiderIdle
   | ServerEventRiderSuccess
-  | ServerEventRiderFailure;
+  | ServerEventRiderFailure
+  | ServerEventCoordinates;
 
 export type ServerEventListener = (message: ServerEvent) => void;
