@@ -4,6 +4,7 @@ export enum GameMode {
   SINGLE_BUTTON,
   TRACE_SHAPE,
   RADAR,
+  FLASH
 }
 export type Rider = {
   name: string;
