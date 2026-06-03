@@ -20,12 +20,15 @@ import { TraceShapeGameMode } from "../../gameModes/TraceShapeGameMode";
 import { useTraceShapeGameModeStore } from "../../state/TraceShapeGameModeState";
 import { useRadarGameModeStore } from "../../state/RadarGameModeState";
 import { RadarGameMode } from "../../gameModes/RadarGameMode";
+import {FlashGameMode} from "../../gameModes/FlashGameMode";
+import {useFlashGameModeStore} from "../../state/FlashGameModeState";
 
 const Canvas = styled.canvas`
   display: block;
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
+  background-color: black;
 `;
 
 export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
@@ -38,6 +41,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const singleButtonGameModeState = useSingleButtonGameModeStore();
   const traceShapeGameModeState = useTraceShapeGameModeStore();
   const radarGameModeState = useRadarGameModeStore();
+  const flashGameModeState = useFlashGameModeStore();
 
   const { subscribe, send } = useSharedWebSocket();
 
@@ -164,6 +168,9 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         break;
       case GameMode.RADAR:
         break;
+      case GameMode.FLASH:
+        FlashGameMode.update(flashGameModeState.getState(), dt);
+        break;
       case GameMode.DEBUG:
         for (let i = canvasState.objects.length - 1; i >= 0; i--) {
           const object = canvasState.objects[i];
@@ -203,10 +210,10 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         );
         break;
       case GameMode.RADAR:
-        RadarGameMode.render(
-          radarGameModeState.getState(),
-          ...standardArgs,
-        )
+        RadarGameMode.render(radarGameModeState.getState(), ...standardArgs);
+        break;
+      case GameMode.FLASH:
+        FlashGameMode.render(flashGameModeState.getState(), ...standardArgs);
         break;
       case GameMode.DEBUG:
         DebugGameMode.render(...standardArgs);
@@ -243,6 +250,9 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         );
         break;
       case GameMode.RADAR:
+        break;
+      case GameMode.FLASH:
+        FlashGameMode.handlePointerDown(flashGameModeState.getState(), ...standardArgs);
         break;
       case GameMode.DEBUG:
         handlePointerDown(event, canvas, canvasStateRef.current);
