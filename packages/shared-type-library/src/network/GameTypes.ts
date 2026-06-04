@@ -1,7 +1,7 @@
 export enum GameMode {
   DEBUG,
   BLANK,
-  SINGLE_BUTTON,
+  SINGLE_BUTTON_HOLD,
   TRACE_SHAPE,
   RADAR,
   FLASH

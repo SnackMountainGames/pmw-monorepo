@@ -13,8 +13,8 @@ import { useSharedWebSocket } from "shared-component-library";
 import { GameMode, ServerEvent, ServerEventType } from "shared-type-library";
 import { usePhoneClientStore } from "../../state/PhoneClientStoreProvider";
 import { DebugGameMode } from "../../gameModes/DebugGameMode";
-import { SingleButtonMode } from "../../gameModes/SingleButtonGameMode";
-import { useSingleButtonGameModeStore } from "../../state/SingleButtonGameModeState";
+import { SingleButtonMode } from "../../gameModes/SingleButtonHoldGameMode";
+import { useSingleButtonHoldGameModeStore } from "../../state/SingleButtonHoldGameModeState";
 import styled from "@emotion/styled";
 import { TraceShapeGameMode } from "../../gameModes/TraceShapeGameMode";
 import { useTraceShapeGameModeStore } from "../../state/TraceShapeGameModeState";
@@ -38,7 +38,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const gameMode = usePhoneClientStore((state) => state.gameMode);
   const setGameMode = usePhoneClientStore((state) => state.setGameMode);
 
-  const singleButtonGameModeState = useSingleButtonGameModeStore();
+  const singleButtonHoldGameModeState = useSingleButtonHoldGameModeStore();
   const traceShapeGameModeState = useTraceShapeGameModeStore();
   const radarGameModeState = useRadarGameModeStore();
   const flashGameModeState = useFlashGameModeStore();
@@ -115,7 +115,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
       switch (gameMode) {
         case GameMode.BLANK:
           break;
-        case GameMode.SINGLE_BUTTON:
+        case GameMode.SINGLE_BUTTON_HOLD:
           break;
         case GameMode.TRACE_SHAPE:
           TraceShapeGameMode.initGameMode(
@@ -161,8 +161,8 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     switch (gameMode) {
       case GameMode.BLANK:
         break;
-      case GameMode.SINGLE_BUTTON:
-        SingleButtonMode.update(singleButtonGameModeState.getState(), dt);
+      case GameMode.SINGLE_BUTTON_HOLD:
+        SingleButtonMode.update(singleButtonHoldGameModeState.getState(), dt);
         break;
       case GameMode.TRACE_SHAPE:
         break;
@@ -197,9 +197,9 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     switch (gameMode) {
       case GameMode.BLANK:
         break;
-      case GameMode.SINGLE_BUTTON:
+      case GameMode.SINGLE_BUTTON_HOLD:
         SingleButtonMode.render(
-          singleButtonGameModeState.getState(),
+          singleButtonHoldGameModeState.getState(),
           ...standardArgs,
         );
         break;
@@ -237,9 +237,9 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     switch (gameMode) {
       case GameMode.BLANK:
         return;
-      case GameMode.SINGLE_BUTTON:
+      case GameMode.SINGLE_BUTTON_HOLD:
         SingleButtonMode.handlePointerDown(
-          singleButtonGameModeState.getState(),
+          singleButtonHoldGameModeState.getState(),
           ...standardArgs,
         );
         return;
@@ -269,9 +269,9 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     switch (gameMode) {
       case GameMode.BLANK:
         return;
-      case GameMode.SINGLE_BUTTON:
+      case GameMode.SINGLE_BUTTON_HOLD:
         SingleButtonMode.handlePointerMove(
-          singleButtonGameModeState.getState(),
+          singleButtonHoldGameModeState.getState(),
           ...standardArgs,
         );
         return;
@@ -298,9 +298,9 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     switch (gameMode) {
       case GameMode.BLANK:
         return;
-      case GameMode.SINGLE_BUTTON:
+      case GameMode.SINGLE_BUTTON_HOLD:
         SingleButtonMode.handlePointerUp(
-          singleButtonGameModeState.getState(),
+          singleButtonHoldGameModeState.getState(),
           ...standardArgs,
         );
         return;

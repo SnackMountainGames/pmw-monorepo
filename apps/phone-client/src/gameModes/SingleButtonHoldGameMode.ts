@@ -9,20 +9,20 @@ import {
   ClientEventSendMessageType,
   RiderStatus,
 } from "shared-type-library";
-import { SingleButtonGameModeState } from "../state/SingleButtonGameModeState";
+import { SingleButtonHoldGameModeState } from "../state/SingleButtonHoldGameModeState";
 
 const BUTTON_ACTIVATION_TIME = 0.0;
 
 export class SingleButtonMode {
   public static initGameMode = (
-    gameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonHoldGameModeState,
     canvasState: CanvasState,
   ) => {
     throw new Error("Method not implemented.");
   };
 
   public static update = (
-    gameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonHoldGameModeState,
     dt: number,
   ) => {
     const { isButtonActivated, activationPercent, setActivationPercent } =
@@ -40,7 +40,7 @@ export class SingleButtonMode {
   };
 
   public static render = (
-    gameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonHoldGameModeState,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
     ctx: CanvasRenderingContext2D,
@@ -81,7 +81,7 @@ export class SingleButtonMode {
   };
 
   public static handlePointerDown = (
-    gameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonHoldGameModeState,
     e: SimulatedPointerEvent,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
@@ -115,7 +115,7 @@ export class SingleButtonMode {
   };
 
   public static handlePointerMove = (
-    gameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonHoldGameModeState,
     e: SimulatedPointerEvent,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
@@ -151,7 +151,7 @@ export class SingleButtonMode {
   };
 
   public static handlePointerUp = (
-    gameModeState: SingleButtonGameModeState,
+    gameModeState: SingleButtonHoldGameModeState,
     e: SimulatedPointerEvent,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,

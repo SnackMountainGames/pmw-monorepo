@@ -1,4 +1,4 @@
-import { SingleButtonGameModeStoreProvider } from "../state/SingleButtonGameModeState";
+import { SingleButtonHoldGameModeStoreProvider } from "../state/SingleButtonHoldGameModeState";
 import { TraceShapeGameModeStoreProvider } from "../state/TraceShapeGameModeState";
 import { RadarGameModeStoreProvider } from "../state/RadarGameModeState";
 import { FlashGameModeStoreProvider } from "../state/FlashGameModeState";
@@ -12,7 +12,7 @@ export const GameModeProviders = (props: GameModeProvidersProps) => {
   const { children } = props;
 
   return (
-    <SingleButtonGameModeStoreProvider>
+    <SingleButtonHoldGameModeStoreProvider>
       <TraceShapeGameModeStoreProvider>
         <RadarGameModeStoreProvider>
           <FlashGameModeStoreProvider>
@@ -20,6 +20,6 @@ export const GameModeProviders = (props: GameModeProvidersProps) => {
           </FlashGameModeStoreProvider>
         </RadarGameModeStoreProvider>
       </TraceShapeGameModeStoreProvider>
-    </SingleButtonGameModeStoreProvider>
+    </SingleButtonHoldGameModeStoreProvider>
   );
 };
