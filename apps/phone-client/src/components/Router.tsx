@@ -1,6 +1,6 @@
 import { usePhoneClientStore } from "../state/PhoneClientStoreProvider";
 import { WelcomeMenu } from "./WelcomeMenu";
-import { Hud } from "./hud/Hud";
+import { BottomHud, TopHud } from "./hud/Hud";
 import { GameCanvas } from "./canvas/GameCanvas";
 
 export const Router = () => {
@@ -15,8 +15,9 @@ export const Router = () => {
 
   return (
     <>
-      <Hud />
+      <TopHud />
       <GameCanvas ref={ref} />
+      <BottomHud />
     </>
   );
 };

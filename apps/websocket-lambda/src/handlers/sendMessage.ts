@@ -3,6 +3,7 @@ import {
   ClientEventSendMessageChangeGameMode,
   ClientEventSendMessageCoordinates,
   ClientEventSendMessageRiderStatus,
+  ClientEventSendMessageTapCount,
   ClientEventSendMessageText,
   ClientEventSendMessageType,
   RiderStatus,
@@ -13,6 +14,7 @@ import {
   ServerEventRiderFailure,
   ServerEventRiderIdle,
   ServerEventRiderSuccess,
+  ServerEventTapCount,
   ServerEventType,
 } from "shared-type-library";
 import { sendEvent } from "../utilities";
@@ -30,7 +32,8 @@ export const handleEventSendMessage = async (
     | ClientEventSendMessageText
     | ClientEventSendMessageChangeGameMode
     | ClientEventSendMessageRiderStatus
-    | ClientEventSendMessageCoordinates,
+    | ClientEventSendMessageCoordinates
+    | ClientEventSendMessageTapCount,
 ): Promise<APIGatewayProxyResult> => {
   const to: string[] = [];
 
@@ -52,7 +55,8 @@ export const handleEventSendMessage = async (
     | ServerEventRiderIdle
     | ServerEventRiderSuccess
     | ServerEventRiderFailure
-    | ServerEventCoordinates;
+    | ServerEventCoordinates
+    | ServerEventTapCount;
 
   switch (eventBody.type) {
     case ClientEventSendMessageType.TEXT: {
@@ -106,6 +110,16 @@ export const handleEventSendMessage = async (
         z: eventBody.z,
       };
       break;
+
+    case ClientEventSendMessageType.TAP_COUNT: {
+      const from = (await getConnection(ddb, connectionId)).playerId;
+      eventToSend = {
+        type: ServerEventType.TAP_COUNT,
+        from,
+        tapCount: eventBody.tapCount,
+      };
+      break;
+    }
   }
 
   // Send the room created event

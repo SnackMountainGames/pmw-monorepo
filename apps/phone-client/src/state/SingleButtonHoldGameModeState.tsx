@@ -4,8 +4,8 @@ import { createContext, ReactNode, useContext, useRef } from "react";
 export type SingleButtonHoldGameModeState = {
   isButtonActivated: boolean;
   setIsButtonActivated: (isButtonActivated: boolean) => void;
-  activationPercent: number;
-  setActivationPercent: (activationPercent: number) => void;
+  pointerId?: number;
+  setPointerId: (pointerId: number | undefined) => void;
 };
 
 export const singleButtonHoldGameModeStore = () => createStore<SingleButtonHoldGameModeState>(
@@ -13,9 +13,7 @@ export const singleButtonHoldGameModeStore = () => createStore<SingleButtonHoldG
     isButtonActivated: false,
     setIsButtonActivated: (isButtonActivated: boolean) =>
       set({ isButtonActivated }),
-    activationPercent: 0,
-    setActivationPercent: (activationPercent: number) =>
-      set({ activationPercent }),
+    setPointerId: (pointerId: number | undefined) => set({ pointerId }),
   }),
 );
 

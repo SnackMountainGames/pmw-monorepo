@@ -5,6 +5,7 @@ import { Ref } from "react";
 import { GameMode } from "shared-type-library";
 
 export type CanvasState = {
+  debug: boolean;
   pointer?: Vector2D;
   isPointerDown: boolean;
   objects: CanvasObject[];
@@ -29,11 +30,14 @@ export type CanvasObject = {
 };
 
 export const defaultCanvasState = (): CanvasState => ({
+  debug: false,
   isPointerDown: false,
   objects: [],
 });
 
 export type PhoneClientState = {
+  debug: boolean;
+  toggleDebug: () => void;
   roomCode: string;
   setRoomCode: (roomCode: string) => void;
   name: string;
@@ -49,6 +53,8 @@ export type PhoneClientState = {
 
 export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalProps) =>
   createStore<PhoneClientState>((set) => ({
+    debug: false,
+    toggleDebug: () => set((state) => ({ debug: !state.debug})),
     roomCode: optionalProps.roomCode || "",
     setRoomCode: (roomCode: string) =>
       set(() => ({
@@ -62,6 +68,6 @@ export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalPro
     setIsConnectedToGameRoom: (isConnectedToGameRoom: boolean) =>
       set(() => ({ isConnectedToGameRoom })),
     ref: optionalProps.ref,
-    gameMode: GameMode.DEBUG,
+    gameMode: GameMode.SINGLE_BUTTON_HOLD,
     setGameMode: (gameMode: GameMode) => set(() => ({ gameMode })),
   }));

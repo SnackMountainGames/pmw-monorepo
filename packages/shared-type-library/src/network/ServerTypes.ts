@@ -17,6 +17,7 @@ export enum ServerEventType {
   RIDER_SUCCESS = "riderSuccess",
   RIDER_FAILURE = "riderFailure",
   COORDINATES = "coordinates",
+  TAP_COUNT = "tapCount",
   UNKNOWN = "unknown",
 }
 
@@ -110,6 +111,12 @@ export type ServerEventCoordinates = {
   z: number;
 }
 
+export type ServerEventTapCount = {
+  type: ServerEventType.TAP_COUNT;
+  from: string;
+  tapCount: number;
+};
+
 export type ServerEvent =
   | ServerEventConnected
   | ServerEventDisconnected
@@ -123,6 +130,7 @@ export type ServerEvent =
   | ServerEventRiderIdle
   | ServerEventRiderSuccess
   | ServerEventRiderFailure
-  | ServerEventCoordinates;
+  | ServerEventCoordinates
+  | ServerEventTapCount;
 
 export type ServerEventListener = (message: ServerEvent) => void;
