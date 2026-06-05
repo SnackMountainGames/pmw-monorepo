@@ -75,6 +75,8 @@ const FakePhone = styled.div`
   width: ${360 * FAKE_PHONE_SCALE}px;
   border: 3px solid black;
   border-radius: 30px;
+  overflow: hidden;
+  background-color: black;
 `;
 
 export const PhoneClientSection = () => {

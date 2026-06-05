@@ -11,6 +11,7 @@ export type {
   ClientEventSendMessageCoordinates,
   ClientEventSendMessageChangeGameMode,
   ClientEventSendMessageRiderStatus,
+  ClientEventSendMessageTapCount,
   ClientEventCreateRoom,
   ClientEventJoinRoom,
 } from "./network/ClientTypes.js";
@@ -32,6 +33,7 @@ export type {
   ServerEventRiderSuccess,
   ServerEventRiderFailure,
   ServerEventCoordinates,
+  ServerEventTapCount,
   ServerEventListener,
 } from "./network/ServerTypes.js";
 

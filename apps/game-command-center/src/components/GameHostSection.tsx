@@ -88,7 +88,7 @@ export const GameHostSection = () => {
           <h3>Change game mode</h3>
           <button onClick={() => changeGameMode(GameMode.BLANK)}>Blank</button>
           <br/>&nbsp;
-          <button onClick={() => changeGameMode(GameMode.SINGLE_BUTTON)}>Single Button</button>
+          <button onClick={() => changeGameMode(GameMode.SINGLE_BUTTON_HOLD)}>Single Button</button>
         </>
       )}
     </Container>

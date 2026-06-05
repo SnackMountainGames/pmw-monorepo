@@ -26,7 +26,8 @@ export enum ClientEventSendMessageType {
   TEXT = "text",
   COORDINATES = "coordinates",
   CHANGE_GAME_MODE = "changeGameMode",
-  RIDER_STATUS = "riderStatus"
+  RIDER_STATUS = "riderStatus",
+  TAP_COUNT = "tapCount",
 }
 
 type ClientEventSendMessageBase = {
@@ -63,6 +64,11 @@ export type ClientEventSendMessageRiderStatus = ClientEventSendMessageBase & {
   status: RiderStatus;
 };
 
+export type ClientEventSendMessageTapCount = ClientEventSendMessageBase & {
+  type: ClientEventSendMessageType.TAP_COUNT;
+  tapCount: number;
+};
+
 /**
  * Create room
  */
@@ -87,4 +93,5 @@ export type ClientEvent =
   | ClientEventSendMessageChangeGameMode
   | ClientEventSendMessageRiderStatus
   | ClientEventCreateRoom
-  | ClientEventJoinRoom;
+  | ClientEventJoinRoom
+  | ClientEventSendMessageTapCount;
