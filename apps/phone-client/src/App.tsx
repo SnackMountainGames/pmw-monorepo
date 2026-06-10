@@ -11,10 +11,11 @@ export type PhoneClientAppsOptionalProps = {
   name?: string;
   playerId?: string;
   ref?: Ref<GameCanvasControls>;
+  debug?: boolean;
 };
 
 export const PhoneClientApp = (optionalProps: PhoneClientAppsOptionalProps) => {
-  const { roomCode, name, ref } = optionalProps;
+  const { roomCode, name, ref, debug } = optionalProps;
 
   let playerId: string | undefined | null = optionalProps.playerId;
 
@@ -34,6 +35,7 @@ export const PhoneClientApp = (optionalProps: PhoneClientAppsOptionalProps) => {
         name={name}
         playerId={playerId}
         ref={ref}
+        debug={debug}
       >
         <GameModeProviders>
           <Router />

@@ -10,8 +10,6 @@ type GameSimulationStore = {
   phoneClientMap: Map<string, ReactNode>;
   setPhoneClientMap: (phoneClientMap: Map<string, ReactNode>) => void;
   phoneClientRefMap: Map<string, GameCanvasControls>;
-  // phoneClients: ReactNode[];
-  // setPhoneClients: (phoneClients: ReactNode[]) => void;
 };
 
 export const useGameSimulationStore = create<GameSimulationStore>((set) => ({
@@ -26,6 +24,4 @@ export const useGameSimulationStore = create<GameSimulationStore>((set) => ({
   phoneClientMap: new Map(),
   setPhoneClientMap: (phoneClientMap: Map<string, ReactNode>) => set(() => ({ phoneClientMap })),
   phoneClientRefMap: new Map(),
-  // phoneClients: [],
-  // setPhoneClients: (phoneClients: ReactNode[]) => set(() => ({ phoneClients })),
 }));

@@ -26,8 +26,6 @@ export class BlankGameMode {
       const { roomCode, name, playerId } = phoneClientState;
       renderDebugText(
         ctx,
-        "Debug:",
-        DebugEmptyLine,
         `Room code: ${roomCode ? roomCode : "----"}`,
         `Player name: ${name ? name : "----"}`,
         `Player id: ${playerId ? playerId : "----"}`,

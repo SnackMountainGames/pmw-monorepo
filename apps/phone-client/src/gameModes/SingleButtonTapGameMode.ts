@@ -9,6 +9,9 @@ import {
   ClientEventSendMessageType,
 } from "shared-type-library";
 import { SingleButtonTapGameModeState } from "../state/SingleButtonTapGameModeState";
+import { renderDebugText } from "../utilities/renderDebugText";
+
+const UPDATE_FREQUENCY = 2.0;
 
 export class SingleButtonTapGameMode {
   public static initGameMode = (
@@ -36,7 +39,7 @@ export class SingleButtonTapGameMode {
 
     const updatedTime = timeSinceLastMessage + dt;
 
-    if (updatedTime > 2.0) {
+    if (updatedTime > UPDATE_FREQUENCY) {
       if (tapCount > 0) {
         send({
           action: ClientEventAction.SEND_MESSAGE,
@@ -61,7 +64,8 @@ export class SingleButtonTapGameMode {
   ) => {
     const BUTTON_RADIUS = getButtonRadius(canvas);
 
-    const { isButtonActivated } = gameModeState;
+    const { debug } = canvasState;
+    const { isButtonActivated, tapCount, timeSinceLastMessage } = gameModeState;
 
     ctx.lineWidth = 3;
 
@@ -93,9 +97,13 @@ export class SingleButtonTapGameMode {
     );
     ctx.stroke();
 
-    // ctx.fillStyle = "white";
-    // ctx.lineWidth = 1;
-    // ctx.fillText(tapCount.toString(), 50, 50);
+    if (debug) {
+      renderDebugText(
+        ctx,
+        `Tap Count: ${tapCount}`,
+        `Time Left: ${(UPDATE_FREQUENCY - timeSinceLastMessage).toFixed(2)}`,
+      );
+    }
   };
 
   public static handlePointerDown = (

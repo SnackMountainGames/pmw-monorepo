@@ -15,10 +15,10 @@ export type PhoneClientStoreProviderProps = {
 export const PhoneClientStoreProvider = (
   props: PhoneClientStoreProviderProps,
 ) => {
-  const { children, roomCode, name, playerId, ref } = props;
+  const { children, roomCode, name, playerId, ref, debug } = props;
 
   const storeRef = useRef<ReturnType<typeof createPhoneClientStore>>(
-    createPhoneClientStore({ roomCode, name, playerId, ref }),
+    createPhoneClientStore({ roomCode, name, playerId, ref, debug }),
   );
 
   return (
