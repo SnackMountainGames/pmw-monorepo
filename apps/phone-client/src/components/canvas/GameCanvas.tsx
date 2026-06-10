@@ -50,37 +50,46 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const { subscribe, send } = useSharedWebSocket();
 
   // This is for the simulated clicks
-  useImperativeHandle(ref, () => ({
-    pointerDown(x, y) {
-      onPointerDown({
-        clientX: x,
-        clientY: y,
-        pointerType: "mouse",
-        buttons: 1,
-        simulated: true,
-      } as any);
-    },
+  // (0,0) is the middle of the screen
+  useImperativeHandle(ref, () => {
+    const mid = { x: 0, y: 0 };
+    if (canvasRef.current) {
+      mid.y = canvasRef.current.height / 2;
+      mid.x = canvasRef.current.width / 2;
+    }
 
-    pointerMove(x, y) {
-      onPointerMove({
-        clientX: x,
-        clientY: y,
-        pointerType: "mouse",
-        buttons: 1,
-        simulated: true,
-      } as any);
-    },
+    return {
+      pointerDown(x, y) {
+        onPointerDown({
+          clientX: mid.x + x,
+          clientY: mid.y + y,
+          pointerType: "mouse",
+          buttons: 1,
+          simulated: true,
+        } as any);
+      },
 
-    pointerUp(x, y) {
-      onPointerUp({
-        clientX: x,
-        clientY: y,
-        pointerType: "mouse",
-        buttons: 1,
-        simulated: true,
-      } as any);
-    },
-  }));
+      pointerMove(x, y) {
+        onPointerMove({
+          clientX: mid.x + x,
+          clientY: mid.y + y,
+          pointerType: "mouse",
+          buttons: 1,
+          simulated: true,
+        } as any);
+      },
+
+      pointerUp(x, y) {
+        onPointerUp({
+          clientX: mid.x + x,
+          clientY: mid.y + y,
+          pointerType: "mouse",
+          buttons: 1,
+          simulated: true,
+        } as any);
+      },
+    };
+  });
 
   useEffect(() => {
     canvasStateRef.current = {

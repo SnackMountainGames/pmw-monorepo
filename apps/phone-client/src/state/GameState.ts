@@ -53,7 +53,7 @@ export type PhoneClientState = {
 
 export const createPhoneClientStore = (optionalProps: PhoneClientAppsOptionalProps) =>
   createStore<PhoneClientState>((set) => ({
-    debug: false,
+    debug: optionalProps.debug || false,
     toggleDebug: () => set((state) => ({ debug: !state.debug})),
     roomCode: optionalProps.roomCode || "",
     setRoomCode: (roomCode: string) =>
