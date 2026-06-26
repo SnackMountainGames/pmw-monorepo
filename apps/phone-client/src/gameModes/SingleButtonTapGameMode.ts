@@ -19,7 +19,10 @@ export class SingleButtonTapGameMode {
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
   ) => {
-    const { setTimeSinceLastMessage, resetTapCount } = gameModeState;
+    const { setTimeSinceLastMessage, resetTapCount, setPointerId, setIsButtonActivated } = gameModeState;
+
+    setPointerId(undefined);
+    setIsButtonActivated(false);
 
     setTimeSinceLastMessage(0);
     resetTapCount();

@@ -136,6 +136,10 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         case GameMode.BLANK:
           break;
         case GameMode.SINGLE_BUTTON_HOLD:
+          SingleButtonHoldGameMode.initGameMode(
+            singleButtonHoldGameModeState.getState(),
+            canvasState,
+          )
           break;
         case GameMode.SINGLE_BUTTON_TAP:
           SingleButtonTapGameMode.initGameMode(
