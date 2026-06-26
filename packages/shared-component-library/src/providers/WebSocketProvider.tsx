@@ -27,7 +27,7 @@ const WebSocketContext = createContext<WebSocketContextType | null>(null);
 const WEBSOCKET_URL =
   "wss://6dwbd9e1d8.execute-api.us-west-2.amazonaws.com/dev/";
 
-const HEARTBEAT_ENABLED = false;
+const HEARTBEAT_ENABLED = true;
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   const socketRef = useRef<WebSocket | null>(null);
@@ -126,7 +126,9 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <WebSocketContext.Provider value={{ connected, send, subscribe, disconnect }}>
+    <WebSocketContext.Provider
+      value={{ connected, send, subscribe, disconnect }}
+    >
       {children}
     </WebSocketContext.Provider>
   );

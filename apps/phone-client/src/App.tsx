@@ -3,8 +3,12 @@ import { WebSocketProvider } from "shared-component-library";
 import { Router } from "./components/Router";
 import { GameCanvasControls } from "./types/types";
 import { Ref } from "react";
-import { generatePlayerId } from "./utilities/generatePlayerId";
 import { GameModeProviders } from "./gameModes/GameModeProviders";
+import {
+  getGameRoom,
+  getName,
+  getOrGeneratePlayerId,
+} from "./utilities/LocalStorageUtilities";
 
 export type PhoneClientAppsOptionalProps = {
   roomCode?: string;
@@ -15,25 +19,14 @@ export type PhoneClientAppsOptionalProps = {
 };
 
 export const PhoneClientApp = (optionalProps: PhoneClientAppsOptionalProps) => {
-  const { roomCode, name, ref, debug } = optionalProps;
-
-  let playerId: string | undefined | null = optionalProps.playerId;
-
-  if (!playerId) {
-    playerId = localStorage.getItem("pmw-playerId");
-
-    if (!playerId) {
-      playerId = generatePlayerId();
-      localStorage.setItem("pmw-playerId", playerId);
-    }
-  }
+  const { ref, debug } = optionalProps;
 
   return (
     <WebSocketProvider>
       <PhoneClientStoreProvider
-        roomCode={roomCode}
-        name={name}
-        playerId={playerId}
+        roomCode={getGameRoom(optionalProps.roomCode)}
+        name={getName(optionalProps.name)}
+        playerId={getOrGeneratePlayerId(optionalProps.playerId)}
         ref={ref}
         debug={debug}
       >

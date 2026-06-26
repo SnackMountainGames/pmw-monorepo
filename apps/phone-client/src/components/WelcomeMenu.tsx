@@ -8,6 +8,7 @@ import {
   ServerEventType,
 } from "shared-type-library";
 import styled from "@emotion/styled";
+import { FIVE_MINUTES, getFromLocalStorage, LocalStorageKeys } from "../utilities/LocalStorageUtilities";
 
 const WelcomePage = styled.div`
   box-sizing: border-box;
@@ -43,10 +44,25 @@ export const WelcomeMenu = () => {
     return subscribe((message: ServerEvent) => {
       console.log("Client", message);
       if (message.type === ServerEventType.JOINED_ROOM) {
+        localStorage.setItem(LocalStorageKeys.ROOM_CODE, roomCode);
+        localStorage.setItem(LocalStorageKeys.NAME, name);
+        localStorage.setItem(
+          LocalStorageKeys.ROOM_CODE_EXPIRATION,
+          (Date.now() + FIVE_MINUTES).toString(),
+        );
         setIsConnectedToGameRoom(true);
       }
     });
-  }, [subscribe, setIsConnectedToGameRoom]);
+  }, [subscribe, setIsConnectedToGameRoom, roomCode, name]);
+
+  useEffect(() => {
+    if (!connected) return;
+
+    const autoConnect = getFromLocalStorage(LocalStorageKeys.AUTO_CONNECT);
+    if (autoConnect && Boolean(autoConnect === "true")) {
+      joinRoom();
+    }
+  }, [connected]);
 
   const joinRoom = () => {
     // for now, pretend to join a room if there is no room code

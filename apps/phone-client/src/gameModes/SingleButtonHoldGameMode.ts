@@ -16,7 +16,10 @@ export class SingleButtonHoldGameMode {
     gameModeState: SingleButtonHoldGameModeState,
     canvasState: CanvasState,
   ) => {
-    throw new Error("Method not implemented.");
+    const { setPointerId, setIsButtonActivated } = gameModeState;
+
+    setPointerId(undefined);
+    setIsButtonActivated(false);
   };
 
   public static update = (
