@@ -6,8 +6,13 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
-import { CanvasState, defaultCanvasState, } from "../../state/GameState";
-import { handlePointerDown, handlePointerMove, handlePointerUp, handleResizeCanvas, } from "./CanvasUtilities";
+import { CanvasState, defaultCanvasState } from "../../state/GameState";
+import {
+  handlePointerDown,
+  handlePointerMove,
+  handlePointerUp,
+  handleResizeCanvas,
+} from "./CanvasUtilities";
 import { GameCanvasControls } from "../../types/types";
 import { useSharedWebSocket } from "shared-component-library";
 import { GameMode, ServerEvent, ServerEventType } from "shared-type-library";
@@ -20,8 +25,8 @@ import { TraceShapeGameMode } from "../../gameModes/TraceShapeGameMode";
 import { useTraceShapeGameModeStore } from "../../state/TraceShapeGameModeState";
 import { useRadarGameModeStore } from "../../state/RadarGameModeState";
 import { RadarGameMode } from "../../gameModes/RadarGameMode";
-import {FlashGameMode} from "../../gameModes/FlashGameMode";
-import {useFlashGameModeStore} from "../../state/FlashGameModeState";
+import { FlashGameMode } from "../../gameModes/FlashGameMode";
+import { useFlashGameModeStore } from "../../state/FlashGameModeState";
 import { useSingleButtonTapGameModeStore } from "../../state/SingleButtonTapGameModeState";
 import { SingleButtonTapGameMode } from "../../gameModes/SingleButtonTapGameMode";
 import { BlankGameMode } from "../../gameModes/BlankGameMode";
@@ -139,20 +144,21 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           SingleButtonHoldGameMode.initGameMode(
             singleButtonHoldGameModeState.getState(),
             canvasState,
-          )
+          );
           break;
         case GameMode.SINGLE_BUTTON_TAP:
           SingleButtonTapGameMode.initGameMode(
             singleButtonTapGameModeState.getState(),
             canvas,
             canvasState,
-          )
+          );
           break;
         case GameMode.TRACE_SHAPE:
           TraceShapeGameMode.initGameMode(
             traceShapeGameModeState.getState(),
             canvas,
             canvasState,
+            true,
           );
           break;
         case GameMode.RADAR:
@@ -186,40 +192,48 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
     };
   }, [gameMode]);
 
-  const update = useCallback((dt: number) => {
-    const canvasState = canvasStateRef.current;
+  const update = useCallback(
+    (dt: number) => {
+      const canvasState = canvasStateRef.current;
 
-    switch (gameMode) {
-      case GameMode.BLANK:
-        break;
-      case GameMode.SINGLE_BUTTON_HOLD:
-        break;
-      case GameMode.SINGLE_BUTTON_TAP:
-        SingleButtonTapGameMode.update(singleButtonTapGameModeState.getState(), dt, send);
-        break;
-      case GameMode.TRACE_SHAPE:
-        break;
-      case GameMode.RADAR:
-        break;
-      case GameMode.FLASH:
-        FlashGameMode.update(flashGameModeState.getState(), dt);
-        break;
-      case GameMode.DEBUG:
-        for (let i = canvasState.objects.length - 1; i >= 0; i--) {
-          const object = canvasState.objects[i];
-          object.x += object.dx * dt;
-          object.y += object.dy * dt;
+      switch (gameMode) {
+        case GameMode.BLANK:
+          break;
+        case GameMode.SINGLE_BUTTON_HOLD:
+          break;
+        case GameMode.SINGLE_BUTTON_TAP:
+          SingleButtonTapGameMode.update(
+            singleButtonTapGameModeState.getState(),
+            dt,
+            send,
+          );
+          break;
+        case GameMode.TRACE_SHAPE:
+          TraceShapeGameMode.update(traceShapeGameModeState.getState(), dt);
+          break;
+        case GameMode.RADAR:
+          break;
+        case GameMode.FLASH:
+          FlashGameMode.update(flashGameModeState.getState(), dt);
+          break;
+        case GameMode.DEBUG:
+          for (let i = canvasState.objects.length - 1; i >= 0; i--) {
+            const object = canvasState.objects[i];
+            object.x += object.dx * dt;
+            object.y += object.dy * dt;
 
-          if (object.time) {
-            object.time -= dt;
-            if (object.time <= 0) {
-              canvasState.objects.splice(i, 1);
+            if (object.time) {
+              object.time -= dt;
+              if (object.time <= 0) {
+                canvasState.objects.splice(i, 1);
+              }
             }
           }
-        }
-        break;
-    }
-  }, [gameMode]);
+          break;
+      }
+    },
+    [gameMode],
+  );
 
   const render = useCallback(
     (
@@ -305,7 +319,10 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
       case GameMode.RADAR:
         break;
       case GameMode.FLASH:
-        FlashGameMode.handlePointerDown(flashGameModeState.getState(), ...standardArgs);
+        FlashGameMode.handlePointerDown(
+          flashGameModeState.getState(),
+          ...standardArgs,
+        );
         break;
       case GameMode.DEBUG:
         handlePointerDown(event, canvas, canvasStateRef.current);

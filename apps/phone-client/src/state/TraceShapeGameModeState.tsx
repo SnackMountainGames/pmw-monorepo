@@ -5,26 +5,32 @@ import { Vector2D } from "./GameState";
 export type TraceShapeGameModeState = {
   isDrawing: boolean;
   distance: number;
+  cycleInterval: number;
   userPoints: Vector2D[];
   shapePoints: ShapeVector2D[];
   shapeDistance: number;
   startTime: number;
+  tutorial?: {
+    cyclesRemaining: number;
+    shapePointIndex: number;
+    timeSinceLastMove: number;
+  };
 };
 
 export type ShapeVector2D = Vector2D & {
   isCovered: boolean;
-}
+};
 
-export const TraceShapeGameModeStore = () => createStore<TraceShapeGameModeState>(
-  (set) => ({
+export const TraceShapeGameModeStore = () =>
+  createStore<TraceShapeGameModeState>((set) => ({
     isDrawing: false,
     distance: 0,
+    cycleInterval: 0,
     userPoints: [],
     shapePoints: [],
     shapeDistance: 0,
-    startTime: 0
-  })
-);
+    startTime: 0,
+  }));
 
 const TraceShapeGameModeStoreContext = createContext<ReturnType<
   typeof TraceShapeGameModeStore

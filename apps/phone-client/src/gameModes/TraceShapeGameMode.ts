@@ -1,5 +1,8 @@
 import { CanvasState, Vector2D } from "../state/GameState";
-import { getCanvasCoords, SimulatedPointerEvent } from "../components/canvas/CanvasUtilities";
+import {
+  getCanvasCoords,
+  SimulatedPointerEvent,
+} from "../components/canvas/CanvasUtilities";
 import {
   ClientEvent,
   ClientEventAction,
@@ -10,15 +13,22 @@ import {
   ShapeVector2D,
   TraceShapeGameModeState,
 } from "../state/TraceShapeGameModeState";
+import { renderDebugText } from "../utilities/renderDebugText";
 
-const THRESHOLD = 0.05;
+const CYCLE_TIME = 1.5;
+const THRESHOLD_PERCENT = 0.1;
+
+const CLOSENESS_THRESHOLD = 60;
 
 export class TraceShapeGameMode {
   public static initGameMode = (
     gameModeState: TraceShapeGameModeState,
     canvas: HTMLCanvasElement,
     canvasState: CanvasState,
+    createTutorial?: boolean,
   ) => {
+    gameModeState.cycleInterval = CYCLE_TIME;
+
     gameModeState.userPoints = [];
 
     const midWidth = canvas.width / 2;
@@ -27,7 +37,7 @@ export class TraceShapeGameMode {
     const isCovered = false;
 
     const points: ShapeVector2D[] = [];
-    const segmentCount = 30;
+    const segmentCount = 60;
     const r = midWidth * 0.7;
     for (let i = 0; i < segmentCount; i++) {
       const angle = -Math.PI / 2 + (i / segmentCount) * Math.PI * 2; // evenly spaced fraction of a full turn
@@ -50,6 +60,40 @@ export class TraceShapeGameMode {
     gameModeState.shapeDistance = totalShapeDistance;
 
     gameModeState.distance = 0;
+
+    if (createTutorial) {
+      gameModeState.tutorial = {
+        cyclesRemaining: 3,
+        shapePointIndex: 0,
+        timeSinceLastMove: -1.0,
+      };
+    }
+  };
+
+  public static update = (
+    gameModeState: TraceShapeGameModeState,
+    dt: number,
+  ) => {
+    const { tutorial, shapePoints } = gameModeState;
+
+    const timeAroundPerSegment = CYCLE_TIME / shapePoints.length;
+
+    if (tutorial) {
+      tutorial.timeSinceLastMove += dt;
+
+      if (tutorial.timeSinceLastMove > timeAroundPerSegment) {
+        tutorial.timeSinceLastMove -= timeAroundPerSegment;
+        tutorial.shapePointIndex++;
+      }
+      if (tutorial.shapePointIndex >= shapePoints.length) {
+        tutorial.shapePointIndex = 0;
+        tutorial.cyclesRemaining--;
+      }
+
+      if (tutorial.cyclesRemaining <= 0) {
+        gameModeState.tutorial = undefined;
+      }
+    }
   };
 
   public static render = (
@@ -58,7 +102,15 @@ export class TraceShapeGameMode {
     canvasState: CanvasState,
     ctx: CanvasRenderingContext2D,
   ) => {
-    const { userPoints, shapePoints, distance } = gameModeState;
+    const { debug } = canvasState;
+    const {
+      userPoints,
+      shapePoints,
+      distance,
+      tutorial,
+      startTime,
+      isDrawing,
+    } = gameModeState;
 
     ctx.beginPath();
     shapePoints.forEach((p, i) =>
@@ -74,25 +126,56 @@ export class TraceShapeGameMode {
 
     shapePoints
       .filter((p) => p.isCovered)
-      .forEach((p, i) => {
+      .forEach((p) => {
         ctx.strokeStyle = "green";
         ctx.beginPath();
         ctx.ellipse(p.x, p.y, 2, 2, 0, 0, 360);
         ctx.stroke();
       });
 
+    if (tutorial) {
+      ctx.save();
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = "yellow";
+      ctx.beginPath();
+      ctx.ellipse(
+        shapePoints[tutorial.shapePointIndex].x,
+        shapePoints[tutorial.shapePointIndex].y,
+        CLOSENESS_THRESHOLD,
+        CLOSENESS_THRESHOLD,
+        0,
+        0,
+        360,
+      );
+      ctx.fill();
+      ctx.restore();
+    }
+
     ctx.beginPath();
     userPoints.forEach((p, i) =>
       i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y),
     );
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = 0.2;
     ctx.strokeStyle = "#378ADD";
-    ctx.lineWidth = 50;
+    ctx.lineWidth = 100;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
 
-    ctx.fillText(Math.floor(distance).toString(), 50, 50);
+    if (debug) {
+      renderDebugText(
+        ctx,
+        `Trace Distance: ${Math.floor(distance).toString()}`,
+        `Total Covered: ${shapePoints.filter((p) => p.isCovered).length} / ${
+          shapePoints.length
+        }`,
+        isDrawing
+          ? `Trace Time: ${((new Date().getTime() - startTime) / 1000).toFixed(
+              1,
+            )}s`
+          : "",
+      );
+    }
   };
 
   public static handlePointerDown = (
@@ -133,7 +216,7 @@ export class TraceShapeGameMode {
     shapePoints
       .filter((point) => !point.isCovered)
       .forEach((point) => {
-        if (distanceBetween(point, coords) <= 30) {
+        if (distanceBetween(point, coords) <= CLOSENESS_THRESHOLD) {
           point.isCovered = true;
         }
       });
@@ -150,22 +233,23 @@ export class TraceShapeGameMode {
     );
 
     // check points
-    const pointerLocation = getCanvasCoords(e, canvas);
     if (
       shapePoints.every((point) => point.isCovered) &&
-      isCoveringPoint(pointerLocation, shapePoints[0]) &&
-      distance > shapeDistance * (1 - THRESHOLD) &&
-      distance < shapeDistance * (1 + THRESHOLD)
+      isCoveringPoint(coords, shapePoints[0])
     ) {
-      send({
-        action: ClientEventAction.SEND_MESSAGE,
-        to: "host",
-        type: ClientEventSendMessageType.RIDER_STATUS,
-        status: RiderStatus.SUCCESS,
-        time: new Date().getTime() - gameModeState.startTime,
-      });
-      this.initGameMode(gameModeState, canvas, canvasState);
-      gameModeState.startTime = new Date().getTime();
+      console.log("Covered everything");
+
+      if (distance > shapeDistance * (1 - THRESHOLD_PERCENT)) {
+        send({
+          action: ClientEventAction.SEND_MESSAGE,
+          to: "host",
+          type: ClientEventSendMessageType.RIDER_STATUS,
+          status: RiderStatus.SUCCESS,
+          time: new Date().getTime() - gameModeState.startTime,
+        });
+        this.initGameMode(gameModeState, canvas, canvasState);
+        gameModeState.startTime = new Date().getTime();
+      }
     }
   };
 
@@ -176,6 +260,7 @@ export class TraceShapeGameMode {
     canvasState: CanvasState,
     send: (data: ClientEvent) => void,
   ) => {
+    gameModeState.isDrawing = false;
     this.initGameMode(gameModeState, canvas, canvasState);
   };
 }
@@ -185,11 +270,11 @@ const distanceBetween = (p1: Vector2D, p2: Vector2D): number => {
   const dy = p1.y - p2.y;
 
   return Math.sqrt(dx * dx + dy * dy);
-}
+};
 
 const isCoveringPoint = (
   userPoint: Vector2D,
   shapePoint: ShapeVector2D,
 ): boolean => {
-  return distanceBetween(userPoint, shapePoint) <= 30;
-}
+  return distanceBetween(userPoint, shapePoint) <= CLOSENESS_THRESHOLD;
+};
