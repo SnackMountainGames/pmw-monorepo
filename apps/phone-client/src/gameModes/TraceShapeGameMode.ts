@@ -25,26 +25,20 @@ export class TraceShapeGameMode {
     const midHeight = canvas.height / 2;
 
     const isCovered = false;
-    const pointA: Vector2D = {
-      x: midWidth,
-      y: midHeight - midWidth * 0.5
-    };
-    const pointB: Vector2D = {
-      x: midWidth + midWidth * 0.7,
-      y: midHeight + midWidth * 0.7,
-    };
-    const pointC: Vector2D = {
-      x: midWidth - midWidth * 0.7,
-      y: midHeight + midWidth * 0.7,
-    };
-    gameModeState.shapePoints = [
-      { x: pointA.x, y: pointA.y, isCovered },
-      { x: (pointA.x + pointB.x) / 2, y: (pointA.y + pointB.y) / 2, isCovered },
-      { x: pointB.x, y: pointB.y, isCovered },
-      { x: (pointB.x + pointC.x) / 2, y: (pointB.y + pointC.y) / 2, isCovered },
-      { x: pointC.x, y: pointC.y, isCovered },
-      { x: (pointC.x + pointA.x) / 2, y: (pointC.y + pointA.y) / 2, isCovered },
-    ];
+
+    const points: ShapeVector2D[] = [];
+    const segmentCount = 30;
+    const r = midWidth * 0.7;
+    for (let i = 0; i < segmentCount; i++) {
+      const angle = -Math.PI / 2 + (i / segmentCount) * Math.PI * 2; // evenly spaced fraction of a full turn
+      points.push({
+        x: midWidth + r * Math.cos(angle),
+        y: midHeight + r * Math.sin(angle),
+        isCovered,
+      });
+    }
+    gameModeState.shapePoints = [...points];
+
     let totalShapeDistance = 0;
     gameModeState.shapePoints.forEach((p, i) => {
       const next =
@@ -118,6 +112,8 @@ export class TraceShapeGameMode {
 
     gameModeState.userPoints.push(pointerLocation);
 
+    gameModeState.startTime = new Date().getTime();
+
     this.handlePointerMove(gameModeState, e, canvas, canvasState, send);
   };
 
@@ -130,9 +126,11 @@ export class TraceShapeGameMode {
   ) => {
     if (!gameModeState.isDrawing) return;
 
+    const { shapePoints, userPoints, shapeDistance, distance } = gameModeState;
+
     const coords = getCanvasCoords(e, canvas);
 
-    gameModeState.shapePoints
+    shapePoints
       .filter((point) => !point.isCovered)
       .forEach((point) => {
         if (distanceBetween(point, coords) <= 30) {
@@ -140,7 +138,7 @@ export class TraceShapeGameMode {
         }
       });
 
-    gameModeState.userPoints.push(coords);
+    userPoints.push(coords);
 
     gameModeState.distance = gameModeState.userPoints.reduce(
       (acc, point, i) => {
@@ -150,20 +148,6 @@ export class TraceShapeGameMode {
       },
       0,
     );
-  };
-
-  public static handlePointerUp = (
-    gameModeState: TraceShapeGameModeState,
-    e: SimulatedPointerEvent,
-    canvas: HTMLCanvasElement,
-    canvasState: CanvasState,
-    send: (data: ClientEvent) => void,
-  ) => {
-    const { shapePoints, shapeDistance, distance } = gameModeState;
-
-    if (!gameModeState.isDrawing) return;
-
-    gameModeState.isDrawing = false;
 
     // check points
     const pointerLocation = getCanvasCoords(e, canvas);
@@ -178,10 +162,21 @@ export class TraceShapeGameMode {
         to: "host",
         type: ClientEventSendMessageType.RIDER_STATUS,
         status: RiderStatus.SUCCESS,
+        time: new Date().getTime() - gameModeState.startTime,
       });
-    } else {
       this.initGameMode(gameModeState, canvas, canvasState);
+      gameModeState.startTime = new Date().getTime();
     }
+  };
+
+  public static handlePointerUp = (
+    gameModeState: TraceShapeGameModeState,
+    e: SimulatedPointerEvent,
+    canvas: HTMLCanvasElement,
+    canvasState: CanvasState,
+    send: (data: ClientEvent) => void,
+  ) => {
+    this.initGameMode(gameModeState, canvas, canvasState);
   };
 }
 

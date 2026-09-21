@@ -62,6 +62,7 @@ export enum RiderStatus {
 export type ClientEventSendMessageRiderStatus = ClientEventSendMessageBase & {
   type: ClientEventSendMessageType.RIDER_STATUS;
   status: RiderStatus;
+  time?: number;
 };
 
 export type ClientEventSendMessageTapCount = ClientEventSendMessageBase & {

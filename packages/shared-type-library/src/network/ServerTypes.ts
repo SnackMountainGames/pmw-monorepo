@@ -96,6 +96,7 @@ export type ServerEventRiderSuccess = {
   type: ServerEventType.RIDER_SUCCESS;
   from: string;
   at: number;
+  time: number;
 };
 
 export type ServerEventRiderFailure = {

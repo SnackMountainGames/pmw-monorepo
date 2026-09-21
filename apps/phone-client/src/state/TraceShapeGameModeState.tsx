@@ -8,6 +8,7 @@ export type TraceShapeGameModeState = {
   userPoints: Vector2D[];
   shapePoints: ShapeVector2D[];
   shapeDistance: number;
+  startTime: number;
 };
 
 export type ShapeVector2D = Vector2D & {
@@ -21,6 +22,7 @@ export const TraceShapeGameModeStore = () => createStore<TraceShapeGameModeState
     userPoints: [],
     shapePoints: [],
     shapeDistance: 0,
+    startTime: 0
   })
 );
 

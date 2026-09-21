@@ -98,6 +98,7 @@ export const handleEventSendMessage = async (
         type,
         from,
         at: Date.now(),
+        time: eventBody.time || 0,
       };
       break;
     }
