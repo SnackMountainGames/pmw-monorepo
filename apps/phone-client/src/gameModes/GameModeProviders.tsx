@@ -4,6 +4,7 @@ import { RadarGameModeStoreProvider } from "../state/RadarGameModeState";
 import { FlashGameModeStoreProvider } from "../state/FlashGameModeState";
 import { ReactNode } from "react";
 import { SingleButtonTapGameModeStoreProvider } from "../state/SingleButtonTapGameModeState";
+import { SwipeGameModeStoreProvider } from "./swipe/SwipeGameModeState";
 
 interface GameModeProvidersProps {
   children: ReactNode;
@@ -18,7 +19,9 @@ export const GameModeProviders = (props: GameModeProvidersProps) => {
         <TraceShapeGameModeStoreProvider>
           <RadarGameModeStoreProvider>
             <FlashGameModeStoreProvider>
-              {children}
+              <SwipeGameModeStoreProvider>
+                {children}
+              </SwipeGameModeStoreProvider>
             </FlashGameModeStoreProvider>
           </RadarGameModeStoreProvider>
         </TraceShapeGameModeStoreProvider>

@@ -47,7 +47,7 @@ export const TopHud = () => {
 
   return (
     <TopHudContainer id="game-hud">
-      <HudButton onClick={changeGameMode}>Change Game Mode</HudButton>
+      <HudButton onMouseDown={changeGameMode}>Change Game Mode</HudButton>
       {roomCode ? (
         <span>
           In room {roomCode} as {name}
@@ -55,7 +55,7 @@ export const TopHud = () => {
       ) : (
         <span>⚠ Offline ⚠</span>
       )}
-      <HudButton onClick={toggleDebug}>{`Debug: ${debug}`}</HudButton>
+      <HudButton onMouseDown={toggleDebug}>{`Debug: ${debug}`}</HudButton>
     </TopHudContainer>
   );
 };
@@ -92,7 +92,7 @@ export const BottomHud = () => {
     <BottomHudContainer id="game-hud">
       <HudButton />
       {label}
-      <HudButton onClick={exitRoom}>Exit Room</HudButton>
+      <HudButton onMouseDown={exitRoom}>Exit Room</HudButton>
     </BottomHudContainer>
   );
 };

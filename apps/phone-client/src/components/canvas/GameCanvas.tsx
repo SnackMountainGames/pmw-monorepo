@@ -30,6 +30,8 @@ import { useFlashGameModeStore } from "../../state/FlashGameModeState";
 import { useSingleButtonTapGameModeStore } from "../../state/SingleButtonTapGameModeState";
 import { SingleButtonTapGameMode } from "../../gameModes/SingleButtonTapGameMode";
 import { BlankGameMode } from "../../gameModes/BlankGameMode";
+import {SwipeGameMode} from "../../gameModes/swipe/SwipeGameMode";
+import {useSwipeGameModeStore} from "../../gameModes/swipe/SwipeGameModeState";
 
 const Canvas = styled.canvas`
   display: block;
@@ -51,6 +53,7 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
   const traceShapeGameModeState = useTraceShapeGameModeStore();
   const radarGameModeState = useRadarGameModeStore();
   const flashGameModeState = useFlashGameModeStore();
+  const swipeGameModeState = useSwipeGameModeStore();
 
   const { subscribe, send } = useSharedWebSocket();
 
@@ -163,6 +166,16 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           break;
         case GameMode.RADAR:
           break;
+        case GameMode.FLASH:
+          break;
+        case GameMode.SWIPE:
+          SwipeGameMode.initGameMode(
+            swipeGameModeState.getState(),
+            canvas,
+            canvasState,
+            true,
+          );
+          break;
         case GameMode.DEBUG:
           break;
       }
@@ -215,6 +228,9 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           break;
         case GameMode.FLASH:
           FlashGameMode.update(flashGameModeState.getState(), dt);
+          break;
+        case GameMode.SWIPE:
+          SwipeGameMode.update(canvasState, swipeGameModeState.getState(), dt);
           break;
         case GameMode.DEBUG:
           for (let i = canvasState.objects.length - 1; i >= 0; i--) {
@@ -274,6 +290,9 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         case GameMode.FLASH:
           FlashGameMode.render(flashGameModeState.getState(), ...standardArgs);
           break;
+        case GameMode.SWIPE:
+          SwipeGameMode.render(swipeGameModeState.getState(), ...standardArgs);
+          break;
         case GameMode.DEBUG:
           DebugGameMode.render(...standardArgs);
           break;
@@ -324,6 +343,12 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
           ...standardArgs,
         );
         break;
+      case GameMode.SWIPE:
+        SwipeGameMode.handlePointerDown(
+          swipeGameModeState.getState(),
+          ...standardArgs,
+        );
+        break;
       case GameMode.DEBUG:
         handlePointerDown(event, canvas, canvasStateRef.current);
         break;
@@ -354,6 +379,10 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         );
         break;
       case GameMode.RADAR:
+        break;
+      case GameMode.FLASH:
+        break;
+      case GameMode.SWIPE:
         break;
       case GameMode.DEBUG:
         handlePointerMove(event, canvas, canvasStateRef.current);
@@ -389,6 +418,15 @@ export const GameCanvas = forwardRef<GameCanvasControls>((props, ref) => {
         );
         break;
       case GameMode.RADAR:
+        break;
+      case GameMode.FLASH:
+        break;
+      case GameMode.SWIPE:
+        SwipeGameMode.handlePointerUp(
+          swipeGameModeState.getState(),
+          ...standardArgs,
+        );
+        break;
         break;
       case GameMode.DEBUG:
         handlePointerUp(...standardArgs);
