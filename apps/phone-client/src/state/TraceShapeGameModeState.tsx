@@ -1,6 +1,7 @@
 import { createStore } from "zustand/vanilla";
 import { createContext, ReactNode, useContext, useRef } from "react";
 import { Vector2D } from "./GameState";
+import { BackgroundState } from "../components/canvas/CanvasUtilities";
 
 export type TraceShapeGameModeState = {
   isDrawing: boolean;
@@ -15,6 +16,7 @@ export type TraceShapeGameModeState = {
     shapePointIndex: number;
     timeSinceLastMove: number;
   };
+  background: BackgroundState;
 };
 
 export type ShapeVector2D = Vector2D & {
@@ -30,6 +32,9 @@ export const TraceShapeGameModeStore = () =>
     shapePoints: [],
     shapeDistance: 0,
     startTime: 0,
+    background: {
+      color: "#c068f2",
+    },
   }));
 
 const TraceShapeGameModeStoreContext = createContext<ReturnType<

@@ -1,6 +1,7 @@
 import { CanvasState, Vector2D } from "../state/GameState";
 import {
   getCanvasCoords,
+  renderGradiantBackground,
   SimulatedPointerEvent,
 } from "../components/canvas/CanvasUtilities";
 import {
@@ -110,7 +111,10 @@ export class TraceShapeGameMode {
       tutorial,
       startTime,
       isDrawing,
+      background,
     } = gameModeState;
+
+    renderGradiantBackground(canvas, ctx, background);
 
     ctx.beginPath();
     shapePoints.forEach((p, i) =>
@@ -118,8 +122,8 @@ export class TraceShapeGameMode {
     );
     ctx.lineTo(shapePoints[0].x, shapePoints[0].y);
     ctx.globalAlpha = 1;
-    ctx.strokeStyle = "#AAAAAA";
-    ctx.lineWidth = 10;
+    ctx.strokeStyle = "grey";
+    ctx.lineWidth = 5;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
@@ -237,8 +241,6 @@ export class TraceShapeGameMode {
       shapePoints.every((point) => point.isCovered) &&
       isCoveringPoint(coords, shapePoints[0])
     ) {
-      console.log("Covered everything");
-
       if (distance > shapeDistance * (1 - THRESHOLD_PERCENT)) {
         send({
           action: ClientEventAction.SEND_MESSAGE,

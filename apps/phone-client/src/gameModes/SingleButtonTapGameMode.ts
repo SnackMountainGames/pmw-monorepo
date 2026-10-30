@@ -1,6 +1,7 @@
 import { CanvasState } from "../state/GameState";
 import {
   getCanvasCoords,
+  renderGradiantBackground,
   SimulatedPointerEvent,
 } from "../components/canvas/CanvasUtilities";
 import {
@@ -68,7 +69,9 @@ export class SingleButtonTapGameMode {
     const BUTTON_RADIUS = getButtonRadius(canvas);
 
     const { debug } = canvasState;
-    const { isButtonActivated, tapCount, timeSinceLastMessage } = gameModeState;
+    const { isButtonActivated, tapCount, timeSinceLastMessage, background } = gameModeState;
+
+    renderGradiantBackground(canvas, ctx, background);
 
     ctx.lineWidth = 3;
 
@@ -87,7 +90,7 @@ export class SingleButtonTapGameMode {
       ctx.fill();
     }
 
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = "grey";
     ctx.beginPath();
     ctx.ellipse(
       canvas.width / 2,

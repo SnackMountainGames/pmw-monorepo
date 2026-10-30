@@ -29,6 +29,40 @@ export const getCanvasCoords = (
   };
 };
 
+export interface BackgroundState {
+  color: string;
+}
+
+export const renderGradiantBackground = (
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  background: BackgroundState,
+) => {
+  const midWidth = canvas.width / 2;
+  const midHeight = canvas.height / 2;
+
+  ctx.save();
+
+  ctx.beginPath();
+  ctx.arc(midWidth, midHeight, canvas.height / 2, 0, 2 * Math.PI);
+  const gradient = ctx.createRadialGradient(
+    midWidth,
+    midHeight,
+    0,
+    midWidth,
+    midHeight,
+    canvas.height / 2,
+  );
+  gradient.addColorStop(0, background.color);
+  gradient.addColorStop(1, "black");
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  ctx.restore();
+};
+
+
+/* Everything below should be deprecated & removed */
 export const handleResizeCanvas = (canvas: HTMLCanvasElement) => {
   const containingNode = canvas.parentNode as HTMLElement;
   canvas.width = containingNode.clientWidth;

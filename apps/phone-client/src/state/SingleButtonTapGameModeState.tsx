@@ -1,5 +1,6 @@
 import { createStore } from "zustand/vanilla";
 import { createContext, ReactNode, useContext, useRef } from "react";
+import { BackgroundState } from "../components/canvas/CanvasUtilities";
 
 export type SingleButtonTapGameModeState = {
   isButtonActivated: boolean;
@@ -13,6 +14,7 @@ export type SingleButtonTapGameModeState = {
   resetTapCount: () => void;
   pointerId?: number;
   setPointerId: (pointerId: number | undefined) => void;
+  background: BackgroundState;
 };
 
 export const SingleButtonTapGameModeStore = () =>
@@ -29,6 +31,9 @@ export const SingleButtonTapGameModeStore = () =>
     incrementTapCount: () => set((state) => ({ tapCount: state.tapCount + 1 })),
     resetTapCount: () => set({ tapCount: 0 }),
     setPointerId: (pointerId: number | undefined) => set({ pointerId }),
+    background: {
+      color: "#2d703f",
+    },
   }));
 
 const SingleButtonTapGameModeStoreContext = createContext<ReturnType<
