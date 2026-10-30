@@ -1,5 +1,6 @@
 import { createStore } from "zustand/vanilla";
 import { createContext, ReactNode, useContext, useRef } from "react";
+import { BackgroundState } from "../../components/canvas/CanvasUtilities";
 
 export type SwipeGameModeState = {
   pointerId?: number;
@@ -11,6 +12,7 @@ export type SwipeGameModeState = {
     swipeTime: number;
     timeSinceLastMove: number;
   };
+  background: BackgroundState;
 };
 
 type Vector2D = {
@@ -25,7 +27,11 @@ type PointerStartObject = {
 export const SwipeGameModeStore = () =>
   createStore<SwipeGameModeState>((set) => ({
     setPointerId: (pointerId: number | undefined) => set({ pointerId }),
-    setPointerStart: (pointerStart: PointerStartObject | undefined) => set({ pointerStart }),
+    setPointerStart: (pointerStart: PointerStartObject | undefined) =>
+      set({ pointerStart }),
+    background: {
+      color: "#692727",
+    },
   }));
 
 const SwipeGameModeStoreContext = createContext<ReturnType<

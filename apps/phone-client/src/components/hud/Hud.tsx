@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { usePhoneClientStore } from "../../state/PhoneClientStoreProvider";
 import { GameMode } from "shared-type-library";
 import { LocalStorageKeys } from "../../utilities/LocalStorageUtilities";
+import { DEVELOPMENT_BUILD } from "../../App";
 
 export const TOP_HUD_HEIGHT = 60;
 export const BOTTOM_HUD_HEIGHT = 60;
@@ -22,7 +23,7 @@ const TopHudContainer = styled.div`
 const HudButton = styled.button`
   color: white;
   background: none;
-  border: 2px solid white;
+  border: none;
   pointer-events: all;
   height: ${TOP_HUD_HEIGHT}px;
   width: ${TOP_HUD_HEIGHT}px;
@@ -45,9 +46,31 @@ export const TopHud = () => {
     }
   }
 
+  const GameModeButton = () => {
+    if (DEVELOPMENT_BUILD) {
+      return (
+        <HudButton onMouseDown={changeGameMode}>Change Game Mode</HudButton>
+      );
+    } else {
+      return <HudButton />;
+    }
+  };
+
+  const DebugButton = () => {
+    if (DEVELOPMENT_BUILD) {
+      return (
+        <HudButton onMouseDown={toggleDebug}>{`Debug: ${debug}`}</HudButton>
+      );
+    } else {
+      return (
+        <HudButton />
+      )
+    }
+  }
+
   return (
     <TopHudContainer id="game-hud">
-      <HudButton onMouseDown={changeGameMode}>Change Game Mode</HudButton>
+      <GameModeButton />
       {roomCode ? (
         <span>
           In room {roomCode} as {name}
@@ -55,7 +78,7 @@ export const TopHud = () => {
       ) : (
         <span>⚠ Offline ⚠</span>
       )}
-      <HudButton onMouseDown={toggleDebug}>{`Debug: ${debug}`}</HudButton>
+      <DebugButton />
     </TopHudContainer>
   );
 };

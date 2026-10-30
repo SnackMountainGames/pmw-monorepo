@@ -1,5 +1,9 @@
 import { CanvasState } from "../../state/GameState";
-import { getCanvasCoords, SimulatedPointerEvent } from "../../components/canvas/CanvasUtilities";
+import {
+  getCanvasCoords,
+  renderGradiantBackground,
+  SimulatedPointerEvent,
+} from "../../components/canvas/CanvasUtilities";
 import {
   ClientEvent,
   ClientEventAction,
@@ -20,7 +24,7 @@ export class SwipeGameMode {
     if (createTutorial) {
       gameModeState.tutorial = {
         swipesRemaining: 5,
-        swipeTime: 0.4,
+        swipeTime: 0.3,
         timeSinceLastMove: -1.0,
       };
     }
@@ -43,7 +47,7 @@ export class SwipeGameMode {
     }
 
     if (tutorial) {
-      const DELAY = 0.2;
+      const DELAY = 0.1;
 
       tutorial.timeSinceLastMove += dt;
 
@@ -64,9 +68,11 @@ export class SwipeGameMode {
     canvasState: CanvasState,
     ctx: CanvasRenderingContext2D,
   ) => {
-    const { tutorial } = gameModeState;
+    const { tutorial, background } = gameModeState;
 
-    const TOTAL_DISTANCE = 400;
+    renderGradiantBackground(canvas, ctx, background);
+
+    const TOTAL_DISTANCE = 300;
     const midWidth = canvas.width / 2;
     const midHeight = canvas.height / 2;
 
@@ -84,7 +90,22 @@ export class SwipeGameMode {
       ctx.restore();
     }
 
+    ctx.beginPath();
+    ctx.globalAlpha = 1.0;
+    ctx.strokeStyle = "grey";
+    ctx.lineWidth = 3;
+    ctx.rect(
+      midWidth - 60,
+      midHeight - 60 - TOTAL_DISTANCE / 2,
+      120,
+     120 + TOTAL_DISTANCE,
+    );
+    ctx.stroke();
+    ctx.restore();
+
     const { debug } = canvasState;
+
+
     if (debug) {
       renderDebugText(
         ctx,

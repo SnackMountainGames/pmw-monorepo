@@ -18,6 +18,8 @@ export type PhoneClientAppsOptionalProps = {
   debug?: boolean;
 };
 
+export const DEVELOPMENT_BUILD = false;
+
 export const PhoneClientApp = (optionalProps: PhoneClientAppsOptionalProps) => {
   const { ref, debug } = optionalProps;
 

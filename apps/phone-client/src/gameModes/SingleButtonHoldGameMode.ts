@@ -1,6 +1,7 @@
 import { CanvasState } from "../state/GameState";
 import {
   getCanvasCoords,
+  renderGradiantBackground,
   SimulatedPointerEvent,
 } from "../components/canvas/CanvasUtilities";
 import {
@@ -37,12 +38,14 @@ export class SingleButtonHoldGameMode {
   ) => {
     const BUTTON_RADIUS = getButtonRadius(canvas);
 
-    const { isButtonActivated } = gameModeState;
+    const { isButtonActivated, background } = gameModeState;
+
+    renderGradiantBackground(canvas, ctx, background);
 
     ctx.lineWidth = 3;
 
     if (isButtonActivated) {
-      ctx.fillStyle = "green";
+      ctx.fillStyle = "#c9b73e";
       ctx.beginPath();
       ctx.ellipse(
         canvas.width / 2,
@@ -56,7 +59,7 @@ export class SingleButtonHoldGameMode {
       ctx.fill();
     }
 
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = "grey";
     ctx.beginPath();
     ctx.ellipse(
       canvas.width / 2,
